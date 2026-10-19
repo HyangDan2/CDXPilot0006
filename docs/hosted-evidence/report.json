@@ -1,0 +1,196 @@
+{
+  "url": "https://hyangdan2.github.io/CDXPilot0006/",
+  "browser": "141.0.7390.37",
+  "checkedAt": "2026-10-19T14:09:46.817Z",
+  "assets": [
+    {
+      "name": "idle",
+      "sha256": "a737b2d9ac2b918e0f7c8f41577df32ea3f4c9608a36afd8e52d779594480af0",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "excited",
+      "sha256": "80366974f61067eed9859df26a6b0b24e94643e2c63f4b5badcfbe1f65c7828f",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "pleased",
+      "sha256": "39da2f24f2dda5095efaac60d7bcc253740821c6068466564688e0e3525a9120",
+      "margins": [
+        106,
+        106,
+        107,
+        106
+      ]
+    },
+    {
+      "name": "puzzled",
+      "sha256": "9c3e4f78917e769f521f6082891efcbc16e6d7518e4c09428e63248089904672",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "worried",
+      "sha256": "f747561b124d9c597dd590439b422233be012f1d3a504aeb208dc181f8635c2b",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "sad",
+      "sha256": "a02d2690ba02729028133b72ce362fe3b87ea1c2b46f13b570846a653a619d21",
+      "margins": [
+        106,
+        106,
+        107,
+        106
+      ]
+    },
+    {
+      "name": "clear",
+      "sha256": "0b0ba9509bb9253c39f474887108bd77143d0328a83d2cd4f5258ca41a1e5217",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "ready",
+      "sha256": "f5259a08837d0e5041f208e64d317b3631bf6e4be581ae9e30f1f6ff1f6dece2",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "blink",
+      "sha256": "f9e27c4f36525f04bd27f06b05fb9a47895cd29dfdc59e3fa655239e8d27f938",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    }
+  ],
+  "viewports": [
+    {
+      "width": 320,
+      "height": 568,
+      "bounds": {
+        "scrollWidth": 320,
+        "width": 320,
+        "height": 568,
+        "controlsBottom": 550.96875,
+        "boardLeft": 42.015625,
+        "boardRight": 277.984375
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "bounds": {
+        "scrollWidth": 360,
+        "width": 360,
+        "height": 640,
+        "controlsBottom": 608,
+        "boardLeft": 33.5,
+        "boardRight": 326.5
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "scrollWidth": 390,
+        "width": 390,
+        "height": 844,
+        "controlsBottom": 835.96875,
+        "boardLeft": 37.796875,
+        "boardRight": 352.203125
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "width": 620,
+      "height": 800,
+      "bounds": {
+        "scrollWidth": 620,
+        "width": 620,
+        "height": 800,
+        "controlsBottom": 792,
+        "boardLeft": 168.5,
+        "boardRight": 451.5
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "bounds": {
+        "scrollWidth": 844,
+        "width": 844,
+        "height": 390,
+        "controlsBottom": 387,
+        "boardLeft": 139,
+        "boardRight": 469
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "bounds": {
+        "scrollWidth": 1440,
+        "width": 1440,
+        "height": 900,
+        "controlsBottom": 875,
+        "boardLeft": 351.5,
+        "boardRight": 765.5
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    }
+  ],
+  "physicalDevices": false
+}

@@ -1,7 +1,7 @@
 # 치비링크 구현 계획 — 패딩 요구사항 반영
 
 ## 현재 상태
-- 구현 및 로컬 검증 완료(2026-10-19). 실물 모바일 기기·Safari·원격 CI·공개 배포는 미검증/미실행으로 분리 기록한다.
+- 구현 및 로컬 검증 완료(2026-10-19). 실물 모바일 기기·Safari는 미검증으로 분리 기록한다. 후속 승인에 따라 원격 CI 및 GitHub Pages 배포도 완료했다.
 - MacRepo의 CDXPilot0004·0005에서 기존 프로세스와 실제 패딩 수정 이력을 확인했다. 원본 프로젝트는 변경하지 않고 이번 프로젝트에 적용했다.
 - 작업 계약: [AGENTS.md](AGENTS.md), 설계 룰: [ARCHITECTURE.md](docs/ARCHITECTURE.md), 검증 절차: [HARNESS.md](docs/HARNESS.md), 에셋 규격: [ART_PIPELINE.md](docs/ART_PIPELINE.md).
 - 출처·적용 판단은 [DECISIONS.md](docs/DECISIONS.md), 실제 검증 상태는 [QA.md](docs/QA.md)에 기록한다.
@@ -59,3 +59,11 @@ npm 명령과 테스트를 구현했고, 깨끗한 npm ci 후 verify(모델 11�
 - 보드 외곽 통로는 셀 반폭 + 간격 + 4px로 계산하여 연결선이 화면 경계 안에 남도록 검증했다.
 - 단위 테스트에는 10단계×30개 시드의 전체 해답 검사가 포함된다. E2E는 실제 클릭 완주, 모바일 탭, 오류 대체 표시, 6개 화면 크기와 전 표정을 검증한다.
 - 상세 근거와 한계: [QA.md](docs/QA.md). 실행: [README.md](README.md).
+
+
+## 배포 결과
+- GitHub `HyangDan2/CDXPilot0006` 업로드 및 Actions 기반 Pages 배포 완료.
+- 서비스 주소: https://hyangdan2.github.io/CDXPilot0006/
+- 실제 배포 경로 기준 로컬 모델 11개·E2E 11개와 원격 CI 통과.
+- 공개 URL의 6개 화면 크기, 실제 입력, 9표정·PNG 패딩 검증 통과. 근거는 QA.md의 hosted addendum 참조.
+- 다단 퍼즐은 별도 확장 제안으로 검토 완료. 이번 서비스의 게임 규칙은 2D 유지.

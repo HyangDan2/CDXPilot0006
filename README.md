@@ -2,6 +2,10 @@
 
 PC/모바일용 사천성 퍼즐. 같은 디저트 두 개를 최대 두 번 꺾는 선으로 연결합니다. 오리지널 치비 캐릭터 모모가 플레이에 반응합니다.
 
+## 플레이
+
+배포 주소: [치비링크 플레이](https://hyangdan2.github.io/CDXPilot0006/)
+
 ## 실행
 
 현재 Mac에서 시스템 Node가 오래된 경우에도 실행할 수 있는 런처:
@@ -41,4 +45,6 @@ npm run test:e2e
 
 캐릭터의 실제 배포 PNG는 512×512이며 사방 106px(20.7%) 이상 투명 여백을 보장하고, 화면 표시에도 별도 10% inset을 적용합니다. 원본·정확한 생성 프롬프트: [art/PROMPTS.md](art/PROMPTS.md). `/art-review.html`에서 전체 표정을 확인할 수 있습니다.
 
-실물 iPhone/Android 기기, Safari, 실제 청취, 원격 CI 및 공개 배포는 별도 검증 대상입니다. 로컬 정적 빌드는 dist/에 생성됩니다.
+GitHub Actions 검증 및 Pages 배포를 완료했고, 실제 배포 주소에서도 PC/모바일 화면과 캐릭터 패딩을 검사했습니다. 실물 iPhone/Android 기기, Safari 및 실제 청취는 별도 검증 대상입니다. 로컬 정적 빌드는 dist/에 생성됩니다.
+
+다단 퍼즐 확장 검토: [설계 제안](docs/STACKED_PUZZLE_PROPOSAL.md). 현재 서비스는 기존 2D 사천성 규칙입니다.

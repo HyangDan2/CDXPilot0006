@@ -39,6 +39,20 @@ Evidence: `test-results/` contains final browser screenshots/traces and last-run
 
 - No physical iPhone/Android device or Safari/Firefox run. Touch tests are Chromium emulation, not hardware gesture or safe-area certification.
 - No physical listening, sound quality evaluation or sustained performance benchmark. Audio failure is nonfatal by design.
-- CI workflow exists but has not run remotely. No repository publication or hosted deployment was performed.
+- Initial local-only qualification was followed by successful remote CI and Pages deployment; see the hosted addendum below.
 - Board shape is selected at run start. Extreme in-run resizing retains topology and can shrink targets; a new run selects the suitable layout. Rotation pauses play but is not claimed as fully certified device behavior.
 - Generated character art is nine still expressions with CSS motion, not nine fully hand-animated clips.
+
+
+## Hosted deployment acceptance — 2026-10-19 (Asia/Seoul)
+
+- Repository: https://github.com/HyangDan2/CDXPilot0006
+- Live URL: https://hyangdan2.github.io/CDXPilot0006/
+- Initial verified/deployed source commit: `7e3c02d585f4001cf4758cf47503bf80201ca46e`.
+- Remote Actions verification and deployment succeeded: https://github.com/HyangDan2/CDXPilot0006/actions/runs/39266198388
+- Executed `node scripts/verify-hosted.mjs` against the live URL. All six viewport sizes passed: 320×568, 360×640, 390×844, 620×800, 844×390 and 1440×900.
+- Actual normal-URL hint + pair click/tap and pause/resume succeeded at every size. No normal-URL debug hook, page exceptions or HTTP error responses.
+- All nine deployed PNG SHA-256 digests matched the local files; every frame retained at least 106px fully transparent padding on all sides.
+- All nine expressions at each animation's maximum upward movement/scale fit their positioned frames at every viewport. Reviewed live desktop, small/tall mobile and landscape screenshots; no visible hair/hand clipping or control overflow.
+- Evidence and exact browser timestamp/version: `docs/hosted-evidence/report.json` and screenshots beside it. These are real hosted Chromium checks with mobile/touch emulation, not physical iPhone/Android or Safari certification.
+- This addendum and the hosted harness do not change production game files. Subsequent documentation/harness commits deploy the same application bundle after their normal CI gate.

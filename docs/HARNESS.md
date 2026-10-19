@@ -46,7 +46,9 @@ Use `nvm use` if available, then `npm ci`. Install Chromium once with `npx playw
 
 E2E contains six viewport cases and a mobile Chromium touch-emulation case. It checks all nine expressions at each animation’s midpoint (its maximum upward movement/scale), outer frame containment, and a synthetic exterior-boundary route with a 2px minimum stroke clearance. That perimeter fixture is a rendering test, not a legal multi-bend match. Legal routes are independently covered by pure tests and real click/tap matching.
 
-Clean installation, asset measurements and final local results are recorded in QA.md. Real-device Safari/Android, auditory quality and remote CI execution remain separate qualification steps.
+Clean installation, asset measurements and final local results are recorded in QA.md. Real-device Safari/Android and auditory quality remain separate qualification steps. Remote CI has now passed.
 
 ## Hosted acceptance
 Pages deployment is authorized. Repeat viewport/mascot containment and actual-input smoke checks against the deployed URL; record failures, screenshot evidence and commit identity separately from local E2E. See DEPLOYMENT.md. Multi-layer gameplay remains a proposal in STACKED_PUZZLE_PROPOSAL.md and must receive its own model and browser gates before release.
+
+Run `node scripts/verify-hosted.mjs` to repeat hosted acceptance. Optional HOSTED_URL overrides the URL. The script writes screenshots and a JSON report in docs/hosted-evidence, checks exact deployed PNG digests/alpha margins, and uses normal URL controls for actual matching before test-only expression bounds checks.
