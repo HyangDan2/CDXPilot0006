@@ -105,3 +105,6 @@ Completed: 23 model tests, 42 browser tests and Actions/Pages passed. Hosted che
 Reproduced half-cell search treating occupied tile boundaries as empty corridors. Include boundaries in obstacles and add tests for rejection on three floors, opening a full empty row, comparison against classic-grid routing and actual mouse/touch input. Run full and hosted verification.
 
 Fix deployed: 25 model tests, 44 browser tests and remote CI passed. Public checks confirmed blocked-pair rejection, valid matching and three difficulties × six viewports.
+
+## 2026-10-20 — compact header, continuous BGM and shorter Challenge time
+Approved: merge the introduction into the header/start card, preserve all board/character padding, continue BGM through popups, resume from the saved loop position after mute/backgrounding, and shorten timed Easy/Normal/Hard budgets by 15%/25%/30% with a 20-second minimum. Preserve existing records and assist penalties. Update English documentation, run model and desktop/mobile browser gates, inspect screenshots, push and deploy Pages, then verify the public site.

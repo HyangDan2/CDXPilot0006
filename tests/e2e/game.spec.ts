@@ -19,6 +19,8 @@ declare global {
     __CHIBILINK__: {
       music: () => {
         playing: boolean;
+        position: number;
+        starts: number;
         state: string;
         rms: number;
         duration: number;
@@ -386,9 +388,52 @@ for (const mobile of [false, true])
     else await page.locator("#start").click();
     await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
     expect((await state()).duration).toBeGreaterThan(30);
-    await page.locator("#pause").click();
+    const initial = await state();
+    for (const opener of [
+      "#pause",
+      "#settings",
+      "#how",
+      "#stage-picker",
+      "#mode-label",
+    ]) {
+      await page.locator(opener).click();
+      const paused = await page.evaluate(() => window.__CHIBILINK__.snapshot());
+      expect(paused.status).toBe("paused");
+      await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
+      expect((await state()).starts).toBe(initial.starts);
+      await page.waitForTimeout(150);
+      expect(
+        (await page.evaluate(() => window.__CHIBILINK__.snapshot())).elapsed,
+      ).toBe(paused.elapsed);
+      await page.locator(".dialog-close").click();
+    }
+    expect((await state()).position).toBeGreaterThan(initial.position);
+    await page.locator("#sound").click();
     await expect.poll(async () => (await state()).rms).toBeLessThan(0.00001);
-    expect((await state()).playing).toBe(false);
+    const stopped = await state();
+    await page.waitForTimeout(150);
+    expect((await state()).position).toBe(stopped.position);
+    await page.locator("#sound").click();
+    await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
+    expect((await state()).position).toBeGreaterThan(stopped.position);
+    expect((await state()).starts).toBe(stopped.starts + 1);
+    // Exercise the visibility handler deterministically; not a physical-device test.
+    await page.evaluate(() => {
+      Object.defineProperty(document, "hidden", {
+        configurable: true,
+        get: () => true,
+      });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await expect.poll(async () => (await state()).rms).toBeLessThan(0.00001);
+    const background = await state();
+    await page.evaluate(() => {
+      Reflect.deleteProperty(document, "hidden");
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
+    expect((await state()).position).toBeGreaterThan(background.position);
+    expect((await state()).starts).toBe(background.starts + 1);
     await page.locator("#resume").click();
     await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
     await page.locator("#sound").click();
@@ -398,8 +443,10 @@ for (const mobile of [false, true])
     expect((await state()).state).toBe("idle");
     await page.locator("#sound").click();
     await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
+    const beforeResult = await state();
     await page.evaluate(() => window.__CHIBILINK__.fixture("won"));
-    await expect.poll(async () => (await state()).rms).toBeLessThan(0.00001);
+    await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
+    expect((await state()).starts).toBe(beforeResult.starts);
     await context.close();
   });
 test("audio unavailable does not block matching", async ({ page }) => {

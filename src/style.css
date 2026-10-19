@@ -1517,3 +1517,58 @@ html {
     max-width: 175px;
   }
 }
+
+/* Compact shared header; board corridors and character insets stay independent. */
+.topbar {
+  height: 76px;
+  gap: 24px;
+}
+.header-title {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.6px;
+  flex: 1;
+}
+.header-right {
+  flex-shrink: 0;
+}
+main {
+  padding-top: 16px;
+}
+@media (max-width: 900px) {
+  .header-title {
+    display: none;
+  }
+  .topbar {
+    padding-inline: 16px;
+    gap: 8px;
+    height: 64px;
+  }
+}
+@media (max-width: 700px) {
+  .topbar {
+    height: 56px;
+    padding-inline: 12px;
+  }
+  .header-right {
+    gap: 6px;
+  }
+  #how {
+    font-size: 11px;
+    padding-inline: 4px;
+  }
+  #how span {
+    display: none;
+  }
+  main {
+    padding-top: 10px;
+  }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .topbar {
+    height: 42px;
+  }
+  main {
+    padding-top: 6px;
+  }
+}

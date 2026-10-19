@@ -339,15 +339,18 @@ export class Game {
     this.last = clock();
   }
   get limit() {
-    return (
-      Math.max(
-        30,
-        Math.round(
-          (this.initialTiles / 2) * Math.max(2.8, 4.5 - this.stage * 0.15) +
-            (this.mode === "layered" ? 12 : 6),
-        ),
-      ) * 1000
+    const base = Math.max(
+      30,
+      Math.round(
+        (this.initialTiles / 2) * Math.max(2.8, 4.5 - this.stage * 0.15) +
+          (this.mode === "layered" ? 12 : 6),
+      ),
     );
+    const factor =
+      this.timed && isDifficulty(this.mode)
+        ? { easy: 0.85, normal: 0.75, hard: 0.7 }[this.mode]
+        : 1;
+    return Math.max(factor < 1 ? 20 : 30, Math.round(base * factor)) * 1000;
   }
   get remaining() {
     return Math.max(0, this.limit - this.elapsed);

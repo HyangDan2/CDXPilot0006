@@ -56,3 +56,8 @@
 ## 2026-10-20 — English documentation
 - Translate README, the implementation plan, layered design and historical snapshot labels into English; identify the snapshot as a translation and retain its original in Git history.
 - Require English for all future repository documentation. Correct stale README references to two-dimensional-only play and the old landscape dimensions. Runtime UI and assets are unchanged.
+
+## 2026-10-20 — compact play area and uninterrupted popup music
+- Move the introduction into the header/start card to raise the game and companion without reducing effect/corridor/character padding.
+- Keep music playing through dialogs, including pause/results; resume from its saved position after mute/backgrounding instead of restarting the melody. Initial load stays silent.
+- Reduce Challenge budgets by 15%/25%/30% for Easy/Normal/Hard, rounded to seconds with a 20-second floor. Preserve assist penalties and all existing records.

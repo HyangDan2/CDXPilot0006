@@ -235,3 +235,30 @@ it("matches classic corridor legality for isolated floors, including holes and a
       }
   }
 });
+
+it("shortens Challenge budgets by difficulty while preserving relaxed budgets and penalties", () => {
+  for (const mode of ["easy", "normal", "hard"] as const)
+    for (const stage of [1, 5, 10]) {
+      const g = new Game(17, stage, true, () => 0, 4, 4, mode, true);
+      const base = Math.max(
+        30,
+        Math.round(
+          (g.initialTiles / 2) * Math.max(2.8, 4.5 - stage * 0.15) + 6,
+        ),
+      );
+      expect(g.limit).toBe(
+        Math.max(
+          20,
+          Math.round(base * { easy: 0.85, normal: 0.75, hard: 0.7 }[mode]),
+        ) * 1000,
+      );
+      g.timed = false;
+      expect(g.limit).toBe(base * 1000);
+      g.timed = true;
+      const before = g.remaining;
+      g.hint();
+      expect(g.remaining).toBe(Math.max(0, before - 8000));
+      g.shuffle();
+      expect(g.remaining).toBe(Math.max(0, before - 20000));
+    }
+});

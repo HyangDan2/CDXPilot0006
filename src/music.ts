@@ -7,13 +7,25 @@ export class Music {
   private buffer?: AudioBuffer;
   private analyser?: AnalyserNode;
 
+  private offset = 0;
+  private startedAt = 0;
+  private starts = 0;
+
+  private position() {
+    const elapsed =
+      this.source && this.context
+        ? this.context.currentTime - this.startedAt
+        : 0;
+    return this.buffer ? (this.offset + elapsed) % this.buffer.duration : 0;
+  }
+
   setPlaying(playing: boolean) {
     if (!playing) {
       if (this.source && this.context && this.gain) {
-        const now = this.context.currentTime;
-        this.gain.gain.cancelScheduledValues(now);
-        this.gain.gain.setTargetAtTime(0, now, 0.025);
-        this.source.stop(now + 0.15);
+        this.offset = this.position();
+        this.source.stop();
+        this.source.disconnect();
+        this.gain.disconnect();
         this.source = undefined;
       }
       return;
@@ -37,7 +49,9 @@ export class Music {
         source.disconnect();
         gain.disconnect();
       };
-      source.start();
+      this.startedAt = ctx.currentTime;
+      source.start(0, this.offset);
+      this.starts++;
       this.source = source;
       this.gain = gain;
     } catch {
@@ -50,6 +64,8 @@ export class Music {
     this.analyser?.getFloatTimeDomainData(samples);
     return {
       playing: !!this.source,
+      position: this.position(),
+      starts: this.starts,
       state: this.context?.state ?? "idle",
       rms: Math.sqrt(samples.reduce((n, x) => n + x * x, 0) / samples.length),
       duration: this.buffer?.duration ?? 0,

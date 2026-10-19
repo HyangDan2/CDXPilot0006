@@ -61,7 +61,7 @@ Browser cases cover all three difficulties at six viewports, all nine expression
 Hosted acceptance runs Easy relaxed, Normal challenge and Hard challenge at all six sizes, actual click/tap matching, nine-expression bounds and exact PNG checks. Preserve distinction between emulator and physical devices.
 
 ## BGM gate
-Browser audio tests must observe actual analyser RMS, not just a requested play flag: silent initial load, audible output after mouse/touch start, fade to silence on pause/mute/results, resume output and persisted mute after reload. Test unavailable AudioContext while matching. Run the same BGM tests against Pages with `BGM_URL=https://hyangdan2.github.io/CDXPilot0006/ npm run test:e2e -- --grep 'BGM audio'`. Test hooks remain limited to `?test=1`. Headless signal checks do not certify speaker quality or physical iOS autoplay behavior.
+Browser audio tests must observe actual analyser RMS, not just a requested play flag: silent initial load, audible output after mouse/touch start, continued output through pause/results dialogs, silence on mute/backgrounding, position-preserving resume output and persisted mute after reload. Test unavailable AudioContext while matching. Run the same BGM tests against Pages with `BGM_URL=https://hyangdan2.github.io/CDXPilot0006/ npm run test:e2e -- --grep 'BGM audio'`. Test hooks remain limited to `?test=1`. Headless signal checks do not certify speaker quality or physical iOS autoplay behavior.
 
 ## Branding gate
 `npm run branding:check` is included in verify: validate static sharing metadata, PNG dimensions, all ICO entries and icon assets. Run `node scripts/check-branding.mjs --hosted` after deployment to check public responses and exact PNG bytes. Visually inspect the generated share card and 32px favicon; do not infer visual quality from dimensions. Third-party social cache refresh is separate from HTTP/metadata validation.
@@ -73,3 +73,10 @@ At all six viewports, inspect Hard with character shown and hidden. Assert board
 
 ## Occupied-seam regression gate
 Reproduce a full 5×5 floor with equal symbols at (1,2)/(3,2), all other cells occupied: no match or score mutation is permitted. Repeat on all three floors; removing a whole row must open a valid corridor. Compare 6,000 candidate pairs across seeded hole layouts against the independent classic grid search. Browser tests use named blocked-seam fixtures with real mouse/touch input and also prove valid adjacent matching still works. Use PATH_QA_URL to repeat these browser tests against Pages. Fixtures are regression cases, not full completion evidence.
+
+## Compact header and continuous audio gate
+Verify all six viewports, header help access, board/effect bounds and character containment after removing the separate intro section. Inspect desktop, narrow mobile and landscape screenshots.
+
+BGM tests must prove nonzero audio and unchanged source-start count across settings/help/stage/difficulty/pause/result dialogs. The game clock must remain paused in interrupting dialogs. Verify saved playback position across mute and simulated visibility events, one restart per resumption, muted reload and unavailable audio. Visibility-event simulation is not physical browser background qualification. Run hosted audio tests with BGM_URL after deployment.
+
+Verify timed difficulty ratios (0.85/0.75/0.70), integer-second rounding, 20-second minimum and unchanged relaxed budgets/assist penalties. Preserve record migration tests. These current contracts supersede historical pause/results-silence and 30-second-floor acceptance entries.
