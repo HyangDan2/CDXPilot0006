@@ -61,3 +61,10 @@
 - Move the introduction into the header/start card to raise the game and companion without reducing effect/corridor/character padding.
 - Keep music playing through dialogs, including pause/results; resume from its saved position after mute/backgrounding instead of restarting the melody. Initial load stays silent.
 - Reduce Challenge budgets by 15%/25%/30% for Easy/Normal/Hard, rounded to seconds with a 20-second floor. Preserve assist penalties and all existing records.
+
+## 2026-10-20 — expanded puzzle edition
+- Double occupied tile counts, keep layer supports and holes, and pan the board while retaining 44px minimum tile faces and fixed controls.
+- Add six families × six shape/color variants, distribute symbols across families and preserve repeated pairs on compact boards.
+- Prefer distant pair placement; score early/mid/late checkpoints across two legal-order policies when selecting seeded boards.
+- Limit Challenge automatic recovery to one use costing 15 seconds/150 points. Further deadlocks require remaining manual shuffle or end the run.
+- Preserve old records/settings in v4; separate expanded progression and scores. Keep character/effect/corridor padding, popup BGM and shortened Challenge-time multipliers.

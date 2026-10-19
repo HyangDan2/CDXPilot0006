@@ -110,6 +110,7 @@ export function random(seed: number) {
 export function arrange(
   source: Board,
   seed: number,
+  preferDistance = false,
 ): { board: Board; witness: Pair[] } {
   const rng = random(seed),
     temp = { ...source, cells: source.cells.map((v) => (v ? 1 : 0)) },
@@ -127,10 +128,21 @@ export function arrange(
   while (types.length) {
     const ps = points(temp);
     let pair: Pair | null = null;
-    for (let tries = 0; tries < 48 && !pair; tries++) {
+    for (
+      let tries = 0;
+      tries < 48 && (!pair || (preferDistance && tries < 24));
+      tries++
+    ) {
       const a = ps[Math.floor(rng() * ps.length)],
         b = ps[Math.floor(rng() * ps.length)];
-      if (path(temp, a, b)) pair = [a, b];
+      if (
+        (!pair ||
+          Math.abs(a.x - b.x) + Math.abs(a.y - b.y) >
+            Math.abs(pair[0].x - pair[1].x) +
+              Math.abs(pair[0].y - pair[1].y)) &&
+        path(temp, a, b)
+      )
+        pair = [a, b];
     }
     pair ??= move(temp);
     if (!pair) throw new Error("No geometric pairing");
@@ -301,6 +313,8 @@ export const challengeRules = {
   hintPenalty: 8000,
   shufflePenalty: 12000,
   recoveryScore: 150,
+  recoveries: 1,
+  recoveryPenalty: 15000,
 };
 export type Status = "playing" | "paused" | "won" | "lost";
 export class Game {
@@ -313,6 +327,7 @@ export class Game {
   shuffles = 0;
   hintCount = 0;
   recoveries = 0;
+  blockedOut = false;
   initialTiles: number;
   elapsed = 0;
   last: number;
@@ -327,9 +342,17 @@ export class Game {
     rows = 6,
     public mode: BoardMode = "classic",
     irregular = false,
+    public expanded = false,
   ) {
     const generated = isDifficulty(mode)
-      ? generatePyramid(cols, rows, seed, stage, mode, timed)
+      ? (expanded ? generateExpanded : generatePyramid)(
+          cols,
+          rows,
+          seed,
+          stage,
+          mode,
+          timed,
+        )
       : irregular || mode === "layered" || timed
         ? generatePuzzle(cols, rows, seed, stage, mode, timed)
         : generate(cols, rows, seed, Math.min(6 + stage, 12));
@@ -402,7 +425,18 @@ export class Game {
     )
       return false;
     if (automatic) {
+      if (
+        this.expanded &&
+        this.timed &&
+        this.recoveries >= challengeRules.recoveries
+      )
+        return false;
       this.recoveries++;
+      if (this.expanded && this.timed) {
+        this.elapsed += challengeRules.recoveryPenalty;
+        this.tick();
+        if (this.status !== "playing") return false;
+      }
       if (this.timed)
         this.score = Math.max(0, this.score - challengeRules.recoveryScore);
     } else {
@@ -417,6 +451,7 @@ export class Game {
       ? rearrangePyramid(
           this.board,
           this.seed + (this.shuffles + this.recoveries) * 7919,
+          this.expanded,
         )
       : this.board.stacks
         ? rearrangeLayers(
@@ -468,8 +503,16 @@ export class Game {
     let reshuffled = false;
     if (!this.board.cells.some(Boolean)) this.status = "won";
     else if (!move(this.board)) {
-      this.shuffle(true);
-      reshuffled = true;
+      reshuffled = this.shuffle(true);
+      if (
+        !reshuffled &&
+        this.expanded &&
+        this.timed &&
+        this.shuffles >= challengeRules.shuffles
+      ) {
+        this.blockedOut = true;
+        this.status = "lost";
+      }
     }
     return { kind: "match", route, reshuffled };
   }
@@ -540,6 +583,7 @@ function spatialPath(b: Board, a: Point, end: Point): Point[] | null {
 export function rearrangePyramid(
   source: Board,
   seed: number,
+  preferDistance = false,
 ): { board: Board; witness: Pair[] } {
   const tiles = source.tiles!.map((t) => ({ ...t })),
     witness: Pair[] = [];
@@ -550,7 +594,11 @@ export function rearrangePyramid(
     const cells = Array(cols * rows).fill(0) as number[];
     for (const t of tiles.filter((t) => t.z === z))
       cells[(t.y - z / 2) * cols + t.x - z / 2] = t.value;
-    const next = arrange({ cols, rows, cells }, seed + z * 1009);
+    const next = arrange(
+      { cols, rows, cells },
+      seed + z * 1009,
+      preferDistance,
+    );
     for (const t of tiles.filter((t) => t.z === z))
       t.value = next.board.cells[(t.y - z / 2) * cols + t.x - z / 2];
     witness.push(
@@ -640,6 +688,106 @@ export function generatePyramid(
   for (let i = 1; i < (timed ? 4 : 1); i++) {
     const candidate = rearrangePyramid(source, seed + i * 104729),
       next = arrangementDifficulty(candidate.board);
+    if (next < cost) {
+      best = candidate;
+      cost = next;
+    }
+  }
+  return best;
+}
+
+// Score early/mid/late positions on both the guaranteed and alternate legal order.
+export function progressionCost(board: Board, witness: Pair[]): number {
+  let cost = 0;
+  for (const reverse of [false, true]) {
+    const b: Board = {
+      ...board,
+      tiles: board.tiles!.map((t) => ({ ...t })),
+      cells: [...board.cells],
+    };
+    const pending = [...witness];
+    for (let step = 0; step < witness.length; step++) {
+      if (
+        [
+          0,
+          Math.floor(witness.length * 0.25),
+          Math.floor(witness.length * 0.5),
+          Math.floor(witness.length * 0.75),
+        ].includes(step)
+      ) {
+        const ps = points(b);
+        let tested = 0;
+        for (let i = 0; i < ps.length; i++)
+          for (let j = i + 1; j < ps.length; j++) {
+            if (
+              value(b, ps[i]) !== value(b, ps[j]) ||
+              (ps[i].z ?? 0) !== (ps[j].z ?? 0)
+            )
+              continue;
+            if (++tested > 160) break;
+            const route = path(b, ps[i], ps[j]);
+            if (route) {
+              const distance =
+                Math.abs(ps[i].x - ps[j].x) + Math.abs(ps[i].y - ps[j].y);
+              const straight =
+                route.every((p) => p.x === ps[i].x) ||
+                route.every((p) => p.y === ps[i].y);
+              cost += 1 + (distance === 1 ? 12 : 0) + (straight ? 3 : 0);
+            }
+          }
+      }
+      const indices = pending.map((_, i) => i);
+      if (reverse) indices.reverse();
+      const index = indices.find((i) => path(b, ...pending[i]));
+      if (index === undefined) {
+        cost += 10000;
+        break;
+      }
+      pending.splice(index, 1)[0].forEach((p) => popTile(b, p));
+    }
+  }
+  return cost;
+}
+
+export function generateExpanded(
+  cols: number,
+  rows: number,
+  seed: number,
+  stage: number,
+  mode: Difficulty,
+  timed: boolean,
+) {
+  const original = generatePyramid(cols, rows, seed, stage, mode, false).board;
+  // Two supported footprints, with a full-cell gap; pair assignment spans both.
+  const tiles = [0, rows + 1].flatMap((offset) =>
+    original.tiles!.map((t) => ({ ...t, y: t.y + offset })),
+  );
+  const target = { easy: [12, 16], normal: [20, 28], hard: [30, 36] }[mode];
+  const kinds = Math.min(
+    target[1],
+    target[0] + Math.floor((stage - 1) / 2) * 2,
+    Math.max(6, tiles.length / 2 - 4),
+  );
+  let offset = 0;
+  for (let z = 0; z < difficulty[mode].layers; z++) {
+    const floor = tiles.filter((t) => t.z === z);
+    floor.forEach((t, i) => {
+      const kind = (offset + Math.floor(i / 2)) % kinds;
+      t.value = 1 + (kind % 6) * 6 + Math.floor(kind / 6);
+    });
+    offset += floor.length / 2;
+  }
+  const source: Board = {
+    cols,
+    rows: rows * 2 + 1,
+    tiles,
+    cells: tiles.map((t) => t.value),
+  };
+  let best = rearrangePyramid(source, seed, true);
+  let cost = progressionCost(best.board, best.witness);
+  for (let i = 1; i < (timed ? 4 : 3); i++) {
+    const candidate = rearrangePyramid(source, seed + i * 104729, true);
+    const next = progressionCost(candidate.board, candidate.witness);
     if (next < cost) {
       best = candidate;
       cost = next;

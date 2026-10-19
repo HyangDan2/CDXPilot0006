@@ -146,7 +146,7 @@ it("version 2 records remain intact and separate from new difficulty records", (
     },
   };
   const p = read({ getItem: () => JSON.stringify(old) }).data;
-  expect(p.version).toBe(3);
+  expect(p.version).toBe(4);
   expect(p.boardMode).toBe("normal");
   expect(p.muted).toBe(true);
   expect(p.records).toEqual(old.records);

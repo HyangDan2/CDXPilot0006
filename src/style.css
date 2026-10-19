@@ -1572,3 +1572,34 @@ main {
     padding-top: 6px;
   }
 }
+
+/* Expanded boards pan inside a fixed play viewport; controls never scroll away. */
+.board-area {
+  display: block;
+  min-height: 0;
+}
+.board-viewport {
+  overflow: auto;
+  max-width: 100%;
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y;
+  scrollbar-width: thin;
+  border-radius: 14px;
+}
+.board-viewport #board {
+  width: max-content;
+  margin-inline: auto;
+}
+.board-viewport .tile {
+  touch-action: pan-x pan-y;
+}
+.board-cover {
+  inset: 0;
+}
+.board-viewport {
+  user-select: none;
+  cursor: grab;
+}
+.board-viewport:active {
+  cursor: grabbing;
+}

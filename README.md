@@ -28,11 +28,12 @@ npm run dev
 - Matching tiles, at most two bends, exterior routes, combos and scoring
 - Hints (H), shuffle (S), pause (P), restart and stage selection
 - Touch, mouse and Tab/Enter controls; locally saved settings, progress and best scores
-- Seeded generation with complete solution witnesses and automatic deadlock recovery
+- Exactly twice the former tile count, 36 family/variant symbols and seeded generation with complete solution witnesses
+- Early/mid/late difficulty scoring; Challenge automatic recovery limited to one use (-15s, -150 points)
 - Nine Momo expressions, image-load fallback, reduced motion, character visibility and music/sound settings
-- Responsive boards: 6×6 desktop, 4×6 tall mobile, 4×4 short mobile and 6×4 short landscape
+- Responsive starting footprints (6×6 desktop, 4×6 tall mobile, 4×4 short mobile, 6×4 short landscape) are doubled vertically; drag/scroll inside the board to reach every tile
 
-New games choose board dimensions for the current viewport. Extreme aspect-ratio changes during play preserve the existing arrangement and can shrink tile targets. Starting a new game selects dimensions for the new viewport.
+New games choose board dimensions for the current viewport. Viewport changes preserve the existing arrangement and at least 44px tile faces; pan the board when it exceeds the available area. Starting a new game selects dimensions for the new viewport.
 
 ## Verification
 

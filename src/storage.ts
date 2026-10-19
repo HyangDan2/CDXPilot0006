@@ -1,7 +1,7 @@
 import type { BoardMode } from "./model";
 export type RecordEntry = { stage: number; best: number };
 export type Preferences = {
-  version: 3;
+  version: 4;
   stage: number;
   best: number;
   timed: boolean;
@@ -12,7 +12,7 @@ export type Preferences = {
   records: Record<string, RecordEntry>;
 };
 export const defaults: Preferences = {
-  version: 3,
+  version: 4,
   stage: 1,
   best: 0,
   timed: false,
@@ -24,7 +24,7 @@ export const defaults: Preferences = {
 };
 export const key = "chibilink.v1";
 export const recordKey = (mode: BoardMode, timed: boolean) =>
-  `${mode}-${timed ? "challenge" : "relaxed"}`;
+  `${["easy", "normal", "hard"].includes(mode) ? "expanded-" : ""}${mode}-${timed ? "challenge" : "relaxed"}`;
 export const stageLimit = (mode: BoardMode) => (mode === "layered" ? 5 : 10);
 export function profile(
   p: Preferences,
@@ -62,7 +62,7 @@ export function read(store: Pick<Storage, "getItem">): {
     const data = { ...defaults, records: {} } as Preferences;
     if (!raw) return { data, error: false };
     const x = JSON.parse(raw);
-    if (!x || ![1, 2, 3].includes(x.version)) throw Error("version");
+    if (!x || ![1, 2, 3, 4].includes(x.version)) throw Error("version");
     for (const k of ["timed", "muted", "character", "motion"] as const)
       if (typeof x[k] === "boolean") data[k] = x[k];
     if (Number.isInteger(x.stage))
@@ -83,11 +83,22 @@ export function read(store: Pick<Storage, "getItem">): {
         "hard",
       ] as const)
         for (const timed of [false, true]) {
-          const id = recordKey(mode, timed),
+          const id = `${mode}-${timed ? "challenge" : "relaxed"}`,
             r = x.records?.[id];
           if (r && Number.isInteger(r.stage) && Number.isFinite(r.best))
             data.records[id] = {
               stage: Math.max(1, Math.min(stageLimit(mode), r.stage)),
+              best: Math.max(0, Math.floor(r.best)),
+            };
+        }
+    if (x.version === 4)
+      for (const mode of ["easy", "normal", "hard"] as const)
+        for (const timed of [false, true]) {
+          const id = recordKey(mode, timed),
+            r = x.records?.[id];
+          if (r && Number.isInteger(r.stage) && Number.isFinite(r.best))
+            data.records[id] = {
+              stage: Math.max(1, Math.min(10, r.stage)),
               best: Math.max(0, Math.floor(r.best)),
             };
         }

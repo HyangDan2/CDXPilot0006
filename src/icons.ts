@@ -18,28 +18,40 @@ const shapes = [
   '<path d="M11 23 20 10h21v25l-10 9H11Z" fill="#d3a576"/><path d="M11 23h20v21H11Z" fill="#fff0d5"/><path d="M24 27c-13-4-12 15-2 11 7-3 1-9-3-6" fill="none" stroke="#c38e9b" stroke-width="3"/>',
   '<path d="m10 29 4 12h26l3-12" fill="#caa56b"/><ellipse cx="26" cy="29" rx="17" ry="8" fill="#fff1d7"/><g fill="#8d8ab2"><circle cx="18" cy="25" r="6"/><circle cx="29" cy="20" r="6"/><circle cx="35" cy="28" r="6"/><circle cx="24" cy="30" r="6"/></g><path d="M26 15q1-8 9-7-1 7-9 7" fill="#8ba681"/>',
 ];
-export const names = [
-  "딸기",
-  "푸딩",
-  "차",
-  "마카롱",
-  "케이크",
-  "컵케이크",
-  "도넛",
-  "아이스크림",
-  "체리",
-  "말차",
-  "크루아상",
-  "초콜릿",
-  "와플",
-  "아이스바",
-  "프레첼",
-  "딸기잼",
-  "롤케이크",
-  "블루베리 타르트",
+const families = [
+  { name: "과일", base: 0 },
+  { name: "음료", base: 2 },
+  { name: "케이크", base: 4 },
+  { name: "빵", base: 10 },
+  { name: "과자", base: 12 },
+  { name: "아이스크림", base: 13 },
 ];
+const variants = ["베리", "레몬", "말차", "초콜릿", "블루베리", "바닐라"];
+const colors = [
+  "#cb586d",
+  "#c78d19",
+  "#4f855e",
+  "#80513e",
+  "#7560a9",
+  "#ac7962",
+];
+// Different topping silhouettes and counts supplement color for small screens.
+const toppings = [
+  '<circle cx="21" cy="24" r="4"/><circle cx="30" cy="29" r="4"/>',
+  '<path d="m25 19 7 7-7 7-7-7Z"/>',
+  '<path d="M18 32q0-15 15-13 0 13-15 13Z"/><path d="m18 32 13-11" stroke="white"/>',
+  '<path d="M18 20h6v6h-6zm10 0h6v6h-6zm-10 10h6v6h-6zm10 0h6v6h-6Z"/>',
+  '<path d="m26 17 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z"/>',
+  '<path d="M17 22h18v4H17zm0 9h18v4H17Z"/>',
+];
+export const names = families.flatMap((f) =>
+  variants.map((v) => `${v} ${f.name}`),
+);
 export function icon(n: number) {
-  return `<svg viewBox="0 0 52 52" aria-hidden="true">${shapes[(n - 1) % shapes.length]}</svg>`;
+  const index = (n - 1) % 36,
+    family = families[Math.floor(index / 6)],
+    variant = index % 6;
+  return `<svg viewBox="0 0 52 52" aria-hidden="true">${shapes[family.base]}<g fill="${colors[variant]}" stroke="#fff8eb" stroke-width="1.3">${toppings[variant]}</g></svg>`;
 }
 export const flower =
   '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 13C2-1-3 20 12 18 2 32 26 35 20 20 36 28 37 5 20 12 26-5 7-3 16 13" fill="currentColor"/><circle cx="16" cy="16" r="3" fill="#faf6f1"/></svg>';

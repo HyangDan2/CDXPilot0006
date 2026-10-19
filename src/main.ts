@@ -56,7 +56,7 @@ $("#app").innerHTML = `
 <main>
 <div class="game-layout"><section class="game-panel" aria-label="사천성 게임"><div class="game-top"><button id="stage-picker" class="stage-button"><span class="stage-number">01</span><span><small>오늘의 디저트</small><strong id="stage-title">첫 번째 티타임</strong></span><span class="chevron">⌄</span></button><button class="mode-pill" id="mode-label" aria-label="게임 모드 선택">클래식 · 편안함 ⌄</button></div>
 <div class="stats"><div><span>남은 패</span><strong id="remaining">36<small> / 36</small></strong></div><div><span id="time-label">플레이 시간</span><strong id="time">00:00</strong></div><div><span>스코어</span><strong id="score">0</strong></div><div class="combo-stat"><span>연속 연결</span><strong id="combo">0 <small>COMBO</small></strong></div></div>
-<div class="board-area"><div id="board" role="group" aria-label="디저트 패"><svg id="route" aria-hidden="true"></svg></div><div id="cover" class="board-cover"><div class="cover-card"><span class="cover-flower">${flower}</span><p class="eyebrow">A LITTLE BREAK, A SWEET MATCH</p><h2>잠깐 쉬어갈까요?</h2><p>같은 디저트를 이어보세요.<br>모모가 곁에서 응원할게요.</p><button class="primary" id="start">티타임 시작하기 <span>→</span></button><span class="cover-foot">시간에 쫓기지 않는 편안한 모드</span></div></div></div>
+<div class="board-area"><div class="board-viewport" tabindex="0" aria-label="퍼즐 보드: 드래그 또는 스크롤로 이동"><div id="board" role="group" aria-label="디저트 패"><svg id="route" aria-hidden="true"></svg></div></div><div id="cover" class="board-cover"><div class="cover-card"><span class="cover-flower">${flower}</span><p class="eyebrow">A LITTLE BREAK, A SWEET MATCH</p><h2>잠깐 쉬어갈까요?</h2><p>같은 디저트를 이어보세요.<br>모모가 곁에서 응원할게요.</p><button class="primary" id="start">티타임 시작하기 <span>→</span></button><span class="cover-foot">시간에 쫓기지 않는 편안한 모드</span></div></div></div>
 <div class="board-bottom"><span class="status-dot"></span><span id="notice" role="status">최대 두 번 꺾어서, 같은 디저트를 연결해요.</span></div>
 <div class="controls"><button id="hint"><span>☀</span> 힌트 <kbd>H</kbd></button><button id="shuffle"><span>⤨</span> 섞기 <kbd>S</kbd></button><button id="pause"><span>Ⅱ</span> 일시정지 <kbd>P</kbd></button></div></section>
 <aside class="companion"><div class="companion-top"><span class="eyebrow">YOUR LITTLE COMPANION</span><span class="sparkle">✧</span></div><div class="speech" aria-live="polite"><strong id="speech-title">어서 와요!</strong><p id="speech-text">따뜻한 차 한 잔처럼,<br>오늘도 편안하게 즐겨요.</p></div><div class="mascot-frame" id="mascot-frame"><img class="mascot-sprite" id="mascot" src="${import.meta.env.BASE_URL}assets/momo-idle.png" alt="미소 짓는 치비 캐릭터 모모"><span id="mascot-fallback" hidden>모모 ♡</span><span class="mascot-ground"></span></div><div class="companion-name"><span>모모</span><small>당신의 티타임 메이트</small></div><div class="little-tip"><span>✦ MOMO'S TIP</span><p>패 바깥쪽에도 길이 있어요.<br>조금 돌아가도 괜찮아요.</p><div class="tip-path">□ <i>└─────┘</i> □</div></div><div class="best-record"><span>나의 최고 점수</span><strong id="best">0 <small>pts</small></strong></div></aside></div>
@@ -174,8 +174,10 @@ function newGame(begin = false) {
     innerHeight < 660 ? 4 : 6,
     prefs.boardMode,
     true,
+    true,
   );
   started = begin;
+  $(".board-viewport").scrollTo(0, 0);
   $("#cover").hidden = begin;
   $("#board").classList.toggle("preview", !begin);
   $("#stage-title").textContent = currentNames()[stage - 1];
@@ -199,8 +201,8 @@ function newGame(begin = false) {
   );
   notice(
     game.mode === "easy"
-      ? "같은 그림을 두 번까지 꺾어 연결해요."
-      : "밝게 드러난 같은 층의 패끼리 연결해요. 위 패부터 지워보세요.",
+      ? "같은 그림을 두 번까지 꺾어 연결해요. 보드를 드래그해서 이동하세요."
+      : "같은 층의 밝은 패끼리 연결해요. 보드를 드래그해서 이동하세요.",
   );
 }
 function fitBoard() {
@@ -223,13 +225,15 @@ function fitBoard() {
     $(".controls").getBoundingClientRect().height -
     2;
   const cell = Math.max(
-    1,
+    44,
     Math.min(
       innerWidth <= 700 ? 58 : 52,
       (width - 2 * safe) / (game.board.cols + 1) - gap,
       (height - 2 * safe) / (game.board.rows + 1) - gap,
     ),
   );
+  const viewport = $(".board-viewport");
+  viewport.style.height = `${Math.max(100, height)}px`;
   const size = `${Math.floor(cell * 100) / 100}px`;
   if (board.style.getPropertyValue("--cell") !== size)
     $("#route").innerHTML = "";
@@ -353,6 +357,7 @@ function select(p: Point) {
   updateStats();
   if (result.kind === "match") {
     if (result.route) drawRoute(result.route);
+
     sound();
     react(
       game.combo > 1 ? "excited" : "pleased",
@@ -362,7 +367,9 @@ function select(p: Point) {
     notice(
       result.reshuffled
         ? "남은 길이 없어 패를 자동으로 섞었어요. 다시 이어볼까요?"
-        : "좋아요! 다음 한 쌍을 찾아보세요.",
+        : !move(game.board) && game.status === "playing"
+          ? "자동 복구를 사용했어요. 남은 섞기 버튼을 눌러주세요."
+          : "좋아요! 다음 한 쌍을 찾아보세요.",
     );
   } else if (result.kind === "invalid") {
     react(
@@ -394,7 +401,7 @@ function finish() {
     react("clear", "오늘도 잘했어요!", "당신 덕분에 달콤한 티타임이 됐어요.");
   } else react("sad", "잠깐 쉬어가도 괜찮아요.", "우리 다시 한번 해볼까요?");
   showDialog(
-    `<p class="eyebrow">${game.status === "won" ? "SWEET LITTLE VICTORY" : "ANOTHER CUP?"}</p><h2>${game.status === "won" ? "티타임 완성!" : "시간이 다 되었어요"}</h2><p>${currentNames()[stage - 1]} · ${game.pairs}쌍 연결</p><div class="result-score">${game.score.toLocaleString()}<small>POINTS</small></div><p>힌트 ${game.hintCount}회 · 섞기 ${game.shuffles}회 · 자동 복구 ${game.recoveries}회</p><button class="primary" id="next">${game.status === "won" && stage < stageLimit(game.mode) ? "다음 티타임 →" : "다시 즐기기 →"}</button><button class="text-button" id="result-menu">처음으로</button>`,
+    `<p class="eyebrow">${game.status === "won" ? "SWEET LITTLE VICTORY" : "ANOTHER CUP?"}</p><h2>${game.status === "won" ? "티타임 완성!" : game.blockedOut ? "연결할 길이 없어요" : "시간이 다 되었어요"}</h2><p>${currentNames()[stage - 1]} · ${game.pairs}쌍 연결</p><div class="result-score">${game.score.toLocaleString()}<small>POINTS</small></div><p>힌트 ${game.hintCount}회 · 섞기 ${game.shuffles}회 · 자동 복구 ${game.recoveries}회</p><button class="primary" id="next">${game.status === "won" && stage < stageLimit(game.mode) ? "다음 티타임 →" : "다시 즐기기 →"}</button><button class="text-button" id="result-menu">처음으로</button>`,
   );
   $("#next").onclick = () => {
     if (game.mode !== prefs.boardMode || game.timed !== prefs.timed) stage = 1;
@@ -485,18 +492,12 @@ function interruptForDialog() {
 $("#settings").onclick = () => {
   interruptForDialog();
   showDialog(
-    `<p class="eyebrow">MAKE YOURSELF AT HOME</p><h2>나의 티타임 설정</h2><label class="setting">난이도 <select id="board-mode">${(["easy", "normal", "hard"] as const).map((m) => `<option value="${m}" ${prefs.boardMode === m ? "selected" : ""}>${difficulty[m].name} · ${difficulty[m].layers}층</option>`).join("")}</select></label><p class="fine-print">Easy 6~8종 · Normal 10~12종 · Hard 14~18종<br>작은 보드에서는 패 수에 맞춰 종류가 조절돼요.</p><label class="setting">도전 모드 <input type="checkbox" id="timed-setting" ${prefs.timed ? "checked" : ""}></label><p class="fine-print">모드는 다음 게임부터 적용돼요. 도전: 힌트 2회(-8초), 섞기 1회(-12초), 자동 복구 -150점.</p><label class="setting">모모 표시 <input type="checkbox" id="character-setting" ${prefs.character ? "checked" : ""}></label><label class="setting">캐릭터 움직임 <input type="checkbox" id="motion-setting" ${prefs.motion ? "checked" : ""}></label><label class="setting">BGM · 효과음 <input type="checkbox" id="audio-setting" ${!prefs.muted ? "checked" : ""}></label><details class="legacy-records"><summary>이전 규칙 기록 (보존됨)</summary>${
-      [
-        "classic-relaxed",
-        "classic-challenge",
-        "layered-relaxed",
-        "layered-challenge",
-      ]
-        .map((id, i) => {
+    `<p class="eyebrow">MAKE YOURSELF AT HOME</p><h2>나의 티타임 설정</h2><label class="setting">난이도 <select id="board-mode">${(["easy", "normal", "hard"] as const).map((m) => `<option value="${m}" ${prefs.boardMode === m ? "selected" : ""}>${difficulty[m].name} · ${difficulty[m].layers}층</option>`).join("")}</select></label><p class="fine-print">Easy 12~16종 · Normal 20~28종 · Hard 30~36종<br>작은 보드에서는 패 수에 맞춰 종류가 조절돼요.</p><label class="setting">도전 모드 <input type="checkbox" id="timed-setting" ${prefs.timed ? "checked" : ""}></label><p class="fine-print">모드는 다음 게임부터 적용돼요. 도전: 힌트 2회(-8초), 섞기 1회(-12초), 자동 복구 1회(-15초·150점). 이후 막히면 남은 섞기를 사용하세요.</p><label class="setting">모모 표시 <input type="checkbox" id="character-setting" ${prefs.character ? "checked" : ""}></label><label class="setting">캐릭터 움직임 <input type="checkbox" id="motion-setting" ${prefs.motion ? "checked" : ""}></label><label class="setting">BGM · 효과음 <input type="checkbox" id="audio-setting" ${!prefs.muted ? "checked" : ""}></label><details class="legacy-records"><summary>이전 규칙 기록 (보존됨)</summary>${
+      Object.keys(prefs.records)
+        .filter((id) => !id.startsWith("expanded-"))
+        .map((id) => {
           const r = prefs.records[id];
-          return r
-            ? `<p>${["클래식 · 편안함", "클래식 · 도전", "2층 · 편안함", "2층 · 도전"][i]}: ${r.stage}단계 / ${r.best.toLocaleString()}점</p>`
-            : "";
+          return `<p>${id}: ${r.stage}단계 / ${r.best.toLocaleString()}점</p>`;
         })
         .join("") || "<p>이전 기록이 없어요.</p>"
     }</details><button class="primary" id="settings-done">저장하고 돌아가기</button>`,
@@ -591,6 +592,57 @@ setInterval(() => {
   updateStats();
   if (game.status === "lost" || game.status === "won") finish();
 }, 100);
+
+const boardViewport = $(".board-viewport");
+let drag: {
+  id: number;
+  x: number;
+  y: number;
+  left: number;
+  top: number;
+  moved: boolean;
+} | null = null;
+let suppressClickUntil = 0;
+boardViewport.addEventListener("pointerdown", (e: PointerEvent) => {
+  if (e.button !== 0) return;
+  suppressClickUntil = 0;
+  drag = {
+    id: e.pointerId,
+    x: e.clientX,
+    y: e.clientY,
+    left: boardViewport.scrollLeft,
+    top: boardViewport.scrollTop,
+    moved: false,
+  };
+});
+boardViewport.addEventListener("pointermove", (e: PointerEvent) => {
+  if (!drag || drag.id !== e.pointerId) return;
+  if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 8) drag.moved = true;
+  if (drag.moved) {
+    suppressClickUntil = performance.now() + 500;
+    if (e.pointerType === "mouse") {
+      boardViewport.setPointerCapture(e.pointerId);
+      boardViewport.scrollLeft = drag.left - (e.clientX - drag.x);
+      boardViewport.scrollTop = drag.top - (e.clientY - drag.y);
+      e.preventDefault();
+    }
+  }
+});
+for (const event of ["pointerup", "pointercancel", "lostpointercapture"])
+  boardViewport.addEventListener(event, () => {
+    drag = null;
+  });
+boardViewport.addEventListener(
+  "click",
+  (e) => {
+    if (performance.now() < suppressClickUntil) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  },
+  true,
+);
+
 applyPrefs();
 newGame();
 if (storageError)

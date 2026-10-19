@@ -70,7 +70,12 @@ test("real input playthrough, pause, hints, shuffle, result and persistence", as
   ).toBe(frozen);
   await page.locator("#resume").click();
   await page.keyboard.press("s");
-  for (let i = 0; i < 18; i++) {
+  const maxPairs = await page.evaluate(
+    () =>
+      window.__CHIBILINK__.snapshot().board.tiles.filter((t) => t.value)
+        .length / 2,
+  );
+  for (let i = 0; i < maxPairs; i++) {
     if (
       (await page.evaluate(() => window.__CHIBILINK__.snapshot().status)) ===
       "won"
@@ -92,7 +97,7 @@ test("real input playthrough, pause, hints, shuffle, result and persistence", as
     await page.evaluate(
       () =>
         JSON.parse(localStorage.getItem("chibilink.v1")!).records[
-          "easy-relaxed"
+          "expanded-easy-relaxed"
         ].stage,
     ),
   ).toBe(2);
@@ -350,7 +355,12 @@ for (const mode of ["normal", "hard"] as const)
           await page.locator("#shuffle")[mobile ? "tap" : "click"]();
           await expect(page.locator("#shuffle")).toBeDisabled();
         }
-        for (let i = 0; i < 60; i++) {
+        const maxPairs = await page.evaluate(
+          () =>
+            window.__CHIBILINK__.snapshot().board.tiles.filter((t) => t.value)
+              .length / 2,
+        );
+        for (let i = 0; i < maxPairs; i++) {
           if (
             (await page.evaluate(
               () => window.__CHIBILINK__.snapshot().status,
@@ -708,3 +718,70 @@ for (const mobile of [false, true]) {
     await context.close();
   });
 }
+
+for (const mobile of [false, true])
+  test(`expanded board drag preserves selection and controls mobile=${mobile}`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      viewport: mobile
+        ? { width: 390, height: 844 }
+        : { width: 1440, height: 900 },
+      isMobile: mobile,
+      hasTouch: mobile,
+    });
+    const page = await context.newPage();
+    await page.goto(
+      (process.env.EXPANDED_QA_URL ?? "http://127.0.0.1:4173/CDXPilot0006/") +
+        "?test=1",
+    );
+    await page.locator("#start").click();
+    const viewport = page.locator(".board-viewport");
+    const rect = (await viewport.boundingBox())!;
+    const before = await page.evaluate(() => window.__CHIBILINK__.snapshot());
+    const x = rect.x + rect.width / 2,
+      y = rect.y + Math.min(rect.height - 20, 200);
+    if (mobile) {
+      const cdp = await context.newCDPSession(page);
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [{ x, y }],
+      });
+      for (let i = 1; i <= 10; i++) {
+        await cdp.send("Input.dispatchTouchEvent", {
+          type: "touchMove",
+          touchPoints: [{ x, y: y - i * 12 }],
+        });
+        await page.waitForTimeout(20);
+      }
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchEnd",
+        touchPoints: [],
+      });
+    } else {
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x, y - 120, { steps: 12 });
+      await page.mouse.up();
+    }
+    await expect
+      .poll(() => viewport.evaluate((el) => el.scrollTop))
+      .toBeGreaterThan(40);
+    const after = await page.evaluate(() => window.__CHIBILINK__.snapshot());
+    expect(after.score).toBe(before.score);
+    expect(after.selected).toBeNull();
+    expect(after.board.tiles).toEqual(before.board.tiles);
+    await viewport.evaluate((el) => el.scrollTo(0, el.scrollHeight));
+    const controls = await page.locator(".controls").boundingBox();
+    expect(controls!.y + controls!.height).toBeLessThanOrEqual(
+      mobile ? 844 : 900,
+    );
+    expect(
+      await page
+        .locator(".tile")
+        .first()
+        .evaluate((el) => el.getBoundingClientRect().width),
+    ).toBeGreaterThanOrEqual(44);
+    await page.screenshot({ path: `test-results/expanded-drag-${mobile}.png` });
+    await context.close();
+  });
