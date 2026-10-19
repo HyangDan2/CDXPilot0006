@@ -36,3 +36,10 @@
 - Added a Momo/dessert 1200×630 share card with static Open Graph and Twitter metadata, following CDXPilot0004.
 - Added flower-logo SVG/ICO/32px PNG favicon and 180px Apple touch icon.
 - Added reproducible branding build and local/hosted acceptance scripts.
+
+## Staggered 3D difficulty update — 2026-10-19
+- Replaced numeric layer badges with half-cell upper tiles centered over four supports, shaded covered tiles and 2.5D faces/sides/shadows.
+- Added Easy/Normal/Hard with one/two/three floors, ten stages each and up to 18 distinct dessert symbols.
+- Same-floor exposed matches use half-cell paths; lower floors do not obstruct upper routes. Preserved complete generation/shuffle solutions.
+- Archived old records visibly in settings; v3 difficulty records remain separate. BGM, padding, sound and character preferences retained.
+- Updated static share description/card to reflect Hard three-floor play.

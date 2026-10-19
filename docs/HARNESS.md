@@ -53,10 +53,12 @@ Pages deployment is authorized. Repeat viewport/mascot containment and actual-in
 
 Run `node scripts/verify-hosted.mjs` to repeat hosted acceptance. Optional HOSTED_URL overrides the URL. The script writes screenshots and a JSON report in docs/hosted-evidence, checks exact deployed PNG digests/alpha margins, and uses normal URL controls for actual matching before test-only expression bounds checks.
 
-## Layered and challenge regression gate
-Replay complete removal witnesses for both modes, both difficulties, every stage, four responsive board sizes and five seeds (600 combinations), in addition to the legacy 300 boards. Verify top-only removal/reveal, depth <=2, permanent masks, partial-board shuffle preserving all remaining symbols, challenge quotas/penalties/expiry and version-1 storage migration with isolated mode records.
+## Staggered pyramid and difficulty gate
+Keep legacy model tests for the old rules. New generation tests replay all three difficulties × four responsive footprints × ten stages × three seeds (360 boards). Assert four supports for every upper tile, exact half-cell offsets, correct floor count, covered input rejection, cross-floor rejection, same/higher obstacle semantics, per-floor shuffle conservation and full command completion. Verify symbol targets and version-2 migration separately from old regression cases.
 
-Run both board modes through all six viewport/expression/corridor cases. Complete layered relaxed and challenge games using real mobile-emulated taps, including assist quota exhaustion in challenge. Hosted acceptance repeats six sizes in classic relaxed and layered challenge, checks real click/tap matching and nine expressions, and compares deployed PNG digests and transparent margins. Never substitute fixtures for actual completion.
+Browser cases cover all three difficulties at six viewports, all nine expressions at maximum animation, exterior corridors and exact upper-face centers relative to four lower centers. Complete Normal/Hard in relaxed/challenge with real desktop clicks and mobile-emulated taps. Verify legacy records remain visible/unchanged, disabled lower clicks cannot select, and numeric badges are absent. Save and inspect failures before fixing them; never lower viewport assertions to hide overflow.
+
+Hosted acceptance runs Easy relaxed, Normal challenge and Hard challenge at all six sizes, actual click/tap matching, nine-expression bounds and exact PNG checks. Preserve distinction between emulator and physical devices.
 
 ## BGM gate
 Browser audio tests must observe actual analyser RMS, not just a requested play flag: silent initial load, audible output after mouse/touch start, fade to silence on pause/mute/results, resume output and persisted mute after reload. Test unavailable AudioContext while matching. Run the same BGM tests against Pages with `BGM_URL=https://hyangdan2.github.io/CDXPilot0006/ npm run test:e2e -- --grep 'BGM audio'`. Test hooks remain limited to `?test=1`. Headless signal checks do not certify speaker quality or physical iOS autoplay behavior.

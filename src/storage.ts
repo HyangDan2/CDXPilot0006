@@ -1,7 +1,7 @@
 import type { BoardMode } from "./model";
 export type RecordEntry = { stage: number; best: number };
 export type Preferences = {
-  version: 2;
+  version: 3;
   stage: number;
   best: number;
   timed: boolean;
@@ -12,14 +12,14 @@ export type Preferences = {
   records: Record<string, RecordEntry>;
 };
 export const defaults: Preferences = {
-  version: 2,
+  version: 3,
   stage: 1,
   best: 0,
   timed: false,
   muted: false,
   character: true,
   motion: true,
-  boardMode: "classic",
+  boardMode: "easy",
   records: {},
 };
 export const key = "chibilink.v1";
@@ -62,17 +62,25 @@ export function read(store: Pick<Storage, "getItem">): {
     const data = { ...defaults, records: {} } as Preferences;
     if (!raw) return { data, error: false };
     const x = JSON.parse(raw);
-    if (!x || ![1, 2].includes(x.version)) throw Error("version");
+    if (!x || ![1, 2, 3].includes(x.version)) throw Error("version");
     for (const k of ["timed", "muted", "character", "motion"] as const)
       if (typeof x[k] === "boolean") data[k] = x[k];
     if (Number.isInteger(x.stage))
       data.stage = Math.min(10, Math.max(1, x.stage));
     if (Number.isFinite(x.best)) data.best = Math.max(0, Math.floor(x.best));
-    if (x.boardMode === "layered") data.boardMode = "layered";
+    if (x.boardMode === "layered") data.boardMode = "normal";
+    if (["easy", "normal", "hard"].includes(x.boardMode))
+      data.boardMode = x.boardMode;
     if (x.version === 1)
       data.records["classic-relaxed"] = { stage: data.stage, best: data.best };
     else
-      for (const mode of ["classic", "layered"] as const)
+      for (const mode of [
+        "classic",
+        "layered",
+        "easy",
+        "normal",
+        "hard",
+      ] as const)
         for (const timed of [false, true]) {
           const id = recordKey(mode, timed),
             r = x.records?.[id];

@@ -31,3 +31,5 @@ Dessert icons are original inline SVG in `src/icons.ts`; they are not extracted 
 
 ## Sharing and browser branding
 Following CDXPilot0004's static metadata format, `public/assets/branding/` contains a 1200×630 Open Graph/Twitter card, SVG/32px PNG/multi-size ICO favicons and a 180px Apple touch icon. `scripts/build-branding.mjs` composes the card in Chromium from original flower/dessert SVGs and the unchanged padded `momo-ready.png`; it does not crop or edit the character PNG. The favicon reuses the flower for small-size legibility. Rebuild intentionally, inspect at full and thumbnail size, and version the share-card filename on replacements. No new third-party artwork is used.
+
+Pyramid update: six additional code-native dessert SVGs (waffle, ice pop, pretzel, jam, roll cake, blueberry tart) bring the symbol set to 18. Shapes differ structurally, not just by color. Share card v2 updates the copy to Easy–Hard/three floors; the original padded character and favicon assets are unchanged.

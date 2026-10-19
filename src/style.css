@@ -1377,27 +1377,6 @@ dialog .primary {
     min-height: 48px;
   }
 }
-/* The extra layer stays inside the existing tile box: no grid or mascot displacement. */
-.tile.stacked {
-  box-shadow:
-    0 3px 0 #cfbacb,
-    0 5px 0 #e6d8e4;
-  border-color: #c7a7c1;
-  background: #fff8fc;
-}
-.layer-badge {
-  position: absolute;
-  right: 2px;
-  top: 2px;
-  border-radius: 4px;
-  background: #a87498;
-  color: white;
-  font-size: 8px;
-  line-height: 12px;
-  width: 12px;
-  text-align: center;
-  pointer-events: none;
-}
 .tile.gap-cell {
   visibility: visible;
   opacity: 1;
@@ -1427,12 +1406,97 @@ dialog .primary {
     font-size: 8px;
     padding: 6px;
   }
-  .layer-badge {
-    font-size: 7px;
-    width: 10px;
-    line-height: 10px;
-  }
   .controls button {
     gap: 4px;
+  }
+}
+
+/* Shared half-cell geometry: upper faces sit exactly between four lower faces. */
+#board.pyramid .tile {
+  position: absolute;
+  width: var(--cell);
+  height: var(--cell);
+  background: linear-gradient(145deg, #ffffff, #fff4df);
+  border: 1px solid #cdb99e;
+  border-top-color: #fff;
+  box-shadow:
+    1px 3px 0 #c9b394,
+    2px 5px 0 #ad9477,
+    3px 7px 8px #5e435326;
+  transform: none;
+}
+#board.pyramid .tile[data-z="1"] {
+  background: linear-gradient(145deg, #fffaff, #f1dbed);
+  border-color: #b893b7;
+  border-top-color: #fff;
+  box-shadow:
+    1px 3px 0 #b498b2,
+    2px 5px 0 #92728f,
+    4px 8px 10px #5e435340;
+}
+#board.pyramid .tile[data-z="2"] {
+  background: linear-gradient(145deg, #fffde9, #ffe1a8);
+  border-color: #c4a35e;
+  border-top-color: #fff;
+  box-shadow:
+    1px 3px 0 #c4a35e,
+    2px 5px 0 #a48248,
+    4px 8px 12px #5e43534a;
+}
+#board.pyramid .tile.covered {
+  background: #cec4bb;
+  border-color: #b8aaa1;
+}
+#board.pyramid .tile.covered svg {
+  opacity: 0.38;
+  filter: saturate(0.5);
+}
+#board.pyramid .tile.selected,
+#board.pyramid .tile.hinted {
+  outline: 3px solid #c05d8c;
+  outline-offset: -3px;
+}
+#board.pyramid .tile:not(:disabled):hover {
+  border-color: #b76d8c;
+}
+#board.pyramid .tile.gap-cell {
+  background: none;
+  box-shadow: none;
+  border: 1px dashed #dfd2c660;
+}
+#board.pyramid #route {
+  z-index: 40;
+}
+.board-cover {
+  z-index: 50;
+}
+.legacy-records {
+  margin: 16px 0;
+  font-size: 12px;
+  text-align: left;
+  color: #917682;
+}
+.tile.revealed {
+  animation: uncover 0.35s ease-out;
+}
+@keyframes uncover {
+  from {
+    filter: brightness(1.4);
+  }
+  to {
+    filter: brightness(1);
+  }
+}
+@media (max-height: 500px) and (min-width: 701px) {
+  .page-heading,
+  .page-heading > .text-button {
+    height: 20px;
+    min-height: 20px;
+  }
+  .page-heading {
+    margin-bottom: 0;
+  }
+  .page-heading h1 {
+    font-size: 16px;
   }
 }

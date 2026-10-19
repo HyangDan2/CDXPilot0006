@@ -23,10 +23,10 @@ for (const marker of [
   "twitter:image:alt",
 ])
   assert(html.includes(`"${marker}"`), marker);
-assert(html.includes(base + "assets/branding/share-card-v1.png"));
+assert(html.includes(base + "assets/branding/share-card-v2.png"));
 assert(html.includes("summary_large_image"));
 for (const [name, width, height] of [
-  ["share-card-v1.png", 1200, 630],
+  ["share-card-v2.png", 1200, 630],
   ["favicon-32.png", 32, 32],
   ["apple-touch-icon.png", 180, 180],
 ]) {

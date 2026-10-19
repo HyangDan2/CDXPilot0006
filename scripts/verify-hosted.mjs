@@ -49,7 +49,7 @@ try {
     report.assets.push({ name: frame.name, sha256: digest(bytes), margins });
   }
   await api.close();
-  for (const mode of ["classic", "layered"])
+  for (const mode of ["easy", "normal", "hard"])
     for (const [width, height] of [
       [320, 568],
       [360, 640],
@@ -77,7 +77,7 @@ try {
       );
       await page.locator("#settings").click();
       await page.locator("#board-mode").selectOption(mode);
-      await page.locator("#timed-setting").setChecked(mode === "layered");
+      await page.locator("#timed-setting").setChecked(mode !== "easy");
       await page.locator("#settings-done").click();
       await page.locator("#start").click();
       await page.locator("#mascot").evaluate((el) => el.decode());
@@ -104,11 +104,17 @@ try {
       const hinted = await page
         .locator(".hinted")
         .evaluateAll((els) =>
-          els.map((el) => ({ x: el.dataset.x, y: el.dataset.y })),
+          els.map((el) => ({
+            x: el.dataset.x,
+            y: el.dataset.y,
+            z: el.dataset.z,
+          })),
         );
       assert.equal(hinted.length, 2);
       for (const p of hinted) {
-        const locator = page.locator(`.tile[data-x="${p.x}"][data-y="${p.y}"]`);
+        const locator = page.locator(
+          `.tile[data-x="${p.x}"][data-y="${p.y}"][data-z="${p.z}"]`,
+        );
         if (width <= 620) await locator.tap();
         else await locator.click();
       }
@@ -155,7 +161,7 @@ try {
       assert.deepEqual(failed, []);
       report.viewports.push({
         mode,
-        challenge: mode === "layered",
+        challenge: mode !== "easy",
         width,
         height,
         bounds,
@@ -168,7 +174,7 @@ try {
     }
   await fs.writeFile(`${dir}/report.json`, JSON.stringify(report, null, 2));
   console.log(
-    "PASS: live Pages, 2 modes × 6 viewports, 9 expressions per viewport, actual match inputs, 9 identical PNGs with >=106px margins.",
+    "PASS: live Pages, 3 difficulties × 6 viewports, 9 expressions per viewport, actual match inputs, 9 identical PNGs with >=106px margins.",
   );
 } finally {
   await browser.close();

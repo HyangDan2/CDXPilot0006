@@ -2,6 +2,9 @@ import { Music } from "./music";
 import "./style.css";
 import {
   Game,
+  exposed,
+  difficulty,
+  isDifficulty,
   move,
   same,
   remainingTiles,
@@ -59,16 +62,8 @@ $("#app").innerHTML = `
 <aside class="companion"><div class="companion-top"><span class="eyebrow">YOUR LITTLE COMPANION</span><span class="sparkle">✧</span></div><div class="speech" aria-live="polite"><strong id="speech-title">어서 와요!</strong><p id="speech-text">따뜻한 차 한 잔처럼,<br>오늘도 편안하게 즐겨요.</p></div><div class="mascot-frame" id="mascot-frame"><img class="mascot-sprite" id="mascot" src="${import.meta.env.BASE_URL}assets/momo-idle.png" alt="미소 짓는 치비 캐릭터 모모"><span id="mascot-fallback" hidden>모모 ♡</span><span class="mascot-ground"></span></div><div class="companion-name"><span>모모</span><small>당신의 티타임 메이트</small></div><div class="little-tip"><span>✦ MOMO'S TIP</span><p>패 바깥쪽에도 길이 있어요.<br>조금 돌아가도 괜찮아요.</p><div class="tip-path">□ <i>└─────┘</i> □</div></div><div class="best-record"><span>나의 최고 점수</span><strong id="best">0 <small>pts</small></strong></div></aside></div>
 <footer><span>MADE FOR YOUR SLOW MOMENTS</span><span>한 쌍씩, 천천히. <span class="footer-flower">✿</span></span></footer></main>
 <dialog id="dialog"><button class="dialog-close icon-button" aria-label="닫기">×</button><div id="dialog-body"></div></dialog>`;
-const layerNames = [
-  "겹겹이 티타임",
-  "딸기 정원",
-  "작은 섬의 카페",
-  "계단 위 디저트",
-  "두 겹의 약속",
-];
-const currentNames = () => (game?.mode === "layered" ? layerNames : stageNames);
-const selectedNames = () =>
-  prefs.boardMode === "layered" ? layerNames : stageNames;
+const currentNames = () => stageNames;
+const selectedNames = () => stageNames;
 const stageNames = [
   "첫 번째 티타임",
   "딸기가 좋아",
@@ -174,7 +169,7 @@ function newGame(begin = false) {
     prefs.timed,
     () => performance.now(),
     compact ? 4 : 6,
-    innerHeight < 500 && !compact ? 2 : innerHeight < 660 ? 4 : 6,
+    innerHeight < 660 ? 4 : 6,
     prefs.boardMode,
     true,
   );
@@ -184,11 +179,11 @@ function newGame(begin = false) {
   $("#stage-title").textContent = currentNames()[stage - 1];
   $(".stage-number").textContent = String(stage).padStart(2, "0");
   $("#mode-label").textContent =
-    `${game.mode === "layered" ? "2층 레이어" : "클래식"} · ${game.timed ? "도전 모드" : "편안함"} ⌄`;
+    `${isDifficulty(game.mode) ? difficulty[game.mode].name : "Easy"} · ${game.timed ? "도전 모드" : "편안함"} ⌄`;
   $(".cover-foot").textContent = game.timed
     ? "짧은 제한 시간 · 힌트 2회(-8초) · 섞기 1회(-12초)"
     : "시간에 쫓기지 않는 편안한 모드";
-  $("#board").classList.toggle("layered", game.mode === "layered");
+  $("#board").classList.add("pyramid");
   $("#time-label").textContent = prefs.timed ? "남은 시간" : "플레이 시간";
   $("#pause").innerHTML = "<span>Ⅱ</span> 일시정지 <kbd>P</kbd>";
   renderBoard();
@@ -201,11 +196,9 @@ function newGame(begin = false) {
       : "따뜻한 차 한 잔처럼, 오늘도 편안하게 즐겨요.",
   );
   notice(
-    game.mode === "layered"
-      ? "2층 배지의 맨 위 패만 선택해요. 제거하면 아래 패가 드러나요."
-      : stage === 1
-        ? "같은 그림 두 개를 눌러요. 선은 두 번까지 꺾을 수 있어요."
-        : "패 바깥쪽으로 돌아가는 길도 찾아보세요.",
+    game.mode === "easy"
+      ? "같은 그림을 두 번까지 꺾어 연결해요."
+      : "밝게 드러난 같은 층의 패끼리 연결해요. 위 패부터 지워보세요.",
   );
 }
 function renderBoard() {
@@ -215,46 +208,63 @@ function renderBoard() {
       ? document.activeElement
       : null;
   const focused = active?.classList.contains("tile")
-    ? { x: active.dataset.x, y: active.dataset.y }
+    ? { x: active.dataset.x, y: active.dataset.y, z: active.dataset.z }
     : null;
   const board = $("#board");
   board.style.setProperty("--cols", String(game.board.cols));
   board.style.setProperty("--rows", String(game.board.rows));
-  board.querySelectorAll(".tile").forEach((e) => e.remove());
-  game.board.cells.forEach((v, i) => {
-    const p = { x: i % game.board.cols, y: Math.floor(i / game.board.cols) },
+  const previouslyCovered = new Set(
+    Array.from(board.querySelectorAll<HTMLElement>(".covered")).map(
+      (el) => `${el.dataset.x},${el.dataset.y},${el.dataset.z}`,
+    ),
+  );
+  board.querySelectorAll(".tile, .board-slot").forEach((e) => e.remove());
+  for (let i = 0; i < game.board.cols * game.board.rows; i++) {
+    const slot = document.createElement("span");
+    slot.className = "board-slot";
+    slot.setAttribute("aria-hidden", "true");
+    board.append(slot);
+  }
+  for (const t of game.board.tiles ?? []) {
+    const p = { x: t.x, y: t.y, z: t.z },
+      v = t.value,
       el = document.createElement("button");
+    const covered = !!v && !exposed(game.board, p);
     el.className =
       "tile" +
       (!v ? " empty" : "") +
+      (covered ? " covered" : "") +
       (game.selected && same(p, game.selected) ? " selected" : "") +
       (hint.some((h) => same(h, p)) ? " hinted" : "");
     el.dataset.x = String(p.x);
     el.dataset.y = String(p.y);
+    el.dataset.z = String(p.z);
     el.dataset.value = String(v);
-    const depth = game.board.stacks?.[i].length ?? (v ? 1 : 0);
-    el.dataset.depth = String(depth);
-    el.classList.toggle("stacked", depth === 2);
-    el.classList.toggle("gap-cell", !v);
-    el.disabled = !v || !started || game.status !== "playing";
+    el.style.left = `calc(var(--corridor) + ${p.x} * (var(--cell) + var(--gap)))`;
+    el.style.top = `calc(var(--corridor) + ${p.y} * (var(--cell) + var(--gap)))`;
+    el.style.zIndex = String(1 + p.z * 10);
+    el.classList.toggle("gap-cell", !v && !p.z);
+    el.classList.toggle(
+      "revealed",
+      !!v && !covered && previouslyCovered.has(`${p.x},${p.y},${p.z}`),
+    );
+    el.disabled = !v || covered || !started || game.status !== "playing";
     el.setAttribute(
       "aria-label",
-      `${p.y + 1}행 ${p.x + 1}열 ${v ? names[v - 1] : "빈 칸"}${depth === 2 ? ", 2층 맨 위 패" : ""}`,
+      `${p.z + 1}층 ${p.y - p.z / 2 + 1}행 ${p.x - p.z / 2 + 1}열 ${v ? names[v - 1] : "빈 칸"}${covered ? ", 위 패에 가려짐" : ""}`,
     );
     el.setAttribute(
       "aria-pressed",
       String(!!game.selected && same(p, game.selected)),
     );
-    el.innerHTML = v
-      ? `${icon(v)}${depth === 2 ? '<span class="layer-badge" aria-hidden="true">2</span>' : ""}`
-      : "";
+    el.innerHTML = v ? icon(v) : "";
     el.addEventListener("click", () => select(p));
     board.append(el);
-  });
+  }
   if (focused) {
     const target =
       board.querySelector<HTMLButtonElement>(
-        `.tile[data-x="${focused.x}"][data-y="${focused.y}"]:not(:disabled)`,
+        `.tile[data-x="${focused.x}"][data-y="${focused.y}"][data-z="${focused.z}"]:not(:disabled)`,
       ) ?? board.querySelector<HTMLButtonElement>(".tile:not(:disabled)");
     target?.focus({ preventScroll: true });
   }
@@ -285,7 +295,7 @@ function updateStats() {
 }
 function drawRoute(route: Point[]) {
   const board = $("#board"),
-    first = $<HTMLButtonElement>(".tile"),
+    first = $<HTMLElement>(".board-slot"),
     rect = board.getBoundingClientRect(),
     tile = first.getBoundingClientRect(),
     gap = parseFloat(getComputedStyle(board).gap);
@@ -440,16 +450,28 @@ function interruptForDialog() {
 $("#settings").onclick = () => {
   interruptForDialog();
   showDialog(
-    `<p class="eyebrow">MAKE YOURSELF AT HOME</p><h2>나의 티타임 설정</h2><label class="setting">보드 방식 <select id="board-mode"><option value="classic" ${prefs.boardMode === "classic" ? "selected" : ""}>클래식 1층</option><option value="layered" ${prefs.boardMode === "layered" ? "selected" : ""}>레이어 2층</option></select></label><label class="setting">도전 모드 <input type="checkbox" id="timed-setting" ${prefs.timed ? "checked" : ""}></label><p class="fine-print">모드는 다음 게임부터 적용돼요. 도전: 힌트 2회(-8초), 섞기 1회(-12초), 자동 복구 -150점.</p><label class="setting">모모 표시 <input type="checkbox" id="character-setting" ${prefs.character ? "checked" : ""}></label><label class="setting">캐릭터 움직임 <input type="checkbox" id="motion-setting" ${prefs.motion ? "checked" : ""}></label><label class="setting">BGM · 효과음 <input type="checkbox" id="audio-setting" ${!prefs.muted ? "checked" : ""}></label><button class="primary" id="settings-done">저장하고 돌아가기</button>`,
+    `<p class="eyebrow">MAKE YOURSELF AT HOME</p><h2>나의 티타임 설정</h2><label class="setting">난이도 <select id="board-mode">${(["easy", "normal", "hard"] as const).map((m) => `<option value="${m}" ${prefs.boardMode === m ? "selected" : ""}>${difficulty[m].name} · ${difficulty[m].layers}층</option>`).join("")}</select></label><p class="fine-print">Easy 6~8종 · Normal 10~12종 · Hard 14~18종<br>작은 보드에서는 패 수에 맞춰 종류가 조절돼요.</p><label class="setting">도전 모드 <input type="checkbox" id="timed-setting" ${prefs.timed ? "checked" : ""}></label><p class="fine-print">모드는 다음 게임부터 적용돼요. 도전: 힌트 2회(-8초), 섞기 1회(-12초), 자동 복구 -150점.</p><label class="setting">모모 표시 <input type="checkbox" id="character-setting" ${prefs.character ? "checked" : ""}></label><label class="setting">캐릭터 움직임 <input type="checkbox" id="motion-setting" ${prefs.motion ? "checked" : ""}></label><label class="setting">BGM · 효과음 <input type="checkbox" id="audio-setting" ${!prefs.muted ? "checked" : ""}></label><details class="legacy-records"><summary>이전 규칙 기록 (보존됨)</summary>${
+      [
+        "classic-relaxed",
+        "classic-challenge",
+        "layered-relaxed",
+        "layered-challenge",
+      ]
+        .map((id, i) => {
+          const r = prefs.records[id];
+          return r
+            ? `<p>${["클래식 · 편안함", "클래식 · 도전", "2층 · 편안함", "2층 · 도전"][i]}: ${r.stage}단계 / ${r.best.toLocaleString()}점</p>`
+            : "";
+        })
+        .join("") || "<p>이전 기록이 없어요.</p>"
+    }</details><button class="primary" id="settings-done">저장하고 돌아가기</button>`,
   );
   $("#settings-done").onclick = () => {
     const modeChanged =
       prefs.boardMode !== $<HTMLSelectElement>("#board-mode").value ||
       prefs.timed !== $<HTMLInputElement>("#timed-setting").checked;
-    prefs.boardMode =
-      $<HTMLSelectElement>("#board-mode").value === "layered"
-        ? "layered"
-        : "classic";
+    const selectedMode = $<HTMLSelectElement>("#board-mode").value;
+    prefs.boardMode = isDifficulty(selectedMode) ? selectedMode : "easy";
     prefs.timed = $<HTMLInputElement>("#timed-setting").checked;
     prefs.character = $<HTMLInputElement>("#character-setting").checked;
     prefs.motion = $<HTMLInputElement>("#motion-setting").checked;
@@ -470,7 +492,7 @@ $("#mode-label").onclick = () => $("#settings").click();
 $("#how").onclick = () => {
   interruptForDialog();
   showDialog(
-    `<p class="eyebrow">A SIMPLE LITTLE RITUAL</p><h2>이렇게 즐겨요</h2><ol class="instructions"><li><strong>같은 그림 두 개를 골라요.</strong><p>마우스, 터치 또는 Tab과 Enter로 선택하세요.</p></li><li><strong>선은 두 번까지 꺾을 수 있어요.</strong><p>다른 패를 통과할 수 없지만, 보드 바깥으로 돌아갈 수 있어요.</p></li><li><strong>2층은 맨 위 패부터!</strong><p>아래 패는 위의 짝을 지우면 드러나요. 빈 칸은 통로이며, 패가 남은 칸은 통과할 수 없어요.</p></li><li><strong>모두 연결하면 티타임 완성!</strong><p>막히면 힌트(H)와 섞기(S), 잠깐 쉴 땐 일시정지(P)를 눌러요.</p></li></ol><button class="primary" id="understood">알겠어요 →</button>`,
+    `<p class="eyebrow">A SIMPLE LITTLE RITUAL</p><h2>이렇게 즐겨요</h2><ol class="instructions"><li><strong>같은 그림 두 개를 골라요.</strong><p>마우스, 터치 또는 Tab과 Enter로 선택하세요.</p></li><li><strong>선은 두 번까지 꺾을 수 있어요.</strong><p>다른 패를 통과할 수 없지만, 보드 바깥으로 돌아갈 수 있어요.</p></li><li><strong>위 패부터, 같은 층끼리!</strong><p>상층 패는 아래 네 패의 중앙에 놓여요. 위 패에 조금이라도 덮이면 선택할 수 없어요. 같은 층의 밝은 패끼리 연결하세요. 선은 해당 층에서 이동하며 같은 층과 더 높은 패를 통과하지 못해요.</p></li><li><strong>모두 연결하면 티타임 완성!</strong><p>막히면 힌트(H)와 섞기(S), 잠깐 쉴 땐 일시정지(P)를 눌러요.</p></li></ol><button class="primary" id="understood">알겠어요 →</button>`,
   );
   $("#understood").onclick = closeDialog;
 };

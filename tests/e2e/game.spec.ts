@@ -1,7 +1,12 @@
 import { test, expect, type Page } from "@playwright/test";
-type Point = { x: number; y: number };
+type Point = { x: number; y: number; z?: number };
 type Snapshot = {
-  board: { cols: number; rows: number; cells: number[] };
+  board: {
+    cols: number;
+    rows: number;
+    cells: number[];
+    tiles: (Point & { z: number; value: number })[];
+  };
   status: string;
   score: number;
   elapsed: number;
@@ -27,7 +32,7 @@ declare global {
   }
 }
 const tile = (page: Page, p: Point) =>
-  page.locator(`.tile[data-x="${p.x}"][data-y="${p.y}"]`);
+  page.locator(`.tile[data-x="${p.x}"][data-y="${p.y}"][data-z="${p.z ?? 0}"]`);
 async function start(page: Page) {
   await page.goto("?test=1");
   await page.locator("#start").click();
@@ -78,12 +83,15 @@ test("real input playthrough, pause, hints, shuffle, result and persistence", as
   await page.reload();
   expect(
     await page.evaluate(
-      () => JSON.parse(localStorage.getItem("chibilink.v1")!).stage,
+      () =>
+        JSON.parse(localStorage.getItem("chibilink.v1")!).records[
+          "easy-relaxed"
+        ].stage,
     ),
   ).toBe(2);
   expect(errors).toEqual([]);
 });
-for (const mode of ["classic", "layered"] as const)
+for (const mode of ["easy", "normal", "hard"] as const)
   for (const [width, height] of [
     [320, 568],
     [360, 640],
@@ -302,42 +310,54 @@ test("touch taps on a mobile browser connect a pair", async ({ browser }) => {
   await context.close();
 });
 
-for (const timed of [false, true])
-  test(`layered touch completion challenge=${timed}`, async ({ browser }) => {
-    const context = await browser.newContext({
-      viewport: { width: 390, height: 844 },
-      isMobile: true,
-      hasTouch: true,
-    });
-    const page = await context.newPage();
-    await page.goto("http://127.0.0.1:4173/CDXPilot0006/?test=1");
-    await page.locator("#settings").tap();
-    await page.locator("#board-mode").selectOption("layered");
-    await page.locator("#timed-setting").setChecked(timed);
-    await page.locator("#settings-done").tap();
-    await page.locator("#start").tap();
-    await expect(page.locator(".stacked").first()).toBeVisible();
-    await expect(page.locator(".gap-cell").first()).toBeDisabled();
-    if (timed) {
-      await page.locator("#hint").tap();
-      await page.locator("#hint").tap();
-      await expect(page.locator("#hint")).toBeDisabled();
-      await page.locator("#shuffle").tap();
-      await expect(page.locator("#shuffle")).toBeDisabled();
-    }
-    for (let i = 0; i < 40; i++) {
-      if (
-        (await page.evaluate(() => window.__CHIBILINK__.snapshot().status)) ===
-        "won"
-      )
-        break;
-      const pair = await page.evaluate(() => window.__CHIBILINK__.move());
-      expect(pair).not.toBeNull();
-      for (const p of pair!) await tile(page, p).tap();
-    }
-    await expect(page.locator("#dialog h2")).toHaveText("티타임 완성!");
-    await context.close();
-  });
+for (const mode of ["normal", "hard"] as const)
+  for (const mobile of [false, true])
+    for (const timed of [false, true])
+      test(`${mode} completion mobile=${mobile} challenge=${timed}`, async ({
+        browser,
+      }) => {
+        const context = await browser.newContext({
+          viewport: mobile
+            ? { width: 390, height: 844 }
+            : { width: 1440, height: 900 },
+          isMobile: mobile,
+          hasTouch: mobile,
+        });
+        const page = await context.newPage();
+        await page.goto("http://127.0.0.1:4173/CDXPilot0006/?test=1");
+        await page.locator("#settings")[mobile ? "tap" : "click"]();
+        await page.locator("#board-mode").selectOption(mode);
+        await page.locator("#timed-setting").setChecked(timed);
+        await page.locator("#settings-done")[mobile ? "tap" : "click"]();
+        await page.locator("#start")[mobile ? "tap" : "click"]();
+        await expect(
+          page.locator(`.tile[data-z="${mode === "hard" ? 2 : 1}"]`).first(),
+        ).toBeVisible();
+        await expect(page.locator(".layer-badge")).toHaveCount(0);
+        await expect(page.locator(".covered").first()).toBeDisabled();
+
+        if (timed) {
+          await page.locator("#hint")[mobile ? "tap" : "click"]();
+          await page.locator("#hint")[mobile ? "tap" : "click"]();
+          await expect(page.locator("#hint")).toBeDisabled();
+          await page.locator("#shuffle")[mobile ? "tap" : "click"]();
+          await expect(page.locator("#shuffle")).toBeDisabled();
+        }
+        for (let i = 0; i < 60; i++) {
+          if (
+            (await page.evaluate(
+              () => window.__CHIBILINK__.snapshot().status,
+            )) === "won"
+          )
+            break;
+          const pair = await page.evaluate(() => window.__CHIBILINK__.move());
+          expect(pair).not.toBeNull();
+          for (const p of pair!)
+            await tile(page, p)[mobile ? "tap" : "click"]();
+        }
+        await expect(page.locator("#dialog h2")).toHaveText("티타임 완성!");
+        await context.close();
+      });
 
 for (const mobile of [false, true])
   test(`BGM audio output and lifecycle mobile=${mobile}`, async ({
@@ -388,4 +408,85 @@ test("audio unavailable does not block matching", async ({ page }) => {
   await start(page);
   await match(page);
   await expect(page.locator("#score")).not.toHaveText("0");
+});
+
+test("three-floor geometry, covered input and saved legacy records", async ({
+  page,
+}) => {
+  await page.goto("?test=1");
+  await page.evaluate(() =>
+    localStorage.setItem(
+      "chibilink.v1",
+      JSON.stringify({
+        version: 2,
+        stage: 7,
+        best: 4200,
+        boardMode: "layered",
+        records: {
+          "classic-relaxed": { stage: 7, best: 4200 },
+          "layered-challenge": { stage: 5, best: 6000 },
+        },
+      }),
+    ),
+  );
+  await page.reload();
+  await page.locator("#settings").click();
+  await expect(page.locator("#board-mode")).toHaveValue("normal");
+  await page.locator(".legacy-records summary").click();
+  await expect(page.locator(".legacy-records")).toContainText("4,200");
+  await expect(page.locator(".legacy-records")).toContainText("6,000");
+  await page.locator("#board-mode").selectOption("hard");
+  await page.locator("#settings-done").click();
+  await page.locator("#start").click();
+  const geometry = await page.evaluate(() => {
+    const tiles = window.__CHIBILINK__.snapshot().board.tiles;
+    const rect = (p: { x: number; y: number; z: number }) =>
+      document
+        .querySelector(
+          `.tile[data-x="${p.x}"][data-y="${p.y}"][data-z="${p.z}"]`,
+        )!
+        .getBoundingClientRect();
+    return tiles
+      .filter((t) => t.z > 0)
+      .every((t) => {
+        const supports = tiles.filter(
+          (p) =>
+            p.z === t.z - 1 &&
+            Math.abs(p.x - t.x) === 0.5 &&
+            Math.abs(p.y - t.y) === 0.5,
+        );
+        const r = rect(t),
+          lower = supports.map(rect);
+        return (
+          supports.length === 4 &&
+          Math.abs(
+            r.x +
+              r.width / 2 -
+              lower.reduce((n, p) => n + p.x + p.width / 2, 0) / 4,
+          ) < 1 &&
+          Math.abs(
+            r.y +
+              r.height / 2 -
+              lower.reduce((n, p) => n + p.y + p.height / 2, 0) / 4,
+          ) < 1
+        );
+      });
+  });
+  expect(geometry).toBe(true);
+  const covered = page.locator(".covered").first();
+  await expect(covered).toBeDisabled();
+  await covered.dispatchEvent("click");
+  expect(
+    await page.evaluate(() => window.__CHIBILINK__.snapshot().selected),
+  ).toBeNull();
+  await match(page);
+  await expect(page.locator("#score")).not.toHaveText("0");
+  expect(
+    await page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("chibilink.v1")!).records[
+          "classic-relaxed"
+        ],
+    ),
+  ).toEqual({ stage: 7, best: 4200 });
 });

@@ -32,12 +32,12 @@ TypeScript strict + Vite, DOM/CSS presentation, Vitest, Playwright, ESLint/Prett
 
 ## Implemented modules and layout policy
 - `src/model.ts`: path search, seeded board arrangement with full removal witness, Game state/time/scoring and automatic deadlock recovery.
-- `src/storage.ts`: validated version-2 local settings with version-1 migration, unlocked stages and best score; recoverable failures.
-- `src/icons.ts`: twelve original code-native dessert symbols.
+- `src/storage.ts`: validated version-3 settings with version-1/2 migration, unlocked stages and best score; recoverable failures.
+- `src/icons.ts`: eighteen original code-native dessert symbols.
 - `src/main.ts`: input/presentation adapters and application composition. Model mutations go through Game except explicit test-only result fixtures.
 - `src/style.css`: responsive layout, independent corridor and mascot containment.
 
-New runs choose 6×6 on regular desktop, 4×6 on tall mobile, 4×4 on short mobile, and 6×2 on short landscape. Board dimensions remain fixed within a run to preserve connection topology; resize recalculates geometry and clears the previous route, while device orientation changes pause play. Very severe resizing of an existing larger board can reduce tile targets; restarting selects the new viewport's board size. This is a known limitation, not a verified universal rotation solution.
+New runs choose 6×6 on regular desktop, 4×6 on tall mobile, 4×4 on short mobile, and 6×4 on short landscape. Board dimensions remain fixed within a run to preserve connection topology; resize recalculates geometry and clears the previous route, while device orientation changes pause play. Very severe resizing of an existing larger board can reduce tile targets; restarting selects the new viewport's board size. This is a known limitation, not a verified universal rotation solution.
 
 The visible exterior corridor is `cell / 2 + gap + 4px`, ensuring exterior cell centers and line stroke remain within the board. Generated cell art has explicit outer 106px transparency; runtime inset remains 10%. All screens reuse one companion component, with results shown in a dialog over the game.
 
@@ -46,13 +46,17 @@ Runtime hooks exist only under `?test=1`: snapshot, legal move lookup, expressio
 ## Deployment and layers
 The production mount is `/CDXPilot0006/`; test it with exact case. Verified dist artifacts are published through GitHub Actions only after the verification job succeeds. See DEPLOYMENT.md.
 
-Two-layer mode is implemented. `stacks` stores bottom-to-top values; `cells` is the exposed projection. Only Game/popTile updates both. All occupied stacks block intermediate path cells regardless of height. Removing a pair reveals lower tiles in place; total remaining counts every layer. One button per position prevents hidden-tile input.
+Current modes are Easy (one floor), Normal (two), Hard (three), each with ten stages. Challenge is an independent timer/assist option. Old classic/layered implementations remain pure compatibility regressions, not selectable UI modes.
 
-Both modes use seeded symmetric masks with permanent gaps. A geometric removal witness assigns one or two symbols per paired position; replay proves full solvability. Layered shuffle rebuilds the remaining symbol multiset inside the same permanent mask, and may refill previously cleared playable positions. Classic shuffle preserves current empty positions. Automatic recovery is separate from manual assist quotas.
+`Board.tiles` is authoritative for the current rules: stable tile positions with `x,y,z,value`, where each higher floor offsets x and y by half a cell. Its initial tile must have exactly four supports on the floor immediately below. `cells` is a synchronized value list for legacy status observers, not a spatial grid for these boards. Only Game/popTile changes tile values. No gravity or relocation occurs after removal.
 
-Challenge selects the least immediately matchable of eight seeded candidates, weighting adjacent matches more heavily, and uses up to twelve symbol types. Its timer scales with initial pair count and stage, with a 30-second floor. Hints: two, each -8 seconds; shuffle: one, -12 seconds; automatic recovery: -150 points, floored at zero. Relaxed mode has unlimited assists and no deadline. Gaps can open routes, so gaps alone are not treated as proof of higher difficulty.
+A tile is covered if any remaining higher tile's unit footprint overlaps it (`abs(dx)<1 && abs(dy)<1`). Covered tiles are disabled in the DOM and rejected independently by Game. A match requires equal symbols, equal z and both tiles exposed. Paths search a half-cell lattice, with at most two bends, on the selected floor. Same/higher occupied footprints block this plane; lower-floor tiles do not. This makes routes above lower floors legitimate and avoids invisible blockers below upper matches. One exterior base-cell corridor remains available. Rendering uses the exact x/y coordinates and the same face size for route endpoints and inputs; depth comes from sides, highlights and shadows rather than displacing the face from its logical center.
 
-Records are isolated by board mode and relaxed/challenge setting. Legacy v1 progression migrates to classic-relaxed because old records did not identify their mode. Existing settings are preserved; the storage key remains stable. Classic has ten stages; layered has five. Mode changes apply to the next game and new runs clamp the stage to the selected profile's unlocked range.
+Generation constructs supported floors, trims odd counts at alternating corners and adds paired edge gaps where supports allow. Easy retains irregular interior gaps. Every floor has an even tile count and even count per symbol. A seeded per-floor geometric witness, ordered top-to-bottom, proves complete solvability. Shuffle preserves every surviving position and per-floor symbol multiset, including holes; it assigns a fresh complete witness without retries. Automated deadlock recovery remains separate from manual quotas.
+
+Symbol targets progress every two stages: Easy 6–8, Normal 10–12, Hard 14–18, naturally limited by available pairs on compact boards. Challenge picks the least immediately matchable of four seeded candidates, weights adjacent matches, scales time to initial pairs/stage and retains the 30-second minimum. Hints: two, -8 seconds each; shuffle: one, -12 seconds; automatic recovery: -150 points, floor zero. Relaxed mode has no deadline and unlimited assists.
+
+Storage version 3 preserves v1/v2 root aliases and the four old classic/layered records, shown read-only under settings. New easy/normal/hard × relaxed/challenge records have distinct keys. Old selected classic maps to Easy, old layered maps to Normal; scores/unlocks are not copied into new rules. Audio/character preferences survive migration. All new runs clamp stage to the active profile. A failed save is recoverable and never deletes the old entry explicitly.
 
 ## Background music
 `src/music.ts` owns an original 16-bar, 104 BPM synthesized café loop (plucked melody, light extended chords, soft bass). Audio is generated once into a reusable mono buffer; there are no external recordings or music requests. One looping source plays at a time; fades avoid abrupt transitions and ended nodes disconnect. The game model has no audio dependency.

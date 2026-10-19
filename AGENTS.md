@@ -13,7 +13,7 @@
 ## Project invariants
 - Game alone mutates puzzle state; renderer and mascot only consume state/events.
 - Connections use at most two bends through empty cells, including a one-cell exterior border.
-- Layered boards expose only stack tops; occupied stacks block routes. Preserve permanent gap masks and all remaining symbols on shuffle.
+- Current layered tiles use half-cell offsets and four initial supports. Covered tiles reject input; match only exposed tiles on the same floor. Same/higher footprints block paths. Shuffle preserves surviving positions and per-floor symbols.
 - A matched pair is removed and scored once. Paused or terminal games reject gameplay input.
 - Use seeded randomness for reproducible boards and QA. Keep tuning in data.
 - Preserve transparent source margins, fixed frame dimensions and anchors. Follow docs/ART_PIPELINE.md.

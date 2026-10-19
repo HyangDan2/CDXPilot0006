@@ -1,17 +1,34 @@
-export type Point = { x: number; y: number };
-export type BoardMode = "classic" | "layered";
+export type Point = { x: number; y: number; z?: number };
+export type Difficulty = "easy" | "normal" | "hard";
+export type Tile = Point & { z: number; value: number };
+export const difficulty = {
+  easy: { name: "Easy", layers: 1, kinds: 6 },
+  normal: { name: "Normal", layers: 2, kinds: 10 },
+  hard: { name: "Hard", layers: 3, kinds: 14 },
+};
+export const isDifficulty = (m: string): m is Difficulty => m in difficulty;
+export type BoardMode = "classic" | "layered" | Difficulty;
 export type Board = {
   cols: number;
   rows: number;
   cells: number[];
+  tiles?: Tile[];
   stacks?: number[][];
   mask?: boolean[];
 };
 export const remainingTiles = (b: Board) =>
-  b.stacks
-    ? b.stacks.reduce((n, s) => n + s.length, 0)
-    : b.cells.filter(Boolean).length;
+  b.tiles
+    ? b.tiles.filter((t) => t.value).length
+    : b.stacks
+      ? b.stacks.reduce((n, s) => n + s.length, 0)
+      : b.cells.filter(Boolean).length;
 export function popTile(b: Board, p: Point) {
+  if (b.tiles) {
+    const t = b.tiles.find((t) => same(t, p));
+    if (t) t.value = 0;
+    b.cells = b.tiles.map((t) => t.value);
+    return;
+  }
   const i = index(b, p);
   if (b.stacks) {
     b.stacks[i].pop();
@@ -19,15 +36,19 @@ export function popTile(b: Board, p: Point) {
   } else b.cells[i] = 0;
 }
 export type Pair = [Point, Point];
-export const same = (a: Point, b: Point) => a.x === b.x && a.y === b.y;
+export const same = (a: Point, b: Point) =>
+  a.x === b.x && a.y === b.y && (a.z ?? 0) === (b.z ?? 0);
 export const index = (b: Board, p: Point) => p.y * b.cols + p.x;
 export const value = (b: Board, p: Point) =>
-  p.x < 0 || p.y < 0 || p.x >= b.cols || p.y >= b.rows
-    ? 0
-    : b.cells[index(b, p)];
+  b.tiles
+    ? (b.tiles.find((t) => same(t, p))?.value ?? 0)
+    : p.x < 0 || p.y < 0 || p.x >= b.cols || p.y >= b.rows
+      ? 0
+      : b.cells[index(b, p)];
 const inside = (b: Board, p: Point) =>
   p.x >= 0 && p.y >= 0 && p.x < b.cols && p.y < b.rows;
 export function path(b: Board, a: Point, z: Point): Point[] | null {
+  if (b.tiles) return spatialPath(b, a, z);
   if (
     !inside(b, a) ||
     !inside(b, z) ||
@@ -64,6 +85,10 @@ export function path(b: Board, a: Point, z: Point): Point[] | null {
   return null;
 }
 export function points(b: Board): Point[] {
+  if (b.tiles)
+    return b.tiles
+      .filter((t) => exposed(b, t))
+      .map(({ x, y, z }) => ({ x, y, z }));
   return b.cells.flatMap((v, i) =>
     v ? [{ x: i % b.cols, y: Math.floor(i / b.cols) }] : [],
   );
@@ -303,8 +328,9 @@ export class Game {
     public mode: BoardMode = "classic",
     irregular = false,
   ) {
-    const generated =
-      irregular || mode === "layered" || timed
+    const generated = isDifficulty(mode)
+      ? generatePyramid(cols, rows, seed, stage, mode, timed)
+      : irregular || mode === "layered" || timed
         ? generatePuzzle(cols, rows, seed, stage, mode, timed)
         : generate(cols, rows, seed, Math.min(6 + stage, 12));
     this.board = generated.board;
@@ -384,15 +410,20 @@ export class Game {
         if (this.status !== "playing") return false;
       }
     }
-    const next = this.board.stacks
-      ? rearrangeLayers(
+    const next = this.board.tiles
+      ? rearrangePyramid(
           this.board,
           this.seed + (this.shuffles + this.recoveries) * 7919,
         )
-      : arrange(
-          this.board,
-          this.seed + (this.shuffles + this.recoveries) * 7919,
-        );
+      : this.board.stacks
+        ? rearrangeLayers(
+            this.board,
+            this.seed + (this.shuffles + this.recoveries) * 7919,
+          )
+        : arrange(
+            this.board,
+            this.seed + (this.shuffles + this.recoveries) * 7919,
+          );
     this.board = next.board;
     this.witness = next.witness;
     this.selected = null;
@@ -408,7 +439,8 @@ export class Game {
     if (
       this.status !== "playing" ||
       !inside(this.board, p) ||
-      !value(this.board, p)
+      !value(this.board, p) ||
+      (this.board.tiles && !exposed(this.board, p))
     )
       return { kind: "ignored" };
     if (!this.selected) {
@@ -438,4 +470,176 @@ export class Game {
     }
     return { kind: "match", route, reshuffled };
   }
+}
+
+export function exposed(b: Board, p: Point): boolean {
+  return (
+    !!value(b, p) &&
+    !(b.tiles ?? []).some(
+      (t) =>
+        t.value &&
+        t.z > (p.z ?? 0) &&
+        Math.abs(t.x - p.x) < 1 &&
+        Math.abs(t.y - p.y) < 1,
+    )
+  );
+}
+// Paths run horizontally on the selected floor. Lower floors do not obstruct
+// that plane; same/higher occupied footprints do. Coordinates are half-cells.
+function spatialPath(b: Board, a: Point, end: Point): Point[] | null {
+  if (
+    same(a, end) ||
+    (a.z ?? 0) !== (end.z ?? 0) ||
+    !exposed(b, a) ||
+    !exposed(b, end) ||
+    value(b, a) !== value(b, end)
+  )
+    return null;
+  const floor = a.z ?? 0;
+  const obstacles = b.tiles!.filter(
+    (t) => t.value && t.z >= floor && !same(t, a) && !same(t, end),
+  );
+  const directions = [
+    [0.5, 0],
+    [0, 0.5],
+    [-0.5, 0],
+    [0, -0.5],
+  ];
+  const queue = [{ p: a, dir: -1, turns: 0, route: [a] }],
+    seen = new Map<string, number>();
+  for (let head = 0; head < queue.length; head++) {
+    const n = queue[head];
+    for (let dir = 0; dir < 4; dir++) {
+      const turns = n.turns + (n.dir !== -1 && n.dir !== dir ? 1 : 0);
+      if (turns > 2) continue;
+      const p = {
+        x: n.p.x + directions[dir][0],
+        y: n.p.y + directions[dir][1],
+        z: floor,
+      };
+      if (p.x < -1 || p.y < -1 || p.x > b.cols || p.y > b.rows) continue;
+      if (
+        obstacles.some(
+          (t) => Math.abs(t.x - p.x) < 0.5 && Math.abs(t.y - p.y) < 0.5,
+        )
+      )
+        continue;
+      if (same(p, end)) return [...n.route, p];
+      const key = `${p.x},${p.y},${dir}`;
+      if ((seen.get(key) ?? 3) <= turns) continue;
+      seen.set(key, turns);
+      queue.push({ p, dir, turns, route: [...n.route, p] });
+    }
+  }
+  return null;
+}
+export function rearrangePyramid(
+  source: Board,
+  seed: number,
+): { board: Board; witness: Pair[] } {
+  const tiles = source.tiles!.map((t) => ({ ...t })),
+    witness: Pair[] = [];
+  const top = Math.max(...tiles.map((t) => t.z));
+  for (let z = top; z >= 0; z--) {
+    const cols = source.cols - z,
+      rows = source.rows - z;
+    const cells = Array(cols * rows).fill(0) as number[];
+    for (const t of tiles.filter((t) => t.z === z))
+      cells[(t.y - z / 2) * cols + t.x - z / 2] = t.value;
+    const next = arrange({ cols, rows, cells }, seed + z * 1009);
+    for (const t of tiles.filter((t) => t.z === z))
+      t.value = next.board.cells[(t.y - z / 2) * cols + t.x - z / 2];
+    witness.push(
+      ...next.witness.map(
+        (pair) =>
+          pair.map((p) => ({ x: p.x + z / 2, y: p.y + z / 2, z })) as Pair,
+      ),
+    );
+  }
+  return {
+    board: {
+      cols: source.cols,
+      rows: source.rows,
+      tiles,
+      cells: tiles.map((t) => t.value),
+    },
+    witness,
+  };
+}
+export function generatePyramid(
+  cols: number,
+  rows: number,
+  seed: number,
+  stage: number,
+  mode: Difficulty,
+  timed: boolean,
+) {
+  const layers = difficulty[mode].layers;
+  if (cols < 4 || rows < 4)
+    throw Error("Pyramid requires at least a 4×4 footprint");
+  const tiles: Tile[] = [];
+  for (let z = 0; z < layers; z++) {
+    const floor: Tile[] = [];
+    for (let y = 0; y < rows - z; y++)
+      for (let x = 0; x < cols - z; x++) {
+        const t = { x: x + z / 2, y: y + z / 2, z, value: 1 };
+        if (
+          z &&
+          tiles.filter(
+            (p) =>
+              p.z === z - 1 &&
+              Math.abs(p.x - t.x) === 0.5 &&
+              Math.abs(p.y - t.y) === 0.5,
+          ).length !== 4
+        )
+          continue;
+        if (
+          !z &&
+          mode === "easy" &&
+          !layoutMask(cols, rows, stage)[y * cols + x]
+        )
+          continue;
+        floor.push(t);
+      }
+    // Rotate the missing corner across stages; preserve four supports upstairs.
+    if (floor.length % 2) floor.splice(stage % 2 ? floor.length - 1 : 0, 1);
+    tiles.push(...floor);
+  }
+  // Create additional paired edge gaps only where no upper tile needs support.
+  if (mode !== "easy") {
+    const free = tiles.filter(
+      (t) =>
+        t.z === 0 &&
+        !tiles.some(
+          (u) =>
+            u.z === 1 && Math.abs(u.x - t.x) < 1 && Math.abs(u.y - t.y) < 1,
+        ),
+    );
+    if (free.length >= 2)
+      for (const t of free.slice(0, 2)) tiles.splice(tiles.indexOf(t), 1);
+  }
+  const kinds = Math.min(
+    mode === "easy" ? 8 : mode === "normal" ? 12 : 18,
+    difficulty[mode].kinds + Math.floor((stage - 1) / 2),
+  );
+  let pairOffset = 0;
+  for (let z = 0; z < layers; z++) {
+    const floor = tiles.filter((t) => t.z === z);
+    floor.forEach(
+      (t, i) => (t.value = 1 + ((pairOffset + Math.floor(i / 2)) % kinds)),
+    );
+    pairOffset += floor.length / 2;
+  }
+  const source = { cols, rows, tiles, cells: tiles.map((t) => t.value) };
+  let best = rearrangePyramid(source, seed),
+    cost = arrangementDifficulty(best.board);
+  for (let i = 1; i < (timed ? 4 : 1); i++) {
+    const candidate = rearrangePyramid(source, seed + i * 104729),
+      next = arrangementDifficulty(candidate.board);
+    if (next < cost) {
+      best = candidate;
+      cost = next;
+    }
+  }
+  return best;
 }

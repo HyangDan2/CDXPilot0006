@@ -11,6 +11,12 @@ const shapes = [
   '<path d="M16 17h20l-3 23H19Z" fill="#b5c8ad"/><path d="M16 17q10-5 20 0" stroke="#faf1dc" stroke-width="5"/><path d="m29 18 4-12" stroke="#957b68" stroke-width="3"/>',
   '<path d="M10 28q0-9 9-9l5 8 5-8q12 0 13 11l-8 6-6-6-5 8-7-4Z" fill="#d6a26d"/><path d="m18 22 4 12m10-11-4 9" stroke="#b77c51" stroke-width="2"/>',
   '<path d="M15 14h23v24H15Z" fill="#98705e"/><path d="M15 22h23m-23 8h23M26 14v24" stroke="#c79d84" stroke-width="2"/>',
+  '<rect x="12" y="10" width="29" height="32" rx="5" fill="#dab275"/><path d="M19 12v28m8-28v28m8-28v28M14 19h25M14 27h25M14 35h25" stroke="#a97a43" stroke-width="3"/><rect x="21" y="17" width="11" height="10" rx="2" fill="#ffe68a"/>',
+  '<rect x="23" y="32" width="7" height="14" rx="3" fill="#cba77a"/><path d="M14 30V18a12 12 0 0124 0v12q-12 6-24 0" fill="#e1a6c5"/><path d="M14 22h24v10q-12 6-24 0" fill="#bd899f"/><path d="M20 13v12" stroke="#fff0e3" stroke-width="3" stroke-linecap="round"/>',
+  '<path d="M26 19C10 0 0 25 18 37c15 12 28-12 15-20-9-5-16 21-3 22 18 1 22-29 8-29-5 0-10 5-12 9Z" fill="none" stroke="#bb824c" stroke-width="7"/><path d="m14 19 2 2m20-4 2 2m-15 13 2 2" stroke="#fff4dd" stroke-width="3"/>',
+  '<rect x="14" y="16" width="25" height="26" rx="6" fill="#b76e83"/><rect x="12" y="10" width="29" height="9" rx="3" fill="#b7c7b0"/><rect x="18" y="23" width="17" height="13" rx="2" fill="#fff4df"/><path d="M22 26q5-5 9 1l-5 7Z" fill="#d7788d"/>',
+  '<path d="M11 23 20 10h21v25l-10 9H11Z" fill="#d3a576"/><path d="M11 23h20v21H11Z" fill="#fff0d5"/><path d="M24 27c-13-4-12 15-2 11 7-3 1-9-3-6" fill="none" stroke="#c38e9b" stroke-width="3"/>',
+  '<path d="m10 29 4 12h26l3-12" fill="#caa56b"/><ellipse cx="26" cy="29" rx="17" ry="8" fill="#fff1d7"/><g fill="#8d8ab2"><circle cx="18" cy="25" r="6"/><circle cx="29" cy="20" r="6"/><circle cx="35" cy="28" r="6"/><circle cx="24" cy="30" r="6"/></g><path d="M26 15q1-8 9-7-1 7-9 7" fill="#8ba681"/>',
 ];
 export const names = [
   "딸기",
@@ -25,6 +31,12 @@ export const names = [
   "말차",
   "크루아상",
   "초콜릿",
+  "와플",
+  "아이스바",
+  "프레첼",
+  "딸기잼",
+  "롤케이크",
+  "블루베리 타르트",
 ];
 export function icon(n: number) {
   return `<svg viewBox="0 0 52 52" aria-hidden="true">${shapes[(n - 1) % shapes.length]}</svg>`;
