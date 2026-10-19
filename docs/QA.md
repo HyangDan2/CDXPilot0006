@@ -56,3 +56,12 @@ Evidence: `test-results/` contains final browser screenshots/traces and last-run
 - All nine expressions at each animation's maximum upward movement/scale fit their positioned frames at every viewport. Reviewed live desktop, small/tall mobile and landscape screenshots; no visible hair/hand clipping or control overflow.
 - Evidence and exact browser timestamp/version: `docs/hosted-evidence/report.json` and screenshots beside it. These are real hosted Chromium checks with mobile/touch emulation, not physical iPhone/Android or Safari certification.
 - This addendum and the hosted harness do not change production game files. Subsequent documentation/harness commits deploy the same application bundle after their normal CI gate.
+
+## Two-layer release local gate — 2026-10-19
+- Environment: macOS, Node 24.19.0, Playwright Chromium. `npm run verify`: PASS (16 tests, lint, strict types, nine PNG checks, production build).
+- New witness coverage: 600 mode/difficulty/stage/size/seed combinations plus 300 legacy boards. Layer reveal, partial shuffle, challenge quotas/expiry and storage migration pass.
+- `npm run test:e2e`: PASS, 19 tests. Both modes × six viewports; all nine expressions at maximum animation midpoint; exterior route containment; classic click completion; layered relaxed and challenge touch completion with real inputs. Error/fallback, keyboard, settings and persistence regressions pass.
+- Directly inspected `test-results/play-layered-320x568.png` and `play-layered-1440x900.png`: badges, gaps, mascot and controls fit. Synthetic perimeter lines in these local screenshots are corridor fixtures, not game paths. Hosted screenshots use normal gameplay.
+- Mascot source and output assets unchanged: nine 512px frames, alpha margins >=106px and independent runtime 10% inset retained.
+- Physical iOS Safari/Android devices, browser toolbars and subjective difficulty balance remain unverified. Emulated touch completion is not physical-device evidence. Existing extreme mid-run resize limitation remains.
+- Hosted acceptance for this release follows deployment; results recorded separately below.

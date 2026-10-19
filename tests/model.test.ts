@@ -181,7 +181,8 @@ describe("generation and game", () => {
     g.select({ x: 0, y: 0 });
     const r = g.select({ x: 1, y: 0 });
     expect(r.reshuffled).toBe(true);
-    expect(g.shuffles).toBe(1);
+    expect(g.shuffles).toBe(0);
+    expect(g.recoveries).toBe(1);
     expect(move(g.board)).not.toBeNull();
   });
   it("hint is legal and shuffle/restart preserve model contracts", () => {

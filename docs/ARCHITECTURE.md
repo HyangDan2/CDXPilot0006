@@ -32,7 +32,7 @@ TypeScript strict + Vite, DOM/CSS presentation, Vitest, Playwright, ESLint/Prett
 
 ## Implemented modules and layout policy
 - `src/model.ts`: path search, seeded board arrangement with full removal witness, Game state/time/scoring and automatic deadlock recovery.
-- `src/storage.ts`: validated version-1 local settings, unlocked stages and best score; recoverable failures.
+- `src/storage.ts`: validated version-2 local settings with version-1 migration, unlocked stages and best score; recoverable failures.
 - `src/icons.ts`: twelve original code-native dessert symbols.
 - `src/main.ts`: input/presentation adapters and application composition. Model mutations go through Game except explicit test-only result fixtures.
 - `src/style.css`: responsive layout, independent corridor and mascot containment.
@@ -43,7 +43,13 @@ The visible exterior corridor is `cell / 2 + gap + 4px`, ensuring exterior cell 
 
 Runtime hooks exist only under `?test=1`: snapshot, legal move lookup, expression selection, route geometry fixture, and named won/lost layout fixtures. Fixtures are not completion evidence; the E2E playthrough uses actual pair clicks.
 
-## Deployment and proposed layers
+## Deployment and layers
 The production mount is `/CDXPilot0006/`; test it with exact case. Verified dist artifacts are published through GitHub Actions only after the verification job succeeds. See DEPLOYMENT.md.
 
-Multi-layer puzzles are feasible but not part of this release: the proposed extension uses per-position stacks, top-only selection and the existing projected 2D path rule. Every occupied stack obstructs intermediate path cells. See STACKED_PUZZLE_PROPOSAL.md before changing the Board contract.
+Two-layer mode is implemented. `stacks` stores bottom-to-top values; `cells` is the exposed projection. Only Game/popTile updates both. All occupied stacks block intermediate path cells regardless of height. Removing a pair reveals lower tiles in place; total remaining counts every layer. One button per position prevents hidden-tile input.
+
+Both modes use seeded symmetric masks with permanent gaps. A geometric removal witness assigns one or two symbols per paired position; replay proves full solvability. Layered shuffle rebuilds the remaining symbol multiset inside the same permanent mask, and may refill previously cleared playable positions. Classic shuffle preserves current empty positions. Automatic recovery is separate from manual assist quotas.
+
+Challenge selects the least immediately matchable of eight seeded candidates, weighting adjacent matches more heavily, and uses up to twelve symbol types. Its timer scales with initial pair count and stage, with a 30-second floor. Hints: two, each -8 seconds; shuffle: one, -12 seconds; automatic recovery: -150 points, floored at zero. Relaxed mode has unlimited assists and no deadline. Gaps can open routes, so gaps alone are not treated as proof of higher difficulty.
+
+Records are isolated by board mode and relaxed/challenge setting. Legacy v1 progression migrates to classic-relaxed because old records did not identify their mode. Existing settings are preserved; the storage key remains stable. Classic has ten stages; layered has five. Mode changes apply to the next game and new runs clamp the stage to the selected profile's unlocked range.

@@ -19,3 +19,10 @@
 - Changed production E2E mount to exact `/CDXPilot0006/`; deployment waits for successful verify/E2E and uploads only dist.
 - Verified the live service at six PC/mobile viewport sizes, nine expressions, source PNG padding/digests, real pair input and error-free loading.
 - Added hosted verification harness/evidence and a separate multi-layer puzzle design proposal; production remains classic 2D.
+
+## Layered update — 2026-10-19
+- Added two-layer/five-stage play, top-only selection, depth badges and lower-tile reveal.
+- Added irregular gap masks to classic and layered boards.
+- Hardened challenge generation, timer, limited assists and recovery penalty.
+- Migrated legacy records and isolated four gameplay profiles.
+- Extended model, browser and hosted harnesses; retained original mascot PNG padding.

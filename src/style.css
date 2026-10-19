@@ -1373,5 +1373,66 @@ dialog .primary {
   }
 }
 @media (max-width: 700px) {
-  .controls button { min-height: 48px; }
+  .controls button {
+    min-height: 48px;
+  }
+}
+/* The extra layer stays inside the existing tile box: no grid or mascot displacement. */
+.tile.stacked {
+  box-shadow:
+    0 3px 0 #cfbacb,
+    0 5px 0 #e6d8e4;
+  border-color: #c7a7c1;
+  background: #fff8fc;
+}
+.layer-badge {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  border-radius: 4px;
+  background: #a87498;
+  color: white;
+  font-size: 8px;
+  line-height: 12px;
+  width: 12px;
+  text-align: center;
+  pointer-events: none;
+}
+.tile.gap-cell {
+  visibility: visible;
+  opacity: 1;
+  background: transparent;
+  box-shadow: none;
+  border: 1px dashed #e9e0d740;
+  pointer-events: none;
+}
+.setting select {
+  max-width: 150px;
+  padding: 8px;
+  border: 1px solid #d9c5cf;
+  border-radius: 7px;
+  background: #fffaf7;
+  color: #705566;
+  font: inherit;
+}
+.controls small {
+  font-size: 9px;
+  color: #977482;
+}
+.mode-pill {
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .mode-pill {
+    font-size: 8px;
+    padding: 6px;
+  }
+  .layer-badge {
+    font-size: 7px;
+    width: 10px;
+    line-height: 10px;
+  }
+  .controls button {
+    gap: 4px;
+  }
 }

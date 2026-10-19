@@ -49,6 +49,11 @@ E2E contains six viewport cases and a mobile Chromium touch-emulation case. It c
 Clean installation, asset measurements and final local results are recorded in QA.md. Real-device Safari/Android and auditory quality remain separate qualification steps. Remote CI has now passed.
 
 ## Hosted acceptance
-Pages deployment is authorized. Repeat viewport/mascot containment and actual-input smoke checks against the deployed URL; record failures, screenshot evidence and commit identity separately from local E2E. See DEPLOYMENT.md. Multi-layer gameplay remains a proposal in STACKED_PUZZLE_PROPOSAL.md and must receive its own model and browser gates before release.
+Pages deployment is authorized. Repeat viewport/mascot containment and actual-input smoke checks against the deployed URL; record failures, screenshot evidence and commit identity separately from local E2E. See DEPLOYMENT.md. Layered gameplay follows the same model → verify → browser → visual review → deployment gates.
 
 Run `node scripts/verify-hosted.mjs` to repeat hosted acceptance. Optional HOSTED_URL overrides the URL. The script writes screenshots and a JSON report in docs/hosted-evidence, checks exact deployed PNG digests/alpha margins, and uses normal URL controls for actual matching before test-only expression bounds checks.
+
+## Layered and challenge regression gate
+Replay complete removal witnesses for both modes, both difficulties, every stage, four responsive board sizes and five seeds (600 combinations), in addition to the legacy 300 boards. Verify top-only removal/reveal, depth <=2, permanent masks, partial-board shuffle preserving all remaining symbols, challenge quotas/penalties/expiry and version-1 storage migration with isolated mode records.
+
+Run both board modes through all six viewport/expression/corridor cases. Complete layered relaxed and challenge games using real mobile-emulated taps, including assist quota exhaustion in challenge. Hosted acceptance repeats six sizes in classic relaxed and layered challenge, checks real click/tap matching and nine expressions, and compares deployed PNG digests and transparent margins. Never substitute fixtures for actual completion.
