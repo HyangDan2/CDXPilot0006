@@ -32,12 +32,12 @@ TypeScript strict + Vite, DOM/CSS presentation, Vitest, Playwright, ESLint/Prett
 
 ## Implemented modules and layout policy
 - `src/model.ts`: path search, seeded board arrangement with full removal witness, Game state/time/scoring and automatic deadlock recovery.
-- `src/storage.ts`: validated version-3 settings with version-1/2 migration, unlocked stages and best score; recoverable failures.
+- `src/storage.ts`: validated version-4 settings with version-1/2 migration, unlocked stages and best score; recoverable failures.
 - `src/icons.ts`: eighteen original code-native dessert symbols.
 - `src/main.ts`: input/presentation adapters and application composition. Model mutations go through Game except explicit test-only result fixtures.
 - `src/style.css`: responsive layout, independent corridor and mascot containment.
 
-New runs choose 6×6 on regular desktop, 4×6 on tall mobile, 4×4 on short mobile, and 6×4 on short landscape. Board dimensions remain fixed within a run to preserve connection topology; resize recalculates geometry and clears the previous route, while device orientation changes pause play. Very severe resizing of an existing larger board can reduce tile targets; restarting selects the new viewport's board size. This is a known limitation, not a verified universal rotation solution.
+New runs choose 6×6 on regular desktop, 4×6 on tall mobile, 4×4 on short mobile, and 6×4 on short landscape. Board dimensions remain fixed within a run to preserve connection topology; resize recalculates geometry and clears the previous route, while device orientation changes pause play. Expanded games preserve 44px minimum targets and scroll inside the board viewport after resizing; restarting selects the new baseline footprint.
 
 The visible exterior corridor is `cell / 2 + gap + 12px`, ensuring exterior cell centers and line stroke remain within the board. Generated cell art has explicit outer 106px transparency; runtime inset remains 10%. All screens reuse one companion component, with results shown in a dialog over the game.
 
@@ -54,9 +54,9 @@ A tile is covered if any remaining higher tile's unit footprint overlaps it (`ab
 
 Generation constructs supported floors, trims odd counts at alternating corners and adds paired edge gaps where supports allow. Easy retains irregular interior gaps. Every floor has an even tile count and even count per symbol. A seeded per-floor geometric witness, ordered top-to-bottom, proves complete solvability. Shuffle preserves every surviving position and per-floor symbol multiset, including holes; it assigns a fresh complete witness without retries. Automated deadlock recovery remains separate from manual quotas.
 
-Symbol targets progress every two stages: Easy 6–8, Normal 10–12, Hard 14–18, naturally limited by available pairs on compact boards. Challenge picks the least immediately matchable of four seeded candidates, weights adjacent matches, scales time to initial pairs/stage and applies the difficulty multipliers and 20-second Challenge minimum described below. Hints: two, -8 seconds each; shuffle: one, -12 seconds; automatic recovery: -150 points, floor zero. Relaxed mode has no deadline and unlimited assists.
+Historical pre-expansion symbol targets were Easy 6–8, Normal 10–12, Hard 14–18. Current expanded targets and repetition caps are defined below. Challenge picks the least immediately matchable of four seeded candidates, weights adjacent matches, scales time to initial pairs/stage and applies the difficulty multipliers and 20-second Challenge minimum described below. Hints: two, -8 seconds each; shuffle: one, -12 seconds; automatic recovery: -150 points, floor zero. Relaxed mode has no deadline and unlimited assists.
 
-Storage version 3 preserves v1/v2 root aliases and the four old classic/layered records, shown read-only under settings. New easy/normal/hard × relaxed/challenge records have distinct keys. Old selected classic maps to Easy, old layered maps to Normal; scores/unlocks are not copied into new rules. Audio/character preferences survive migration. All new runs clamp stage to the active profile. A failed save is recoverable and never deletes the old entry explicitly.
+Historical storage version 3 preserved v1/v2 root aliases and the four old classic/layered records, shown read-only under settings. New easy/normal/hard × relaxed/challenge records have distinct keys. Old selected classic maps to Easy, old layered maps to Normal; scores/unlocks are not copied into new rules. Audio/character preferences survive migration. All new runs clamp stage to the active profile. A failed save is recoverable and never deletes the old entry explicitly.
 
 ## Background music
 `src/music.ts` owns an original 16-bar, 104 BPM synthesized café loop (plucked melody, light extended chords, soft bass). Audio is generated once into a reusable mono buffer; there are no external recordings or music requests. One looping source plays at a time; starts fade in and stopped/ended nodes disconnect. The game model has no audio dependency.

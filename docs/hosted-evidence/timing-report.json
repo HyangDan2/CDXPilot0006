@@ -1,0 +1,61 @@
+{
+  "url": "https://hyangdan2.github.io/CDXPilot0006/",
+  "checkedAt": "2026-10-19T17:11:30.644Z",
+  "browser": "141.0.7390.37",
+  "cases": [
+    {
+      "mobile": false,
+      "mode": "easy",
+      "stage": 1,
+      "tiles": 68,
+      "previousSeconds": 154,
+      "expectedSeconds": 131,
+      "display": "02:08"
+    },
+    {
+      "mobile": false,
+      "mode": "normal",
+      "stage": 1,
+      "tiles": 120,
+      "previousSeconds": 267,
+      "expectedSeconds": 200,
+      "display": "03:20"
+    },
+    {
+      "mobile": false,
+      "mode": "hard",
+      "stage": 1,
+      "tiles": 148,
+      "previousSeconds": 328,
+      "expectedSeconds": 230,
+      "display": "03:50"
+    },
+    {
+      "mobile": true,
+      "mode": "easy",
+      "stage": 1,
+      "tiles": 44,
+      "previousSeconds": 102,
+      "expectedSeconds": 87,
+      "display": "01:27"
+    },
+    {
+      "mobile": true,
+      "mode": "normal",
+      "stage": 1,
+      "tiles": 76,
+      "previousSeconds": 171,
+      "expectedSeconds": 128,
+      "display": "02:08"
+    },
+    {
+      "mobile": true,
+      "mode": "hard",
+      "stage": 1,
+      "tiles": 88,
+      "previousSeconds": 197,
+      "expectedSeconds": 138,
+      "display": "02:18"
+    }
+  ]
+}

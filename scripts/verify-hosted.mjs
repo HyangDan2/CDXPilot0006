@@ -97,6 +97,12 @@ try {
         };
       });
       assert(bounds.scrollWidth <= width);
+      assert(
+        await page
+          .locator(".tile")
+          .first()
+          .evaluate((el) => el.getBoundingClientRect().width >= 44),
+      );
       assert(bounds.controlsBottom <= height);
       assert(bounds.boardLeft >= 0 && bounds.boardRight <= width);
       await page.screenshot({

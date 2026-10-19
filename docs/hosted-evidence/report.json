@@ -1,7 +1,7 @@
 {
   "url": "https://hyangdan2.github.io/CDXPilot0006/",
   "browser": "141.0.7390.37",
-  "checkedAt": "2026-10-19T15:25:05.105Z",
+  "checkedAt": "2026-10-19T17:11:11.795Z",
   "assets": [
     {
       "name": "idle",
@@ -104,9 +104,9 @@
         "scrollWidth": 320,
         "width": 320,
         "height": 568,
-        "controlsBottom": 565.9375,
-        "boardLeft": 34.53125,
-        "boardRight": 285.46875
+        "controlsBottom": 566,
+        "boardLeft": 25.5,
+        "boardRight": 294.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -122,9 +122,9 @@
         "scrollWidth": 360,
         "width": 360,
         "height": 640,
-        "controlsBottom": 637.96875,
-        "boardLeft": 18.515625,
-        "boardRight": 341.484375
+        "controlsBottom": 638,
+        "boardLeft": 45.5,
+        "boardRight": 314.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -140,9 +140,9 @@
         "scrollWidth": 390,
         "width": 390,
         "height": 844,
-        "controlsBottom": 841.90625,
-        "boardLeft": 33.390625,
-        "boardRight": 356.609375
+        "controlsBottom": 842,
+        "boardLeft": 60.5,
+        "boardRight": 329.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -158,9 +158,9 @@
         "scrollWidth": 620,
         "width": 620,
         "height": 800,
-        "controlsBottom": 797.9375,
-        "boardLeft": 164.09375,
-        "boardRight": 455.90625
+        "controlsBottom": 798,
+        "boardLeft": 175.5,
+        "boardRight": 444.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -177,8 +177,8 @@
         "width": 844,
         "height": 390,
         "controlsBottom": 388,
-        "boardLeft": 197.5,
-        "boardRight": 410.5
+        "boardLeft": 127.5,
+        "boardRight": 480.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -194,9 +194,9 @@
         "scrollWidth": 1440,
         "width": 1440,
         "height": 900,
-        "controlsBottom": 891,
-        "boardLeft": 343.5,
-        "boardRight": 773.5
+        "controlsBottom": 898,
+        "boardLeft": 371.5,
+        "boardRight": 745.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -212,9 +212,9 @@
         "scrollWidth": 320,
         "width": 320,
         "height": 568,
-        "controlsBottom": 565.9375,
-        "boardLeft": 34.53125,
-        "boardRight": 285.46875
+        "controlsBottom": 566,
+        "boardLeft": 25.5,
+        "boardRight": 294.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -230,9 +230,9 @@
         "scrollWidth": 360,
         "width": 360,
         "height": 640,
-        "controlsBottom": 637.96875,
-        "boardLeft": 18.515625,
-        "boardRight": 341.484375
+        "controlsBottom": 638,
+        "boardLeft": 45.5,
+        "boardRight": 314.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -248,9 +248,9 @@
         "scrollWidth": 390,
         "width": 390,
         "height": 844,
-        "controlsBottom": 841.90625,
-        "boardLeft": 33.390625,
-        "boardRight": 356.609375
+        "controlsBottom": 842,
+        "boardLeft": 60.5,
+        "boardRight": 329.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -266,9 +266,9 @@
         "scrollWidth": 620,
         "width": 620,
         "height": 800,
-        "controlsBottom": 797.9375,
-        "boardLeft": 164.09375,
-        "boardRight": 455.90625
+        "controlsBottom": 798,
+        "boardLeft": 175.5,
+        "boardRight": 444.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -285,8 +285,8 @@
         "width": 844,
         "height": 390,
         "controlsBottom": 388,
-        "boardLeft": 197.5,
-        "boardRight": 410.5
+        "boardLeft": 127.5,
+        "boardRight": 480.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -302,9 +302,9 @@
         "scrollWidth": 1440,
         "width": 1440,
         "height": 900,
-        "controlsBottom": 891,
-        "boardLeft": 343.5,
-        "boardRight": 773.5
+        "controlsBottom": 898,
+        "boardLeft": 371.5,
+        "boardRight": 745.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -320,9 +320,9 @@
         "scrollWidth": 320,
         "width": 320,
         "height": 568,
-        "controlsBottom": 565.9375,
-        "boardLeft": 34.53125,
-        "boardRight": 285.46875
+        "controlsBottom": 566,
+        "boardLeft": 25.5,
+        "boardRight": 294.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -338,9 +338,9 @@
         "scrollWidth": 360,
         "width": 360,
         "height": 640,
-        "controlsBottom": 637.96875,
-        "boardLeft": 18.515625,
-        "boardRight": 341.484375
+        "controlsBottom": 638,
+        "boardLeft": 45.5,
+        "boardRight": 314.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -356,9 +356,9 @@
         "scrollWidth": 390,
         "width": 390,
         "height": 844,
-        "controlsBottom": 841.90625,
-        "boardLeft": 33.390625,
-        "boardRight": 356.609375
+        "controlsBottom": 842,
+        "boardLeft": 60.5,
+        "boardRight": 329.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -374,9 +374,9 @@
         "scrollWidth": 620,
         "width": 620,
         "height": 800,
-        "controlsBottom": 797.9375,
-        "boardLeft": 164.09375,
-        "boardRight": 455.90625
+        "controlsBottom": 798,
+        "boardLeft": 175.5,
+        "boardRight": 444.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -393,8 +393,8 @@
         "width": 844,
         "height": 390,
         "controlsBottom": 388,
-        "boardLeft": 197.5,
-        "boardRight": 410.5
+        "boardLeft": 127.5,
+        "boardRight": 480.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
@@ -410,9 +410,9 @@
         "scrollWidth": 1440,
         "width": 1440,
         "height": 900,
-        "controlsBottom": 891,
-        "boardLeft": 343.5,
-        "boardRight": 773.5
+        "controlsBottom": 898,
+        "boardLeft": 371.5,
+        "boardRight": 745.5
       },
       "expressions": 9,
       "normalUrlInput": "pass",
