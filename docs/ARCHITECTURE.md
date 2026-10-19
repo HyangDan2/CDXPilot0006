@@ -83,7 +83,7 @@ Music now follows a started session, not the gameplay clock. Settings, help, sta
 
 For timed Easy/Normal/Hard, multiply the previous rounded budget by 0.85/0.75/0.70 respectively, round to seconds and apply a 20-second floor. Relaxed and legacy budgets remain unchanged. Hint/shuffle penalties remain 8/12 seconds. Existing records and storage schema remain unchanged, so historical Challenge scores can predate this stricter timing policy.
 
-## Expanded puzzle rules — 2026-10-20 (current)
+## Expanded puzzle rules — 2026-10-20 (historical)
 New UI games use expanded generation; legacy generators remain regression baselines. Construct two copies of the former stage/viewport footprint, joined horizontally, preserving Easy/Normal/Hard floor counts and all four supports. Assign pairs across the combined floor, not independently per copy. This gives exactly twice the former occupied-tile count for every supported starting viewport and stage, including existing holes. No gravity is introduced.
 
 Artwork comprises six families × six variants (36 SVGs). Shared silhouettes express family; topping shape/count and color identify variant. Symbol targets are Easy 12–16, Normal 20–28, Hard 30–36. Small boards cap unique symbols at total pairs minus four (minimum six), preserving some repeated pairs instead of making every symbol unique. Distribute selected symbols across all six families before adding more variants. Per-floor even counts and full solution witnesses remain mandatory.
@@ -102,3 +102,12 @@ The approved correction supersedes the earlier vertical-scroll policy. The doubl
 Fit the complete board, exterior corridor and effect clearance between the header and controls; remove board panning. Tile faces adapt to available width/height, including compact portrait sizes below the previous 44px target. Reserve 18px effect clearance in addition to half a cell and the gap. Mobile gaps are 2px. Existing runs keep logical coordinates on resize.
 
 Acceptance: exact doubled counts and horizontal dimensions, complete solution witnesses, six viewport sizes with character shown/hidden, full board above controls without scroll overflow, actual mouse/touch matching, unchanged storage/audio and original character margins. Inspect screenshots, especially compact portrait symbol legibility. Physical-device ergonomics remain a separate gate.
+
+## Unified difficulty boards and match time — 2026-10-20 (current)
+This contract supersedes doubled copies and viewport-dependent footprints. UI games use Easy 4×6×1 floor, Normal 6×6×2 floors and Hard 8×6×3 floors on every device. Construct one supported pyramid across the full width. Upper floors are connected; odd floor counts trim a corner, and safe holes preserve four supports. Keep 36 available family variants, bounded difficulty ranking and full solution witnesses. Original expanded/legacy generators remain regression fixtures.
+
+Challenge successful matches grant Easy 3000ms, Normal 2000ms or Hard 1500ms, capped at the starting limit. Credit is separate from elapsed time so combo and gameplay clocks remain monotonic. Award once after legal removal, before recovery penalties; expired, paused, invalid and relaxed inputs award nothing. Show the awarded seconds in the reaction text. Starting budgets still derive from actual occupied counts and existing difficulty factors. Assist penalties and one automatic recovery remain.
+
+Storage v5 preserves v1–v4 records and settings; unified-{difficulty}-{relaxed|challenge} keys separate changed rules. Prior records remain read-only in settings. Full-board fitting, source transparency, runtime character inset and effect corridors remain unchanged. Short landscape chrome is compacted to retain readable six-row boards.
+
+Gate: all ten stages per difficulty must have fixed dimensions, connected upper floors, four supports and complete legal witnesses. Test credit amount, cap, duplicate removal, pause, exact expiry and v4/v5 migration. Run full browser regression plus actual Challenge match-credit checks on desktop/touch for all difficulties; inspect all six sizes and verify Pages separately.

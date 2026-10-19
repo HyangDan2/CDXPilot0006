@@ -50,3 +50,5 @@ Deployed character PNGs are 512×512 with at least 106px (20.7%) of transparent 
 GitHub Actions verification and Pages deployment have completed. Desktop/mobile layouts and character padding have also been checked on the public site. Physical iPhone/Android devices, Safari and listening quality require separate verification. Local static builds are generated in `dist/`.
 
 Current layered rules: [Stacked puzzle design](docs/STACKED_PUZZLE_PROPOSAL.md). Upper tiles sit at the center of four lower tiles; only exposed matching tiles on the same floor can connect. Occupied tile boundaries block routes, while lower floors do not obstruct an upper-floor route. Legacy records remain preserved.
+
+Current boards use fixed Easy 4×6, Normal 6×6 and Hard 8×6 footprints with one, two and three connected floors. Challenge match bonuses are +3s/+2s/+1.5s respectively, capped at the initial time. Records from earlier rules are preserved separately.

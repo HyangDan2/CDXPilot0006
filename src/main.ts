@@ -175,6 +175,7 @@ function newGame(begin = false) {
     prefs.boardMode,
     true,
     true,
+    true,
   );
   started = begin;
   $(".board-viewport").scrollTo(0, 0);
@@ -362,7 +363,9 @@ function select(p: Point) {
     react(
       game.combo > 1 ? "excited" : "pleased",
       game.combo > 1 ? `${game.combo}콤보! 멋져요!` : "달콤한 한 쌍!",
-      "다음 디저트도 찾아볼까요?",
+      result.bonus
+        ? `+${Number((result.bonus / 1000).toFixed(1))}초 · 다음 디저트도 찾아볼까요?`
+        : "다음 디저트도 찾아볼까요?",
     );
     notice(
       result.reshuffled
@@ -492,9 +495,9 @@ function interruptForDialog() {
 $("#settings").onclick = () => {
   interruptForDialog();
   showDialog(
-    `<p class="eyebrow">MAKE YOURSELF AT HOME</p><h2>나의 티타임 설정</h2><label class="setting">난이도 <select id="board-mode">${(["easy", "normal", "hard"] as const).map((m) => `<option value="${m}" ${prefs.boardMode === m ? "selected" : ""}>${difficulty[m].name} · ${difficulty[m].layers}층</option>`).join("")}</select></label><p class="fine-print">Easy 12~16종 · Normal 20~28종 · Hard 30~36종<br>작은 보드에서는 패 수에 맞춰 종류가 조절돼요.</p><label class="setting">도전 모드 <input type="checkbox" id="timed-setting" ${prefs.timed ? "checked" : ""}></label><p class="fine-print">모드는 다음 게임부터 적용돼요. 도전: 힌트 2회(-8초), 섞기 1회(-12초), 자동 복구 1회(-15초·150점). 이후 막히면 남은 섞기를 사용하세요.</p><label class="setting">모모 표시 <input type="checkbox" id="character-setting" ${prefs.character ? "checked" : ""}></label><label class="setting">캐릭터 움직임 <input type="checkbox" id="motion-setting" ${prefs.motion ? "checked" : ""}></label><label class="setting">BGM · 효과음 <input type="checkbox" id="audio-setting" ${!prefs.muted ? "checked" : ""}></label><details class="legacy-records"><summary>이전 규칙 기록 (보존됨)</summary>${
+    `<p class="eyebrow">MAKE YOURSELF AT HOME</p><h2>나의 티타임 설정</h2><label class="setting">난이도 <select id="board-mode">${(["easy", "normal", "hard"] as const).map((m) => `<option value="${m}" ${prefs.boardMode === m ? "selected" : ""}>${difficulty[m].name} · ${difficulty[m].layers}층</option>`).join("")}</select></label><p class="fine-print">Easy 4×6 · Normal 6×6 · Hard 8×6<br>36종 디저트 중 패 수와 단계에 맞춰 종류가 조절돼요.</p><label class="setting">도전 모드 <input type="checkbox" id="timed-setting" ${prefs.timed ? "checked" : ""}></label><p class="fine-print">모드는 다음 게임부터 적용돼요. 매칭 보너스: Easy +3초, Normal +2초, Hard +1.5초 (시작 시간 상한). 도전: 힌트 2회(-8초), 섞기 1회(-12초), 자동 복구 1회(-15초·150점). 이후 막히면 남은 섞기를 사용하세요.</p><label class="setting">모모 표시 <input type="checkbox" id="character-setting" ${prefs.character ? "checked" : ""}></label><label class="setting">캐릭터 움직임 <input type="checkbox" id="motion-setting" ${prefs.motion ? "checked" : ""}></label><label class="setting">BGM · 효과음 <input type="checkbox" id="audio-setting" ${!prefs.muted ? "checked" : ""}></label><details class="legacy-records"><summary>이전 규칙 기록 (보존됨)</summary>${
       Object.keys(prefs.records)
-        .filter((id) => !id.startsWith("expanded-"))
+        .filter((id) => !id.startsWith("unified-"))
         .map((id) => {
           const r = prefs.records[id];
           return `<p>${id}: ${r.stage}단계 / ${r.best.toLocaleString()}점</p>`;

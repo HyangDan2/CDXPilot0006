@@ -97,7 +97,7 @@ test("real input playthrough, pause, hints, shuffle, result and persistence", as
     await page.evaluate(
       () =>
         JSON.parse(localStorage.getItem("chibilink.v1")!).records[
-          "expanded-easy-relaxed"
+          "unified-easy-relaxed"
         ].stage,
     ),
   ).toBe(2);
@@ -770,3 +770,45 @@ for (const mobile of [false, true])
     });
     await context.close();
   });
+
+for (const mobile of [false, true])
+  for (const mode of ["easy", "normal", "hard"] as const)
+    test(`unified Challenge bonus ${mode} mobile=${mobile}`, async ({
+      browser,
+    }) => {
+      const context = await browser.newContext({
+        viewport: mobile
+          ? { width: 390, height: 844 }
+          : { width: 1440, height: 900 },
+        isMobile: mobile,
+        hasTouch: mobile,
+      });
+      const page = await context.newPage();
+      await page.goto(
+        (process.env.BONUS_QA_URL ?? "http://127.0.0.1:4173/CDXPilot0006/") +
+          "?test=1",
+      );
+      await page.locator("#settings").click();
+      await page.locator("#board-mode").selectOption(mode);
+      await page.locator("#timed-setting").check();
+      await page.locator("#settings-done").click();
+      await page.locator("#start").click();
+      await page.waitForTimeout(3200);
+      const before = await page.evaluate(() => window.__CHIBILINK__.snapshot());
+      expect(before.board.cols).toBe({ easy: 4, normal: 6, hard: 8 }[mode]);
+      expect(before.board.rows).toBe(6);
+      const pair = await page.evaluate(() => window.__CHIBILINK__.move());
+      for (const p of pair!) {
+        if (mobile) await tile(page, p).tap();
+        else await tile(page, p).click();
+      }
+      const after = await page.evaluate(() => window.__CHIBILINK__.snapshot());
+      const bonus = { easy: 3000, normal: 2000, hard: 1500 }[mode];
+      expect(
+        after.remaining + after.elapsed - before.remaining - before.elapsed,
+      ).toBe(bonus);
+      await expect(page.locator("#speech-text")).toContainText(
+        `+${bonus / 1000}초`,
+      );
+      await context.close();
+    });

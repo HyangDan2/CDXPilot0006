@@ -26,14 +26,8 @@ try {
       else await page.locator("#start").click();
       const state = await page.evaluate(() => window.__CHIBILINK__.snapshot());
       const count = state.board.tiles.filter((t) => t.value).length;
-      const priorCount = mobile
-        ? { easy: 22, normal: 38, hard: 44 }[mode]
-        : { easy: 34, normal: 60, hard: 74 }[mode];
-      assert.equal(
-        count,
-        priorCount * 2,
-        "Expanded occupied count must double the preceding stage-one footprint",
-      );
+      assert.equal(state.board.cols, { easy: 4, normal: 6, hard: 8 }[mode]);
+      assert.equal(state.board.rows, 6);
       const previous = Math.max(30, Math.round((count / 2) * (4.5 - 0.15) + 6));
       const expected = Math.max(
         20,

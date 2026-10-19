@@ -1607,3 +1607,45 @@ main {
     --gap: 2px;
   }
 }
+
+/* Six fixed rows need a compact chrome in short landscape viewports. */
+@media (min-width: 701px) and (max-height: 450px) {
+  main {
+    padding-top: 2px;
+  }
+  .game-top {
+    padding: 2px 10px;
+  }
+  .stage-button,
+  .mode-pill {
+    min-height: 28px;
+    padding-block: 2px;
+  }
+  .stage-number {
+    width: 24px;
+    height: 24px;
+  }
+  .controls {
+    padding: 3px;
+  }
+  .controls button {
+    height: 32px;
+    min-height: 32px;
+    padding: 3px 10px;
+  }
+  #board {
+    --gap: 2px;
+  }
+}
+@media (min-width: 701px) and (max-height: 450px) {
+  .stage-button small {
+    font-size: 8px;
+    line-height: 10px;
+    margin-bottom: 1px;
+  }
+  .stage-button strong {
+    display: block;
+    font-size: 11px;
+    line-height: 14px;
+  }
+}

@@ -73,3 +73,8 @@
 - Spread doubled tile counts horizontally with unchanged floor counts, family variants and Challenge limits.
 - Widen desktop play space and fit the complete board above controls; remove board dragging and scrolling.
 - Retain records, original character margins and continuous popup music. Compact portrait faces adapt below 44px to show the entire board.
+
+## 2026-10-20 — connected floors and Challenge match bonuses
+- Easy uses 4×6, Normal 6×6 and Hard 8×6 on desktop and mobile; upper floors form one connected pyramid.
+- Challenge matches award +3/+2/+1.5 seconds respectively, capped at starting time; assist costs remain.
+- Preserve previous records and preferences; track the new rules separately. Compact short-landscape controls retain the full six-row board.

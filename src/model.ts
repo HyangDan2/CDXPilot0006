@@ -330,6 +330,7 @@ export class Game {
   blockedOut = false;
   initialTiles: number;
   elapsed = 0;
+  timeCredit = 0;
   last: number;
   lastMatch = -Infinity;
   witness: Pair[];
@@ -343,19 +344,27 @@ export class Game {
     public mode: BoardMode = "classic",
     irregular = false,
     public expanded = false,
+    public unified = false,
   ) {
-    const generated = isDifficulty(mode)
-      ? (expanded ? generateExpanded : generatePyramid)(
-          cols,
-          rows,
-          seed,
-          stage,
-          mode,
-          timed,
-        )
-      : irregular || mode === "layered" || timed
-        ? generatePuzzle(cols, rows, seed, stage, mode, timed)
-        : generate(cols, rows, seed, Math.min(6 + stage, 12));
+    if (unified && isDifficulty(mode)) {
+      cols = { easy: 4, normal: 6, hard: 8 }[mode];
+      rows = 6;
+    }
+    const generated =
+      unified && isDifficulty(mode)
+        ? generateExpanded(cols, rows, seed, stage, mode, timed, true)
+        : isDifficulty(mode)
+          ? (expanded ? generateExpanded : generatePyramid)(
+              cols,
+              rows,
+              seed,
+              stage,
+              mode,
+              timed,
+            )
+          : irregular || mode === "layered" || timed
+            ? generatePuzzle(cols, rows, seed, stage, mode, timed)
+            : generate(cols, rows, seed, Math.min(6 + stage, 12));
     this.board = generated.board;
     this.witness = generated.witness;
     this.initialTiles = remainingTiles(this.board);
@@ -376,7 +385,7 @@ export class Game {
     return Math.max(factor < 1 ? 20 : 30, Math.round(base * factor)) * 1000;
   }
   get remaining() {
-    return Math.max(0, this.limit - this.elapsed);
+    return Math.max(0, this.limit - this.elapsed + this.timeCredit);
   }
   tick() {
     const now = this.clock();
@@ -472,6 +481,7 @@ export class Game {
     kind: "select" | "invalid" | "match" | "ignored";
     route?: Point[];
     reshuffled?: boolean;
+    bonus?: number;
   } {
     this.tick();
     if (
@@ -500,6 +510,14 @@ export class Game {
     this.lastMatch = this.elapsed;
     this.pairs++;
     this.score += 100 + Math.min(this.combo - 1, 9) * 25;
+    const bonus =
+      this.unified && this.timed && isDifficulty(this.mode)
+        ? Math.min(
+            { easy: 3000, normal: 2000, hard: 1500 }[this.mode],
+            this.limit - this.remaining,
+          )
+        : 0;
+    this.timeCredit += bonus;
     let reshuffled = false;
     if (!this.board.cells.some(Boolean)) this.status = "won";
     else if (!move(this.board)) {
@@ -514,7 +532,7 @@ export class Game {
         this.status = "lost";
       }
     }
-    return { kind: "match", route, reshuffled };
+    return { kind: "match", route, reshuffled, bonus };
   }
 }
 
@@ -756,10 +774,11 @@ export function generateExpanded(
   stage: number,
   mode: Difficulty,
   timed: boolean,
+  unified = false,
 ) {
   const original = generatePyramid(cols, rows, seed, stage, mode, false).board;
   // Two supported footprints, joined horizontally; pair assignment spans both.
-  const tiles = [0, cols].flatMap((offset) =>
+  const tiles = (unified ? [0] : [0, cols]).flatMap((offset) =>
     original.tiles!.map((t) => ({ ...t, x: t.x + offset })),
   );
   const target = { easy: [12, 16], normal: [20, 28], hard: [30, 36] }[mode];
@@ -778,7 +797,7 @@ export function generateExpanded(
     offset += floor.length / 2;
   }
   const source: Board = {
-    cols: cols * 2,
+    cols: unified ? cols : cols * 2,
     rows,
     tiles,
     cells: tiles.map((t) => t.value),
