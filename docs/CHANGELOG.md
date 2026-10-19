@@ -29,7 +29,7 @@
 
 ## Fresh café BGM — 2026-10-19
 - Added an original 104 BPM, 16-bar plucked melody/chord/bass loop, generated locally without external audio assets.
-- Linked BGM to gameplay, pause/results/background state and the saved sound toggle; clarified settings as “BGM · 효과음”.
+- Linked BGM to gameplay, pause/results/background state and the saved sound toggle; clarified settings as “BGM · sound effects” (English translation of the UI label).
 - Added desktop/touch signal-output and lifecycle tests plus audio-unavailable gameplay coverage.
 
 ## Share preview and favicon — 2026-10-19
@@ -52,3 +52,7 @@
 ## 2026-10-20 — Occupied seam routing fix
 - Block routes that slipped between occupied tile rows/columns along half-cell boundaries. Preserve legitimate empty-cell/exterior routes, floor rules, saved settings and records.
 - Add enclosed-pair rejection on all three floors, independent classic-path comparison and actual mouse/touch blocked-pair checks.
+
+## 2026-10-20 — English documentation
+- Translate README, the implementation plan, layered design and historical snapshot labels into English; identify the snapshot as a translation and retain its original in Git history.
+- Require English for all future repository documentation. Correct stale README references to two-dimensional-only play and the old landscape dimensions. Runtime UI and assets are unchanged.

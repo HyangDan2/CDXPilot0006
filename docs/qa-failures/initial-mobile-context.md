@@ -1,108 +1,110 @@
-# Page snapshot
+# Page snapshot — English translation
+
+This is an English translation of the original Korean UI snapshot retained for the initial mobile overflow failure. Node references, structure and values are preserved. The original capture remains available in Git history; translated labels are not literal runtime selectors.
 
 ```yaml
 - generic [ref=e2]:
   - banner [ref=e3]:
-    - link "치비링크 홈" [ref=e4] [cursor=pointer]:
+    - link "ChibiLink home" [ref=e4] [cursor=pointer]:
       - /url: ./
       - img [ref=e6]
       - generic [ref=e9]:
         - text: chibilink
-        - generic [ref=e10]: 모모의 작은 카페
+        - generic [ref=e10]: Momo’s Little Café
     - generic [ref=e11]:
-      - button "소리 끄기" [pressed] [ref=e12] [cursor=pointer]: ♪
-      - button "설정" [ref=e13] [cursor=pointer]: ⚙
+      - button "Mute sound" [pressed] [ref=e12] [cursor=pointer]: ♪
+      - button "Settings" [ref=e13] [cursor=pointer]: ⚙
   - main [ref=e14]:
     - generic [ref=e15]:
-      - heading "작은 연결, 달콤한 휴식." [level=1] [ref=e17]
-      - button "게임 방법 ↗" [ref=e18] [cursor=pointer]
+      - heading "Small connections, a sweet break." [level=1] [ref=e17]
+      - button "How to play ↗" [ref=e18] [cursor=pointer]
     - generic [ref=e19]:
-      - region "사천성 게임" [ref=e20]:
+      - region "Tile-matching game" [ref=e20]:
         - generic [ref=e21]:
-          - button "01 오늘의 디저트 첫 번째 티타임 ⌄" [ref=e22] [cursor=pointer]:
+          - button "01 Today’s dessert First tea time ⌄" [ref=e22] [cursor=pointer]:
             - generic [ref=e23]: "01"
             - generic [ref=e24]:
-              - generic [ref=e25]: 오늘의 디저트
-              - strong [ref=e26]: 첫 번째 티타임
+              - generic [ref=e25]: Today’s dessert
+              - strong [ref=e26]: First tea time
             - generic [ref=e27]: ⌄
-          - generic [ref=e28]: ♧ 편안한 모드
+          - generic [ref=e28]: ♧ Relaxed mode
         - generic [ref=e29]:
           - generic [ref=e30]:
-            - generic [ref=e31]: 남은 패
+            - generic [ref=e31]: Remaining tiles
             - strong [ref=e32]: 24 / 24
           - generic [ref=e33]:
-            - generic [ref=e34]: 플레이 시간
+            - generic [ref=e34]: Play time
             - strong [ref=e35]: 00:00
           - generic [ref=e36]:
-            - generic [ref=e37]: 스코어
+            - generic [ref=e37]: Score
             - strong [ref=e38]: "0"
-        - group "디저트 패" [ref=e40]:
+        - group "Dessert tiles" [ref=e40]:
           - img
-          - button "1행 1열 케이크" [ref=e41] [cursor=pointer]:
+          - button "Row 1 column 1 Cake" [ref=e41] [cursor=pointer]:
             - img [ref=e42]
-          - button "1행 2열 차" [ref=e47] [cursor=pointer]:
+          - button "Row 1 column 2 Tea" [ref=e47] [cursor=pointer]:
             - img [ref=e48]
-          - button "1행 3열 딸기" [ref=e52] [cursor=pointer]:
+          - button "Row 1 column 3 Strawberry" [ref=e52] [cursor=pointer]:
             - img [ref=e53]
-          - button "1행 4열 컵케이크" [ref=e57] [cursor=pointer]:
+          - button "Row 1 column 4 Cupcake" [ref=e57] [cursor=pointer]:
             - img [ref=e58]
-          - button "2행 1열 마카롱" [ref=e62] [cursor=pointer]:
+          - button "Row 2 column 1 Macaron" [ref=e62] [cursor=pointer]:
             - img [ref=e63]
-          - button "2행 2열 차" [ref=e67] [cursor=pointer]:
+          - button "Row 2 column 2 Tea" [ref=e67] [cursor=pointer]:
             - img [ref=e68]
-          - button "2행 3열 마카롱" [ref=e72] [cursor=pointer]:
+          - button "Row 2 column 3 Macaron" [ref=e72] [cursor=pointer]:
             - img [ref=e73]
-          - button "2행 4열 마카롱" [ref=e77] [cursor=pointer]:
+          - button "Row 2 column 4 Macaron" [ref=e77] [cursor=pointer]:
             - img [ref=e78]
-          - button "3행 1열 케이크" [ref=e82] [cursor=pointer]:
+          - button "Row 3 column 1 Cake" [ref=e82] [cursor=pointer]:
             - img [ref=e83]
-          - button "3행 2열 차" [ref=e88] [cursor=pointer]:
+          - button "Row 3 column 2 Tea" [ref=e88] [cursor=pointer]:
             - img [ref=e89]
-          - button "3행 3열 도넛" [ref=e93] [cursor=pointer]:
+          - button "Row 3 column 3 Donut" [ref=e93] [cursor=pointer]:
             - img [ref=e94]
-          - button "3행 4열 컵케이크" [ref=e98] [cursor=pointer]:
+          - button "Row 3 column 4 Cupcake" [ref=e98] [cursor=pointer]:
             - img [ref=e99]
-          - button "4행 1열 딸기" [ref=e103] [cursor=pointer]:
+          - button "Row 4 column 1 Strawberry" [ref=e103] [cursor=pointer]:
             - img [ref=e104]
-          - button "4행 2열 마카롱" [ref=e108] [cursor=pointer]:
+          - button "Row 4 column 2 Macaron" [ref=e108] [cursor=pointer]:
             - img [ref=e109]
-          - button "4행 3열 푸딩" [ref=e113] [cursor=pointer]:
+          - button "Row 4 column 3 Pudding" [ref=e113] [cursor=pointer]:
             - img [ref=e114]
-          - button "4행 4열 딸기" [ref=e118] [cursor=pointer]:
+          - button "Row 4 column 4 Strawberry" [ref=e118] [cursor=pointer]:
             - img [ref=e119]
-          - button "5행 1열 딸기" [ref=e123] [cursor=pointer]:
+          - button "Row 5 column 1 Strawberry" [ref=e123] [cursor=pointer]:
             - img [ref=e124]
-          - button "5행 2열 차" [ref=e128] [cursor=pointer]:
+          - button "Row 5 column 2 Tea" [ref=e128] [cursor=pointer]:
             - img [ref=e129]
-          - button "5행 3열 푸딩" [ref=e133] [cursor=pointer]:
+          - button "Row 5 column 3 Pudding" [ref=e133] [cursor=pointer]:
             - img [ref=e134]
-          - button "5행 4열 도넛" [ref=e138] [cursor=pointer]:
+          - button "Row 5 column 4 Donut" [ref=e138] [cursor=pointer]:
             - img [ref=e139]
-          - button "6행 1열 푸딩" [ref=e143] [cursor=pointer]:
+          - button "Row 6 column 1 Pudding" [ref=e143] [cursor=pointer]:
             - img [ref=e144]
-          - button "6행 2열 케이크" [ref=e148] [cursor=pointer]:
+          - button "Row 6 column 2 Cake" [ref=e148] [cursor=pointer]:
             - img [ref=e149]
-          - button "6행 3열 푸딩" [ref=e154] [cursor=pointer]:
+          - button "Row 6 column 3 Pudding" [ref=e154] [cursor=pointer]:
             - img [ref=e155]
-          - button "6행 4열 케이크" [ref=e159] [cursor=pointer]:
+          - button "Row 6 column 4 Cake" [ref=e159] [cursor=pointer]:
             - img [ref=e160]
-        - status [ref=e167]: 같은 그림 두 개를 눌러요. 선은 두 번까지 꺾을 수 있어요.
+        - status [ref=e167]: Tap two matching pictures. The line can bend at most twice.
         - generic [ref=e168]:
-          - button "☀ 힌트" [ref=e169] [cursor=pointer]:
+          - button "☀ Hint" [ref=e169] [cursor=pointer]:
             - generic [ref=e170]: ☀
-            - text: 힌트
-          - button "⤨ 섞기" [ref=e171] [cursor=pointer]:
+            - text: Hint
+          - button "⤨ Shuffle" [ref=e171] [cursor=pointer]:
             - generic [ref=e172]: ⤨
-            - text: 섞기
-          - button "Ⅱ 일시정지" [ref=e173] [cursor=pointer]:
+            - text: Shuffle
+          - button "Ⅱ Pause" [ref=e173] [cursor=pointer]:
             - generic [ref=e174]: Ⅱ
-            - text: 일시정지
+            - text: Pause
       - complementary [ref=e175]:
         - generic [ref=e176]:
-          - strong [ref=e177]: 준비됐나요?
-          - paragraph [ref=e178]: 같은 디저트를 두 개 골라봐요.
-        - 'img "모모: 준비됐나요?" [ref=e180]'
+          - strong [ref=e177]: Ready?
+          - paragraph [ref=e178]: Choose two matching desserts.
+        - 'img "Momo: Ready?" [ref=e180]'
     - generic [ref=e181]:
       - generic [ref=e182]: MADE FOR YOUR SLOW MOMENTS
-      - generic [ref=e183]: 한 쌍씩, 천천히. ✿
+      - generic [ref=e183]: One pair at a time, at your own pace. ✿
 ```

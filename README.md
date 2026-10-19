@@ -1,39 +1,40 @@
-# ChibiLink · 모모의 작은 카페
+# ChibiLink · Momo's Little Café
 
-PC/모바일용 사천성 퍼즐. 같은 디저트 두 개를 최대 두 번 꺾는 선으로 연결합니다. 오리지널 치비 캐릭터 모모가 플레이에 반응합니다.
+A tile-matching puzzle for desktop and mobile browsers. Connect two matching desserts with a path that bends at most twice. Momo, an original chibi character, reacts to your play.
 
-## 플레이
+## Play
 
-배포 주소: [치비링크 플레이](https://hyangdan2.github.io/CDXPilot0006/)
+Public site: [Play ChibiLink](https://hyangdan2.github.io/CDXPilot0006/)
 
-## 실행
+## Run locally
 
-현재 Mac에서 시스템 Node가 오래된 경우에도 실행할 수 있는 런처:
+On this Mac, use the launcher even if the system Node version is outdated:
 
 ```sh
 ./scripts/dev-local.sh
 ```
 
-터미널에 표시되는 로컬 주소를 브라우저에서 여세요. 일반 개발 환경에서는 Node 24.19.0을 활성화하고 다음을 실행합니다.
+Open the local address printed in the terminal. In a standard development environment, activate Node 24.19.0 and run:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-## 구현 기능
+## Features
 
-- 10개 단계, 편안한 모드와 시간 제한 도전 모드
-- 같은 패 연결, 최대 두 번 꺾기, 보드 외곽 경로, 콤보와 점수
-- 힌트(H), 섞기(S), 일시정지(P), 재시작 및 단계 선택
-- 터치·마우스·Tab/Enter 조작, 설정·진행 단계·최고 점수 로컬 저장
-- 해답 순서가 존재하는 시드 기반 생성 및 자동 막힘 복구
-- 모모 9개 표정, 이미지 실패 대체 표시, 움직임 줄이기·캐릭터 숨기기·효과음 설정
-- PC 6×6, 긴 모바일 4×6, 짧은 모바일 4×4, 짧은 가로 화면 6×2 보드
+- Easy: one floor; Normal: two floors; Hard: three floors, with ten stages each
+- Relaxed play and timed Challenge mode; Normal is the default for new users
+- Matching tiles, at most two bends, exterior routes, combos and scoring
+- Hints (H), shuffle (S), pause (P), restart and stage selection
+- Touch, mouse and Tab/Enter controls; locally saved settings, progress and best scores
+- Seeded generation with complete solution witnesses and automatic deadlock recovery
+- Nine Momo expressions, image-load fallback, reduced motion, character visibility and music/sound settings
+- Responsive boards: 6×6 desktop, 4×6 tall mobile, 4×4 short mobile and 6×4 short landscape
 
-새 게임의 보드 크기는 시작 시 화면에 맞춰 선택됩니다. 플레이 중 극단적으로 화면 비율을 바꾸면 기존 패 배열을 유지하므로 패 크기가 작아질 수 있습니다. 새 게임을 시작하면 해당 화면에 맞는 크기가 적용됩니다.
+New games choose board dimensions for the current viewport. Extreme aspect-ratio changes during play preserve the existing arrangement and can shrink tile targets. Starting a new game selects dimensions for the new viewport.
 
-## 검증
+## Verification
 
 ```sh
 npx playwright install chromium
@@ -41,10 +42,10 @@ npm run verify
 npm run test:e2e
 ```
 
-하네스: [docs/HARNESS.md](docs/HARNESS.md). 결과 및 미검증 범위: [docs/QA.md](docs/QA.md).
+Harness: [docs/HARNESS.md](docs/HARNESS.md). Results and unverified scope: [docs/QA.md](docs/QA.md).
 
-캐릭터의 실제 배포 PNG는 512×512이며 사방 106px(20.7%) 이상 투명 여백을 보장하고, 화면 표시에도 별도 10% inset을 적용합니다. 원본·정확한 생성 프롬프트: [art/PROMPTS.md](art/PROMPTS.md). `/art-review.html`에서 전체 표정을 확인할 수 있습니다.
+Deployed character PNGs are 512×512 with at least 106px (20.7%) of transparent margin on every side, plus a separate 10% runtime inset. Source artwork and exact generation prompt: [art/PROMPTS.md](art/PROMPTS.md). Inspect all expressions at `/art-review.html`.
 
-GitHub Actions 검증 및 Pages 배포를 완료했고, 실제 배포 주소에서도 PC/모바일 화면과 캐릭터 패딩을 검사했습니다. 실물 iPhone/Android 기기, Safari 및 실제 청취는 별도 검증 대상입니다. 로컬 정적 빌드는 dist/에 생성됩니다.
+GitHub Actions verification and Pages deployment have completed. Desktop/mobile layouts and character padding have also been checked on the public site. Physical iPhone/Android devices, Safari and listening quality require separate verification. Local static builds are generated in `dist/`.
 
-다단 퍼즐 확장 검토: [설계 제안](docs/STACKED_PUZZLE_PROPOSAL.md). 현재 서비스는 기존 2D 사천성 규칙입니다.
+Current layered rules: [Stacked puzzle design](docs/STACKED_PUZZLE_PROPOSAL.md). Upper tiles sit at the center of four lower tiles; only exposed matching tiles on the same floor can connect. Occupied tile boundaries block routes, while lower floors do not obstruct an upper-floor route. Legacy records remain preserved.

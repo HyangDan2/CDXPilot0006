@@ -1,107 +1,107 @@
-# 치비링크 구현 계획 — 패딩 요구사항 반영
+# ChibiLink implementation plan — padding requirements
 
-## 현재 상태
-- 구현 및 로컬 검증 완료(2026-10-19). 실물 모바일 기기·Safari는 미검증으로 분리 기록한다. 후속 승인에 따라 원격 CI 및 GitHub Pages 배포도 완료했다.
-- MacRepo의 CDXPilot0004·0005에서 기존 프로세스와 실제 패딩 수정 이력을 확인했다. 원본 프로젝트는 변경하지 않고 이번 프로젝트에 적용했다.
-- 작업 계약: [AGENTS.md](AGENTS.md), 설계 룰: [ARCHITECTURE.md](docs/ARCHITECTURE.md), 검증 절차: [HARNESS.md](docs/HARNESS.md), 에셋 규격: [ART_PIPELINE.md](docs/ART_PIPELINE.md).
-- 출처·적용 판단은 [DECISIONS.md](docs/DECISIONS.md), 실제 검증 상태는 [QA.md](docs/QA.md)에 기록한다.
-- 기존 공통 프로세스: 규칙 확인 → 작업 파일 점검 → 담당 모듈·변경 범위 식별 → 계획 → 작은 단위 구현 → 회귀·전체·브라우저 검증 → 스크린샷 직접 확인 → 문서·결과 기록. 미해결 실패가 있으면 다음 단계로 진행하지 않는다.
+## Status
+- Implementation and local verification completed on 2026-10-19. Physical mobile devices and Safari remain explicitly unverified. GitHub Pages deployment and remote CI also completed after subsequent authorization.
+- Reviewed existing processes and padding fixes in MacRepo/CDXPilot0004 and CDXPilot0005. Applied relevant precedents without changing those projects.
+- Contributor contract: [AGENTS.md](AGENTS.md); design rules: [ARCHITECTURE.md](docs/ARCHITECTURE.md); verification: [HARNESS.md](docs/HARNESS.md); asset specifications: [ART_PIPELINE.md](docs/ART_PIPELINE.md).
+- Sources and adoption decisions: [DECISIONS.md](docs/DECISIONS.md). Actual verification status: [QA.md](docs/QA.md).
+- Workflow: read rules → inspect working files → identify ownership and scope → plan → bounded implementation → regression/full/browser checks → inspect screenshots → record results. Do not advance with unresolved failures.
 
-## 확정 요구사항
-- PC·모바일 웹용 사천성. 동일한 패를 최대 두 번 꺾는 경로로 연결한다.
-- 일본 애니메이션풍 오리지널 치비 캐릭터가 상황에 맞춰 반응한다.
-- 보드 사방에 논리적인 빈 테두리 한 칸을 포함하고, 화면에도 바깥 연결선 통로를 확보한다.
-- 화면 여백, 보드 연결 통로, 패 간격, 캐릭터 이미지 내부 여백을 별도로 관리한다.
-- 캐릭터 원본 이미지 자체에 투명 패딩을 포함한다. CSS 패딩만으로 대체하지 않는다.
+## Confirmed requirements
+- A desktop/mobile tile-matching puzzle: connect identical tiles with at most two bends.
+- An original Japanese-animation-inspired chibi character reacts to gameplay.
+- Reserve a logical one-cell empty border on all four sides and display the exterior connection corridor.
+- Manage screen padding, board corridors, tile gaps and internal character-image margins separately.
+- Include transparent padding in the source character images; CSS padding alone is insufficient.
 
-## 캐릭터 이미지 설계 룰
-- 모든 포즈의 머리카락, 귀, 손발, 의상, 소품, 그림자와 효과를 포함해 콘텐츠 경계를 산정한다.
-- 원본은 셀 사방 최소 15%의 투명 여백, 생성 목표는 20%로 강화한다. 화면에는 별도 10% inset을 적용한다. 기존 프로젝트의 실제 수정 기준이며 가장 큰 동작을 기준으로 검증한다.
-- 모든 프레임은 동일한 캔버스 크기, 배율, 기준점(전신은 발밑, 상반신은 어깨)으로 정렬한다. 자동으로 투명 테두리를 잘라내지 않는다.
-- 캐릭터 표시에는 비율 유지와 contain 방식을 사용하고, 고정된 표시 영역을 확보한다.
-- 점프·확대·회전 등 런타임 동작의 최대 범위는 원본 투명 여백과 별도로 컨테이너에서 확보한다.
-- 캐릭터·말풍선·효과 영역은 게임판 및 조작 버튼을 가리지 않도록 배치한다.
-- 스프라이트 시트를 사용하면 셀 사이 거터와 텍스처 필터링에 의한 인접 프레임 번짐 방지를 추가한다.
-- 이미지 로딩 실패 시 대체 표시를 제공하고, 캐릭터 리소스 오류가 퍼즐 진행을 중단시키지 않게 한다.
+## Character design rules
+- Measure content bounds including hair, ears, limbs, clothing, props, shadows and effects in every pose.
+- Require at least 15% transparent margins on all sides of each source cell, targeting 20% at generation. Apply an independent 10% runtime inset. These precedents come from prior fixes and must hold at maximum motion.
+- Keep canvas size, scale and anchors consistent across frames: feet for full-body art, shoulders for busts. Never automatically trim transparent borders.
+- Preserve aspect ratio with contain sizing and a fixed display frame.
+- Reserve container space for maximum jumping, scaling and rotation independently of source margins.
+- Keep the character, speech bubbles and effects clear of tiles and controls.
+- Sprite sheets require gutters and protection against texture-filter bleed between cells.
+- Provide an image-load fallback; character resource failures must not stop gameplay.
 
-## 하네스 가이드
-- 에셋 검사: 이미지 디코딩, 알파 채널, 프레임 크기 일치, 기준점 일치, 콘텐츠 경계와 투명 여백을 확인한다.
-- 시각 검사: 모든 표정·포즈 및 최대 점프·확대 상태에서 잘림, 프레임 흔들림, 인접 프레임 번짐을 확인한다.
-- 반응형 검사: 좁은 모바일 세로 화면, 모바일 가로 화면, PC에서 캐릭터·말풍선·버튼의 겹침을 확인한다.
-- 보드 검사: 네 방향 및 모서리의 바깥 연결 경로, 선택 테두리, 성공 효과가 잘리지 않는지 확인한다.
-- 상태 검사: 이미지 로딩 중·로딩 실패·화면 크기 변경·기기 안전 영역에서도 레이아웃과 입력이 유지되는지 확인한다.
-- 기존 하네스의 실행 방식과 결과 기록 형식을 유지하고, 위 검증을 해당 게이트에 추가한다.
-- 실제 실행하지 않은 검증을 통과로 기록하지 않는다.
+## Harness guidance
+- Assets: verify decoding, alpha channels, consistent frame dimensions/anchors, content bounds and transparent margins.
+- Visuals: inspect every expression/pose and maximum jump/scale for clipping, frame jitter and adjacent-frame bleed.
+- Responsive layouts: check character, speech-bubble and control overlap on narrow portrait, landscape and desktop screens.
+- Board: check exterior routes at every edge/corner, selection borders and match effects for clipping.
+- States: retain layout and input during loading, image failure, viewport changes and device safe-area handling.
+- Preserve the existing harness execution and reporting workflow; add these checks to its gates.
+- Never report checks as passed unless they actually ran.
 
-## 진행 순서와 단계 게이트
-1. **프로세스·문서 정렬 — 완료:** 기존 자료 조사 및 이번 프로젝트의 AGENTS·설계·하네스·아트 규칙 작성. 문서 경로와 계획 상태 확인.
-2. **부트스트랩·하네스 — 완료:** TypeScript strict/Vite 기반 시작 화면, 고정 환경·lockfile, lint/typecheck/test/build/verify, CI 준비. 최소 임시 에셋도 패딩 규격을 적용한다. 게이트: 실제 실행 가능한 verify.
-3. **순수 퍼즐 엔진 — 완료:** 최대 두 번 꺾는 연결, 외곽 한 칸, 시드 기반 보드·해법 검증, 힌트·막힘·섞기·시간·점수·상태 전이. 게이트: 모델·통합 테스트 및 verify.
-4. **PC·모바일 조작/UI — 완료:** 화면 여백과 외곽 통로, 마우스·터치·키보드, 일시정지·회전·저장 실패 처리. 게이트: verify, 실제 입력 E2E, 화면 크기별 스크린샷 확인.
-5. **치비 에셋·반응 — 완료:** 원본·프롬프트 보존 → 추출·시각 확인 → 고정 캔버스 패킹 → 메타데이터·렌더러 동시 갱신. 게이트: PNG 여백 검사, verify/E2E, 모든 표정·최대 동작의 스크린샷 확인.
-6. **로컬 수용 검증 — 완료 / 실기기 미검증:** 정상 플레이 완주, 실패·재시작·리소스 오류, 중첩 URL 경로, 작은 화면·실기기 확인. 게이트: 전체 verify/E2E, 시각 검토, QA·변경 기록 갱신. 실기기 확인이 불가능하면 미검증으로 명시한다.
-7. **결과 전달:** 구현·실행한 검사·실패·미검증·제한사항을 구분해 보고한다. 공개 배포는 별도 작업이다.
+## Implementation sequence and gates
+1. **Process and documentation — complete:** review precedents; write contributor, design, harness and art rules; verify document paths and plan status.
+2. **Bootstrap and harness — complete:** TypeScript strict/Vite start screen, pinned environment/lockfile, lint/typecheck/test/build/verify and CI. Temporary assets also follow padding requirements. Gate: executable verification.
+3. **Pure puzzle engine — complete:** two-bend paths, exterior border, seeded boards and solution witnesses, hints, deadlocks, shuffle, timing, scoring and state transitions. Gate: model/integration tests and verify.
+4. **Desktop/mobile UI and input — complete:** padding/corridors, mouse/touch/keyboard, pause, rotation and storage-failure handling. Gate: verify, real-input E2E and viewport screenshot inspection.
+5. **Chibi assets and reactions — complete:** preserve sources/prompts → extract and inspect → pack fixed canvases → update metadata and renderer together. Gate: PNG margin checks, verify/E2E and all-expression/maximum-motion screenshots.
+6. **Local acceptance — complete; physical devices unverified:** full playthroughs, failure/restart/resource errors, nested URLs and small screens. Gate: full verify/E2E, visual inspection and QA/changelog updates. Explicitly record unavailable physical-device checks.
+7. **Delivery:** distinguish implementation, executed checks, failures, unverified scope and limitations. Public deployment is a separate activity.
 
-npm 명령과 테스트를 구현했고, 깨끗한 npm ci 후 verify(모델 11개)와 E2E(11개)를 통과했다. 기존 프로젝트의 리듬게임/액션게임 전용 규칙 대신 동일한 작업 순서와 검증 수준을 사천성에 적용한다.
+Initial acceptance: after a clean `npm ci`, verify passed with 11 model tests and E2E passed with 11 tests. Reuse prior projects' workflow and verification rigor, without importing their rhythm/action mechanics.
 
-## 완료 기준
-- 연결 판정의 바깥 경로와 화면상의 연결선이 일치한다.
-- 모든 캐릭터 포즈 및 동작에서 원본·표시 영역의 잘림이 없다.
-- 모바일에서도 패와 버튼을 가리지 않고 조작할 수 있다.
-- 캐릭터 로딩 실패 시에도 게임을 계속할 수 있다.
-- 기존 하네스 가이드와 설계 룰에 변경사항이 반영되고, 요구 검증 결과가 기록된다.
+## Acceptance criteria
+- Logical exterior paths match displayed connection lines.
+- All character poses and motions fit both source and display bounds.
+- Mobile tiles and controls remain unobstructed and usable.
+- Gameplay continues when character images fail to load.
+- Harness/design rules reflect changes and required verification results are recorded.
 
+## Initial implementation results and adjustments
+These are historical milestones; subsequent sections describe later changes.
 
-## 구현 결과와 조정
-- 모모 9표정, 12종 디저트 패, 10단계, 편안한/도전 모드, 힌트·섞기·자동 막힘 복구·콤보·저장을 구현했다.
-- 생성 원본은 보존하고, 규격화된 512×512 배포 PNG에 사방 106px(20.7%) 이상의 완전 투명 여백을 확보했다. 별도 10% 화면 inset과 최대 동작 검사를 통과했다.
-- 실제 화면 검사에서 하단 버튼 넘침을 발견해 수정했다. 새 게임은 화면별로 PC 6×6, 긴 모바일 4×6, 짧은 모바일 4×4, 짧은 가로 6×2를 선택한다.
-- 보드 외곽 통로는 셀 반폭 + 간격 + 4px로 계산하여 연결선이 화면 경계 안에 남도록 검증했다.
-- 단위 테스트에는 10단계×30개 시드의 전체 해답 검사가 포함된다. E2E는 실제 클릭 완주, 모바일 탭, 오류 대체 표시, 6개 화면 크기와 전 표정을 검증한다.
-- 상세 근거와 한계: [QA.md](docs/QA.md). 실행: [README.md](README.md).
+- Implemented nine Momo expressions, twelve dessert symbols, ten stages, relaxed/Challenge modes, hints, shuffle, automatic deadlock recovery, combos and persistence.
+- Preserved generated sources; standardized 512×512 deployment PNGs have at least 106px (20.7%) fully transparent margins on all sides. Independent 10% runtime inset and maximum-motion checks passed.
+- Visual inspection found and fixed overflowing bottom controls. Initial responsive dimensions were 6×6 desktop, 4×6 tall mobile, 4×4 short mobile and 6×2 short landscape; the layered update later changed landscape to 6×4.
+- Initial exterior clearance used half a cell + gap + 4px and kept lines inside the board. Later clearance changes are recorded below.
+- Unit tests replayed full solutions for ten stages × thirty seeds. E2E covered actual-click completion, mobile taps, resource fallback, six viewport sizes and every expression.
+- Evidence and limitations: [QA.md](docs/QA.md). Running the project: [README.md](README.md).
 
+## Initial deployment results
+- Uploaded to GitHub `HyangDan2/CDXPilot0006` and deployed through Actions to Pages.
+- Public site: [Play ChibiLink](https://hyangdan2.github.io/CDXPilot0006/).
+- Eleven local model tests, eleven E2E cases and remote CI passed under the actual deployment path.
+- Public-site checks passed for six viewports, real input, nine expressions and PNG margins; see the hosted addendum in QA.md.
+- Reviewed layered puzzles as a separate extension; subsequent approval authorized the two-floor work below.
 
-## 배포 결과
-- GitHub `HyangDan2/CDXPilot0006` 업로드 및 Actions 기반 Pages 배포 완료.
-- 서비스 주소: https://hyangdan2.github.io/CDXPilot0006/
-- 실제 배포 경로 기준 로컬 모델 11개·E2E 11개와 원격 CI 통과.
-- 공개 URL의 6개 화면 크기, 실제 입력, 9표정·PNG 패딩 검증 통과. 근거는 QA.md의 hosted addendum 참조.
-- 다단 퍼즐은 별도 확장 제안으로 검토 완료. 후속 승인으로 아래 2층 확장 작업을 진행한다.
+## Approved follow-up — two floors, irregular layouts and harder Challenge mode
+- Retain ten classic stages and add five two-floor stages, selectable in settings or the board mode control.
+- Apply permanent hole masks to both modes. Since holes can open routes, tune difficulty through symbol variety, fewer easy matches and time/assist limits together.
+- Challenge allows two hints costing eight seconds each and one shuffle costing twelve seconds. Automatic recovery costs 150 points without consuming manual shuffle quota.
+- Preserve existing records as classic relaxed and separate all four mode combinations.
+- Follow model/full checks → two modes at six viewports and touch completion → screenshot review → documentation → Actions/Pages → public-site verification.
+- Preserve at least 106px PNG margins and 10% runtime inset; distinguish physical devices from emulation.
 
-## 승인된 후속 구현 — 2층·비정형·도전 강화
-- 클래식 10단계를 유지하고 2층 레이어 5단계를 추가. 설정 또는 보드 상단 모드 버튼에서 선택한다.
-- 두 모드에 영구 빈칸 마스크 적용. 빈칸이 길을 열기도 하므로 도전 난이도는 패 종류, 쉬운 연결 후보 감소, 시간·도움 제한으로 함께 조절한다.
-- 도전은 힌트 2회(각 8초 차감), 섞기 1회(12초 차감). 자동 막힘 복구는 수동 횟수를 소모하지 않고 150점 차감한다.
-- 기존 기록은 클래식 편안함으로 보존하고 네 가지 모드 조합의 기록을 분리한다.
-- 기존 하네스 순서대로 모델/전체 검사 → 두 모드 6개 화면/터치 완주 → 스크린샷 검토 → 문서 기록 → GitHub Actions/Pages → 실제 배포 주소 검증을 수행한다.
-- 캐릭터 PNG 여백 106px 이상과 런타임 inset 10% 유지. 실물 기기 검증은 에뮬레이션과 구분한다.
+Completed: 16 model tests, 19 browser tests and remote CI/Pages passed. Public checks covered two modes × six viewports, actual matching input, nine-expression padding and matching deployed bundles. See QA.md's Two-layer entry. Physical mobile devices and Safari remain unverified.
 
-후속 구현 검증 완료: 모델 16개, 브라우저 19개, 원격 CI/Pages 성공. 공개 주소에서 두 모드×6개 화면, 실제 매칭 입력, 9표정 패딩과 배포 번들 일치를 확인했다. 상세 결과는 QA.md의 Two-layer 항목 참조. 실물 모바일·Safari는 미검증이다.
+## Fresh background music
+Add an original 104 BPM, sixteen-bar café-style loop. Play after game start; stop on pause, results and backgrounding. Persist the existing sound preference for both BGM and effects. Verify actual audio output, mute persistence and mobile-tap startup before Pages deployment.
 
-## 산뜻한 BGM 추가
-오리지널 104 BPM 카페풍 16마디 루프를 추가한다. 게임 시작 후 재생하며 일시정지·결과·백그라운드에서 멈춘다. 기존 소리 설정으로 BGM과 효과음을 함께 제어하고 저장한다. 실제 오디오 신호·음소거 유지·모바일 탭 시작을 브라우저에서 검증한 뒤 Pages에 반영한다.
+## Sharing preview and favicon
+Reviewed CDXPilot0004's metadata/icon structure and applied it here. Added a 1200×630 preview featuring Momo, dessert tiles and a game introduction, flower-logo SVG/ICO/PNG favicons and an Apple home-screen icon. Preserve character padding, inspect generated assets and verify static metadata, image dimensions and deployed responses.
 
-## 미리보기·파비콘
-CDXPilot0004의 메타 태그·아이콘 구성을 확인해 이번 프로젝트에 적용했다. 모모·디저트 패·게임 소개가 담긴 1200×630 미리보기와 꽃 로고 SVG/ICO/PNG 파비콘, Apple 홈 화면 아이콘을 추가했다. 원본 캐릭터 이미지 패딩을 유지하고 생성 결과를 직접 시각 확인한 뒤 정적 메타데이터·이미지 규격·배포 응답을 검증한다.
+## Approved layered difficulty redesign
+- Replace numeric badges with upper tiles centered over four lower tiles. Align input and routes using half-cell coordinates and same-floor connection rules.
+- Easy: one floor; Normal: two; Hard: three. Each has ten stages. Symbol counts progress through 6–8 / 10–12 / 14–18 respectively.
+- Add face/side depth, shadows, covered-tile shading and reveal effects. Preserve mobile controls, 106px source margins and 10% runtime inset.
+- Use v3 storage to preserve old settings/records and separate new-rule records.
+- Verify generation/coverage/routes/shuffle/migration → full checks → three difficulties × six viewports and mouse/touch completion → visual review → Pages/public-site verification.
 
-## 승인된 입체 난이도 개편
-- 숫자 배지를 제거하고 상층 패를 아래 4개 패 중앙에 배치. 반 칸 좌표와 같은 층 연결 규칙으로 입력·경로를 일치시킨다.
-- Easy 1층 / Normal 2층 / Hard 3층, 각 10단계. 패 종류는 6~8 / 10~12 / 14~18종으로 증가한다.
-- 입체 윗면·측면·그림자와 덮인 패의 명암, 드러남 효과 적용. 모바일 조작·캐릭터 106px 원본 여백과 10% inset 유지.
-- v3 저장으로 이전 기록·설정을 보존하고, 새 규칙 기록은 별도 관리한다.
-- 생성/가림/경로/섞기/마이그레이션 → 전체 검증 → 3난이도×6화면과 PC·터치 완주 → 시각 확인 → Pages 배포·공개 주소 검증 순서를 따른다.
+Completed: 22 model tests, 35 browser tests and Actions/Pages passed. Hosted checks covered three difficulties × six viewports, actual clicks/taps and all-expression padding. Legacy records remain visible in settings and separate from new records. Physical devices/Safari remain unverified.
 
-입체 난이도 개편 완료: 모델 22개·브라우저 35개 통과, GitHub Actions 및 Pages 배포 성공. 공개 주소에서 3난이도×6개 화면, 실제 클릭/탭과 전 표정 패딩 검증 완료. 이전 기록은 설정에서 열람 가능하며 새 난이도 기록과 분리했다. 실물 모바일·Safari는 미검증이다.
+## 2026-10-20 — mobile zoom, effect clearance and default difficulty
+- Restrict pinch/double-tap zoom while preserving taps and settings scrolling.
+- Size tiles using actual available board width/height and 3D effect clearance. Verify hidden-character layouts and all corners.
+- Default new users or users without a saved difficulty to Normal; preserve existing selections and records.
+- Run full checks, mobile gestures/desktop input and character padding checks, followed by Pages deployment and public acceptance.
 
-## 2026-10-20 모바일 줌·효과 여백·기본값 수정
-- 모바일 핀치/더블탭 확대를 제한하고 정상 탭·설정 스크롤을 유지한다.
-- 보드의 실제 가용 폭·높이와 입체 효과 안전 여백으로 패 크기를 계산한다. 캐릭터 숨김 상태와 네 모서리도 검증한다.
-- 신규/난이도 미저장 사용자는 Normal, 기존 선택·기록은 보존한다.
-- 전체 검사, 모바일 제스처·PC 입력, 캐릭터 패딩 검사 후 Pages 배포와 공개 주소 검증을 진행한다.
+Completed: 23 model tests, 42 browser tests and Actions/Pages passed. Hosted checks covered three difficulties × six viewports, six hidden-character layouts, all expressions, zoom restrictions, taps and dialog scrolling. New users start Normal; saved choices/records survive. Physical devices/Safari remain unverified.
 
-완료: 모델 23개·브라우저 42개 및 GitHub Actions/Pages 성공. 공개 주소에서 3난이도×6화면, 캐릭터 숨김 6화면, 전 표정 패딩과 모바일 줌 제한·탭·설정창 스크롤을 검증했다. 신규 기본값 Normal, 기존 선택·기록 유지. 실물 기기·Safari는 미검증이다.
+## 2026-10-20 — blocked-tile connection fix
+Reproduced half-cell search treating occupied tile boundaries as empty corridors. Include boundaries in obstacles and add tests for rejection on three floors, opening a full empty row, comparison against classic-grid routing and actual mouse/touch input. Run full and hosted verification.
 
-## 2026-10-20 막힌 패 사이 연결 오류 수정
-반 칸 탐색이 패 경계선을 빈 통로로 오인하는 문제를 재현했다. 패 경계까지 장애물로 판정하고, 3개 층의 차단·빈 줄 개방·기존 격자 판정 비교·PC/터치 입력 회귀 검사를 추가한다. 전체 검사 및 배포 주소에서 재검증한다.
-
-수정·배포 완료: 모델 25개/브라우저 44개 및 원격 CI 통과. 공개 주소에서 PC·터치 차단 재현과 정상 연결, 3난이도×6화면을 재검증했다.
+Fix deployed: 25 model tests, 44 browser tests and remote CI passed. Public checks confirmed blocked-pair rejection, valid matching and three difficulties × six viewports.

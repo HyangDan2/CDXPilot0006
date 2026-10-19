@@ -131,3 +131,7 @@ Branding hosted acceptance: deployed commit `745a9202c87b7d7c545ea31b5aafacd4ece
 
 - Hosted acceptance: runtime commit `a3d6ed3a5a3cd6e425fbb9681e0fc9fa19f50e15`, Actions 39277161128 verify/deploy SUCCESS. `PATH_QA_URL=https://hyangdan2.github.io/CDXPilot0006/ npm run test:e2e -- --grep 'blocked seam'`: 2/2 PASS, real mouse/touch rejection and valid adjacent matching. Hosted fixture screenshots saved as docs/hosted-evidence/blocked-seam-{desktop,mobile}.png; desktop screenshot reviewed directly.
 - `node scripts/verify-hosted.mjs`: PASS, all three difficulties × six viewports, real matches, nine-expression bounds, hidden-character containment and identical source PNGs. Public JS SHA256 `1493a7e9c9ce70647a4a655299fb2619d3a0abcc1022a9a6672a588c2d7aee1a` and unchanged CSS match local production bytes. Physical devices/Safari remain unverified. Evidence-only follow-up does not change runtime.
+
+## English documentation acceptance — 2026-10-20
+- Checked all 14 tracked text documents: no Korean text remains and relative Markdown links resolve. `git diff --check` passes. Translated the historical UI snapshot with explicit provenance; its original is retained in Git history. Updated the contributor language rule and stale README descriptions.
+- Documentation-only change: runtime code, UI, assets and saved data are unchanged. Gameplay/browser tests were not rerun for this translation.

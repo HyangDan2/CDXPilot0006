@@ -25,4 +25,4 @@
 ## Scope and documents
 Implementation was authorized on 2026-10-19. Commands in HARNESS.md are implemented; report only checks actually executed. Local verification does not prove deployment; publishing is a separate task.
 
-Process and padding precedents are recorded in docs/DECISIONS.md. Prior projects' rhythm/action mechanics, engines and deployment permissions are not inherited. Technical rules use English; PLAN.md is the Korean user-facing plan.
+Process and padding precedents are recorded in docs/DECISIONS.md. Prior projects' rhythm/action mechanics, engines and deployment permissions are not inherited. All repository documentation, including PLAN.md and future updates, must be written in English. Label translated historical UI evidence explicitly; keep original captures recoverable in Git history.

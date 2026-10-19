@@ -1,11 +1,11 @@
-# 입체 퍼즐 규칙 — 승인된 3층 확장
+# Layered puzzle rules — approved three-floor expansion
 
-이 문서는 초기 제안을 대체한다. Easy 1층, Normal 2층, Hard 3층으로 구현하며 각 난이도는 10단계다. 도전 모드는 별도 시간 제한 옵션이다.
+This document supersedes the initial proposal. Easy uses one floor, Normal two and Hard three, with ten stages per difficulty. Challenge mode is an independent timed option.
 
-상층 패는 아래 네 패 중앙에 반 칸씩 이동해 배치한다. 숫자 배지를 없애고 두께·그림자·윗면 색으로 층을 표현한다. 위 패가 겹쳐 덮으면 아래 패는 선택할 수 없다. 제거 후에는 중력 이동 없이 아래 패가 제자리에서 드러난다.
+Upper tiles are offset by half a cell in each direction and centered over four lower tiles. Thickness, shadows and face colors replace numeric layer badges. A lower tile cannot be selected while an upper tile overlaps it. Removing tiles reveals lower tiles in place without gravity or relocation.
 
-같은 층의 노출된 동일 그림끼리 최대 두 번 꺾어 연결한다. 경로는 선택한 층의 평면에서 진행하므로 그 층과 위층 패를 장애물로 계산하며, 아래층 패 위로는 지나갈 수 있다. 이 규칙은 도움말에도 명시한다.
+Connect exposed tiles with matching symbols on the same floor using at most two bends. The path runs on the selected floor, so tiles on that floor or above are obstacles; it may pass over lower-floor tiles. The help text explains this rule. Occupied footprint boundaries are also blocked: decorative gaps between tiles are not playable corridors.
 
-패 종류는 Easy 6~8, Normal 10~12, Hard 14~18종이며 작은 보드는 실제 쌍 수에 맞춘다. 모든 보드는 끝까지 지울 수 있는 해답을 보존하고 섞기는 층별 잔여 그림과 위치를 유지한다.
+Symbol counts range from 6–8 for Easy, 10–12 for Normal and 14–18 for Hard, limited by the number of available pairs on smaller boards. Every generated board retains a complete solution witness. Shuffling preserves surviving positions and each floor's symbol multiset.
 
-기존 클래식/2층 기록은 삭제하지 않고 설정에서 보존 기록으로 표시한다. 새로운 여섯 난이도·도전 조합의 기록과 분리한다. 설계 계약은 ARCHITECTURE.md, 검증 절차는 HARNESS.md, 실제 결과는 QA.md를 따른다.
+Legacy classic/two-floor records are retained and displayed in settings, separately from the six new difficulty/Challenge combinations. Follow [ARCHITECTURE.md](ARCHITECTURE.md) for design contracts, [HARNESS.md](HARNESS.md) for verification procedures and [QA.md](QA.md) for actual results.
