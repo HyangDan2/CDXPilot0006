@@ -1,0 +1,137 @@
+[
+  {
+    "name": "idle",
+    "alphaMargins": [
+      106,
+      106,
+      106,
+      106
+    ],
+    "substantialMargins": [
+      167,
+      147,
+      131,
+      129
+    ]
+  },
+  {
+    "name": "excited",
+    "alphaMargins": [
+      106,
+      106,
+      106,
+      106
+    ],
+    "substantialMargins": [
+      152,
+      148,
+      148,
+      130
+    ]
+  },
+  {
+    "name": "pleased",
+    "alphaMargins": [
+      106,
+      106,
+      107,
+      106
+    ],
+    "substantialMargins": [
+      148,
+      148,
+      154,
+      129
+    ]
+  },
+  {
+    "name": "puzzled",
+    "alphaMargins": [
+      106,
+      106,
+      106,
+      106
+    ],
+    "substantialMargins": [
+      163,
+      146,
+      129,
+      131
+    ]
+  },
+  {
+    "name": "worried",
+    "alphaMargins": [
+      106,
+      106,
+      106,
+      106
+    ],
+    "substantialMargins": [
+      153,
+      147,
+      144,
+      131
+    ]
+  },
+  {
+    "name": "sad",
+    "alphaMargins": [
+      106,
+      106,
+      107,
+      106
+    ],
+    "substantialMargins": [
+      153,
+      147,
+      139,
+      131
+    ]
+  },
+  {
+    "name": "clear",
+    "alphaMargins": [
+      106,
+      106,
+      106,
+      106
+    ],
+    "substantialMargins": [
+      156,
+      146,
+      117,
+      138
+    ]
+  },
+  {
+    "name": "ready",
+    "alphaMargins": [
+      106,
+      106,
+      106,
+      106
+    ],
+    "substantialMargins": [
+      149,
+      142,
+      140,
+      138
+    ]
+  },
+  {
+    "name": "blink",
+    "alphaMargins": [
+      106,
+      106,
+      106,
+      106
+    ],
+    "substantialMargins": [
+      152,
+      147,
+      141,
+      138
+    ]
+  }
+]

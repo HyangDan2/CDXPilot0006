@@ -1,0 +1,32 @@
+{
+  "name": "chibilink",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "lint": "eslint src tests",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "assets:check": "node scripts/check-assets.mjs",
+    "verify": "node scripts/check-env.mjs && npm run assets:check && npm run lint && npm run typecheck && npm test && npm run build",
+    "test:e2e": "playwright test",
+    "format": "prettier --write src tests *.json *.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "@playwright/test": "1.56.1",
+    "@types/node": "22.19.0",
+    "eslint": "9.39.1",
+    "prettier": "3.6.2",
+    "sharp": "0.35.5",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.2",
+    "vite": "7.3.7",
+    "vitest": "5.0.5"
+  }
+}

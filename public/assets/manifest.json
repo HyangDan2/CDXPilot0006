@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "source": "art/source/momo-original.png",
+  "sourceGrid": [
+    3,
+    3
+  ],
+  "runtimeInset": 0.1,
+  "minimumMargin": 0.2,
+  "frames": [
+    {
+      "name": "idle",
+      "file": "assets/momo-idle.png",
+      "width": 512,
+      "height": 512,
+      "origin": [
+        256,
+        390
+      ],
+      "sourceCell": 0
+    },
+    {
+      "name": "excited",
+      "file": "assets/momo-excited.png",
+      "width": 512,
+      "height": 512,
+      "origin": [
+        256,
+        390
+      ],
+      "sourceCell": 1
+    },
+    {
+      "name": "pleased",
+      "file": "assets/momo-pleased.png",
+      "width": 512,
+      "height": 512,
+      "origin": [
+        256,
+        390
+      ],
+      "sourceCell": 2
+    },
+    {
+      "name": "puzzled",
+      "file": "assets/momo-puzzled.png",
+      "width": 512,
+      "height": 512,
+      "origin": [
+        256,
+        390
+      ],
+      "sourceCell": 3
+    },
+    {
+      "name": "worried",
+      "file": "assets/momo-worried.png",
+      "width": 512,
+      "height": 512,
+      "origin": [
+        256,
+        390
+      ],
+      "sourceCell": 4
+    },
+    {
+      "name": "sad",
+      "file": "assets/momo-sad.png",
+      "width": 512,
+      "height": 512,
+      "origin": [
+        256,
+        390
+      ],
+      "sourceCell": 5
+    },
+    {
+      "name": "clear",
+      "file": "assets/momo-clear.png",
+      "width": 512,
+      "height": 512,
+      "origin": [
+        256,
+        390
+      ],
+      "sourceCell": 6
+    },
+    {
+      "name": "ready",
+      "file": "assets/momo-ready.png",
+      "width": 512,
+      "height": 512,
+      "origin": [
+        256,
+        390
+      ],
+      "sourceCell": 7
+    },
+    {
+      "name": "blink",
+      "file": "assets/momo-blink.png",
+      "width": 512,
+      "height": 512,
+      "origin": [
+        256,
+        390
+      ],
+      "sourceCell": 8
+    }
+  ]
+}
