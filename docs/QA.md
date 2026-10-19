@@ -164,3 +164,12 @@ Branding hosted acceptance: deployed commit `745a9202c87b7d7c545ea31b5aafacd4ece
 - `node scripts/verify-hosted-timing.mjs`: PASS, six actual public cases. Exact stage-one occupied counts are desktop Easy/Normal/Hard 68/120/148, mobile 390×844 44/76/88, each twice its previous count. Budgets are desktop 131/200/230 seconds, mobile 87/128/138 seconds, including difficulty multipliers. Actual displayed countdown and paused popup clock pass; timing-report.json records observations.
 - Reviewed public desktop Hard and mobile far-end drag screenshots: accessible lower footprint, clear family/variant artwork, contained character and fixed controls. Runtime bytes match local: JS SHA256 `3cc21536b396253dfceb4fd44e0ceeeb8923e08d1b8deaf2c41076221ce05622`; CSS SHA256 `3be617b97256342ce240cf47f0bab46677c2ad94c53e1c99bc2578307ef0a657`.
 - Physical devices/Safari and subjective difficulty ratings remain unverified. Evidence/checker follow-up changes no deployed runtime.
+
+## 2026-10-20 — horizontal whole-board correction
+Local Node 24.19.0: `npm run verify` passed (33 model tests, assets/branding, lint, types and production build). `npm run test:e2e` passed all 46 cases, including desktop/mobile completion, continuous popup audio, records, zoom, six viewport sizes and all character expressions. No failures occurred in this run. Logs: /tmp/overview-verify.log and /tmp/overview-e2e.log.
+
+Replaced obsolete scroll/drag acceptance with whole-board overflow/controls bounds and real click/tap matching. Model assertions now require doubled columns and unchanged rows alongside exact doubled counts and full supported solution witnesses. The responsive 22px regression floor replaces the former 44px panning policy explicitly at user request; it is not a claim of ideal physical touch ergonomics.
+
+Inspected actual screenshots at 1440×900 (Hard), 320×568 (Normal) and 844×390 (Hard), saved under docs/screenshots/overview. Full horizontal boards, exterior routes and controls are visible; character and effect clearance are retained. Physical iOS/Android/Safari, subjective difficulty and compact-target ergonomics remain unverified. Publication is tracked separately below.
+
+After strengthening the shared six-size effect gate to require board.bottom <= controls.top, `npm run test:e2e -- --grep '3D effects safe|expanded board fits'` passed all 8 targeted cases (/tmp/overview-bounds.log).

@@ -94,6 +94,8 @@ try {
           controlsBottom: c.bottom,
           boardLeft: b.left,
           boardRight: b.right,
+          boardBottom: b.bottom,
+          controlsTop: c.top,
         };
       });
       assert(bounds.scrollWidth <= width);
@@ -101,9 +103,10 @@ try {
         await page
           .locator(".tile")
           .first()
-          .evaluate((el) => el.getBoundingClientRect().width >= 44),
+          .evaluate((el) => el.getBoundingClientRect().width >= 22),
       );
       assert(bounds.controlsBottom <= height);
+      assert(bounds.boardBottom <= bounds.controlsTop);
       assert(bounds.boardLeft >= 0 && bounds.boardRight <= width);
       await page.screenshot({
         path: `${dir}/play-${mode}-${width}x${height}.png`,

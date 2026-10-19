@@ -22,3 +22,6 @@ CDXPilot0004 requested 15% and 20% source margins, then used a separate 10% runt
 
 ## Scope-specific adaptations
 Retain verification process, not rhythm/action mechanics or old project permissions. Do not import HOLD rules, combat geometry, the rhythm game's 75:25 layout, global zoom restrictions or the action game's Phaser dependency. Proposed strict TypeScript/Vite tooling supports the existing verify/E2E gates; implementation has not started. Public deployment remains outside the current planning task.
+
+## 2026-10-20 — horizontal overview supersedes panning
+The user clarified that the doubled tiles should occupy unused horizontal space and remain visible together. Join supported footprints along x without an empty separator; keep the row count and exact occupied counts. This preserves the established rules, witnesses and records while widening the composition. Fit tile faces to both axes rather than forcing 44px and scrolling. The six-size regression minimum is 22px; this is an automated layout guard, not a physical-touch accessibility certification. Keep conservative 26px upper-effect bounds and increase independent clearance to 18px. Existing scroll assertions are replaced by explicit whole-board bounds and real-input checks because the approved interaction contract changed.

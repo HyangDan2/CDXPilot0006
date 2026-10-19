@@ -1573,33 +1573,37 @@ main {
   }
 }
 
-/* Expanded boards pan inside a fixed play viewport; controls never scroll away. */
+/* Entire expanded board stays visible; no board panning. */
+main {
+  max-width: 1600px;
+}
+@media (min-width: 1001px) {
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 18px;
+  }
+}
 .board-area {
   display: block;
   min-height: 0;
 }
 .board-viewport {
-  overflow: auto;
+  overflow: hidden;
   max-width: 100%;
-  overscroll-behavior: contain;
-  touch-action: pan-x pan-y;
-  scrollbar-width: thin;
-  border-radius: 14px;
+  user-select: none;
 }
 .board-viewport #board {
   width: max-content;
   margin-inline: auto;
 }
-.board-viewport .tile {
-  touch-action: pan-x pan-y;
+#board {
+  --corridor: calc(var(--cell) / 2 + var(--gap) + 18px);
 }
 .board-cover {
   inset: 0;
 }
-.board-viewport {
-  user-select: none;
-  cursor: grab;
-}
-.board-viewport:active {
-  cursor: grabbing;
+@media (max-width: 700px) {
+  #board {
+    --gap: 2px;
+  }
 }

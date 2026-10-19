@@ -30,6 +30,8 @@ it("doubles every footprint exactly and retains full supported solutions", () =>
           true,
         );
         expect(remainingTiles(board)).toBe(2 * remainingTiles(old.board));
+        expect(board.cols).toBe(cols * 2);
+        expect(board.rows).toBe(rows);
         for (const t of board.tiles!.filter((t) => t.z > 0))
           expect(
             board.tiles!.filter(

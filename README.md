@@ -33,7 +33,7 @@ npm run dev
 - Nine Momo expressions, image-load fallback, reduced motion, character visibility and music/sound settings
 - Responsive starting footprints (6×6 desktop, 4×6 tall mobile, 4×4 short mobile, 6×4 short landscape) are doubled vertically; drag/scroll inside the board to reach every tile
 
-New games choose board dimensions for the current viewport. Viewport changes preserve the existing arrangement and at least 44px tile faces; pan the board when it exceeds the available area. Starting a new game selects dimensions for the new viewport.
+New games choose board dimensions for the current viewport. Viewport changes preserve the existing arrangement and fit the complete board without panning; compact portrait tile faces are smaller than 44px. Starting a new game selects dimensions for the new viewport.
 
 ## Verification
 

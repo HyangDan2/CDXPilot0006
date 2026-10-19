@@ -758,9 +758,9 @@ export function generateExpanded(
   timed: boolean,
 ) {
   const original = generatePyramid(cols, rows, seed, stage, mode, false).board;
-  // Two supported footprints, with a full-cell gap; pair assignment spans both.
-  const tiles = [0, rows + 1].flatMap((offset) =>
-    original.tiles!.map((t) => ({ ...t, y: t.y + offset })),
+  // Two supported footprints, joined horizontally; pair assignment spans both.
+  const tiles = [0, cols].flatMap((offset) =>
+    original.tiles!.map((t) => ({ ...t, x: t.x + offset })),
   );
   const target = { easy: [12, 16], normal: [20, 28], hard: [30, 36] }[mode];
   const kinds = Math.min(
@@ -778,8 +778,8 @@ export function generateExpanded(
     offset += floor.length / 2;
   }
   const source: Board = {
-    cols,
-    rows: rows * 2 + 1,
+    cols: cols * 2,
+    rows,
     tiles,
     cells: tiles.map((t) => t.value),
   };

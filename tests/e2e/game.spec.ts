@@ -147,9 +147,7 @@ for (const mode of ["easy", "normal", "hard"] as const)
       expect(geometry.board.x).toBeGreaterThanOrEqual(0);
       expect(geometry.board.right).toBeLessThanOrEqual(width);
       expect(geometry.controls.bottom).toBeLessThanOrEqual(height);
-      expect(geometry.tile.width).toBeGreaterThanOrEqual(
-        width === 844 ? 23 : 30,
-      );
+      expect(geometry.tile.width).toBeGreaterThanOrEqual(22);
       for (const expression of [
         "idle",
         "excited",
@@ -583,6 +581,7 @@ for (const [width, height] of [
           b.left >= panel.left &&
           b.right <= panel.right &&
           b.top >= panel.top &&
+          b.bottom <= buttons.top &&
           buttons.bottom <= innerHeight &&
           [...document.querySelectorAll<HTMLElement>(".tile")].every((el) => {
             const r = el.getBoundingClientRect(),
@@ -720,7 +719,7 @@ for (const mobile of [false, true]) {
 }
 
 for (const mobile of [false, true])
-  test(`expanded board drag preserves selection and controls mobile=${mobile}`, async ({
+  test(`expanded board fits without scrolling mobile=${mobile}`, async ({
     browser,
   }) => {
     const context = await browser.newContext({
@@ -736,52 +735,38 @@ for (const mobile of [false, true])
         "?test=1",
     );
     await page.locator("#start").click();
-    const viewport = page.locator(".board-viewport");
-    const rect = (await viewport.boundingBox())!;
-    const before = await page.evaluate(() => window.__CHIBILINK__.snapshot());
-    const x = rect.x + rect.width / 2,
-      y = rect.y + Math.min(rect.height - 20, 200);
-    if (mobile) {
-      const cdp = await context.newCDPSession(page);
-      await cdp.send("Input.dispatchTouchEvent", {
-        type: "touchStart",
-        touchPoints: [{ x, y }],
-      });
-      for (let i = 1; i <= 10; i++) {
-        await cdp.send("Input.dispatchTouchEvent", {
-          type: "touchMove",
-          touchPoints: [{ x, y: y - i * 12 }],
-        });
-        await page.waitForTimeout(20);
-      }
-      await cdp.send("Input.dispatchTouchEvent", {
-        type: "touchEnd",
-        touchPoints: [],
-      });
-    } else {
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x, y - 120, { steps: 12 });
-      await page.mouse.up();
+    const geometry = await page.evaluate(() => {
+      const v = document.querySelector(".board-viewport")!;
+      const b = document.querySelector("#board")!.getBoundingClientRect();
+      const c = document.querySelector(".controls")!.getBoundingClientRect();
+      return {
+        width: v.clientWidth,
+        height: v.clientHeight,
+        scrollWidth: v.scrollWidth,
+        scrollHeight: v.scrollHeight,
+        bottom: b.bottom,
+        controlsTop: c.top,
+        controlsBottom: c.bottom,
+        screen: innerHeight,
+      };
+    });
+    expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.width + 1);
+    expect(geometry.scrollHeight).toBeLessThanOrEqual(geometry.height + 1);
+    expect(geometry.bottom).toBeLessThanOrEqual(geometry.controlsTop);
+    expect(geometry.controlsBottom).toBeLessThanOrEqual(geometry.screen);
+    const pair = await page.evaluate(() => window.__CHIBILINK__.move());
+    for (const p of pair!) {
+      const tile = page.locator(
+        `.tile[data-x="${p.x}"][data-y="${p.y}"][data-z="${p.z}"]`,
+      );
+      if (mobile) await tile.tap();
+      else await tile.click();
     }
-    await expect
-      .poll(() => viewport.evaluate((el) => el.scrollTop))
-      .toBeGreaterThan(40);
-    const after = await page.evaluate(() => window.__CHIBILINK__.snapshot());
-    expect(after.score).toBe(before.score);
-    expect(after.selected).toBeNull();
-    expect(after.board.tiles).toEqual(before.board.tiles);
-    await viewport.evaluate((el) => el.scrollTo(0, el.scrollHeight));
-    const controls = await page.locator(".controls").boundingBox();
-    expect(controls!.y + controls!.height).toBeLessThanOrEqual(
-      mobile ? 844 : 900,
-    );
     expect(
-      await page
-        .locator(".tile")
-        .first()
-        .evaluate((el) => el.getBoundingClientRect().width),
-    ).toBeGreaterThanOrEqual(44);
-    await page.screenshot({ path: `test-results/expanded-drag-${mobile}.png` });
+      (await page.evaluate(() => window.__CHIBILINK__.snapshot())).score,
+    ).toBeGreaterThan(0);
+    await page.screenshot({
+      path: `test-results/expanded-overview-${mobile}.png`,
+    });
     await context.close();
   });

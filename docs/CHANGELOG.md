@@ -68,3 +68,8 @@
 - Prefer distant pair placement; score early/mid/late checkpoints across two legal-order policies when selecting seeded boards.
 - Limit Challenge automatic recovery to one use costing 15 seconds/150 points. Further deadlocks require remaining manual shuffle or end the run.
 - Preserve old records/settings in v4; separate expanded progression and scores. Keep character/effect/corridor padding, popup BGM and shortened Challenge-time multipliers.
+
+## 2026-10-20 — whole-board horizontal overview
+- Spread doubled tile counts horizontally with unchanged floor counts, family variants and Challenge limits.
+- Widen desktop play space and fit the complete board above controls; remove board dragging and scrolling.
+- Retain records, original character margins and continuous popup music. Compact portrait faces adapt below 44px to show the entire board.

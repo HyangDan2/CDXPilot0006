@@ -117,3 +117,10 @@ Approved scope: exactly double the previous occupied count at each starting view
 Implementation uses two vertically connected supported footprints with pair assignment across both. Small boards retain repeated pairs by capping the number of unique symbols; 36 is the available artwork set, not a claim that every compact board displays 36 kinds. Generation remains fully solvable with bounded difficulty sampling.
 
 Expanded edition completed: model 33 and browser 46 checks passed locally and on remote CI; Pages deployed successfully. Public acceptance passed for three difficulties × six viewports, mouse/touch panning, continuous popup BGM, exact doubled counts, difficulty time budgets and character padding. Previous records remain separate; physical devices/Safari and subjective difficulty ratings remain unverified. Earlier service-blocked publication is resolved.
+
+## Whole-board horizontal layout — 2026-10-20
+The approved correction supersedes the earlier vertical-scroll policy. The doubled footprint joins horizontally (2 × baseline columns, unchanged rows), with pair assignment across the full floor. Tile counts, support geometry, symbol tuning, recovery limits, records and character assets remain unchanged. Desktop content expands to 1600px with a 240px companion panel.
+
+Fit the complete board, exterior corridor and effect clearance between the header and controls; remove board panning. Tile faces adapt to available width/height, including compact portrait sizes below the previous 44px target. Reserve 18px effect clearance in addition to half a cell and the gap. Mobile gaps are 2px. Existing runs keep logical coordinates on resize.
+
+Acceptance: exact doubled counts and horizontal dimensions, complete solution witnesses, six viewport sizes with character shown/hidden, full board above controls without scroll overflow, actual mouse/touch matching, unchanged storage/audio and original character margins. Inspect screenshots, especially compact portrait symbol legibility. Physical-device ergonomics remain a separate gate.

@@ -56,7 +56,7 @@ $("#app").innerHTML = `
 <main>
 <div class="game-layout"><section class="game-panel" aria-label="사천성 게임"><div class="game-top"><button id="stage-picker" class="stage-button"><span class="stage-number">01</span><span><small>오늘의 디저트</small><strong id="stage-title">첫 번째 티타임</strong></span><span class="chevron">⌄</span></button><button class="mode-pill" id="mode-label" aria-label="게임 모드 선택">클래식 · 편안함 ⌄</button></div>
 <div class="stats"><div><span>남은 패</span><strong id="remaining">36<small> / 36</small></strong></div><div><span id="time-label">플레이 시간</span><strong id="time">00:00</strong></div><div><span>스코어</span><strong id="score">0</strong></div><div class="combo-stat"><span>연속 연결</span><strong id="combo">0 <small>COMBO</small></strong></div></div>
-<div class="board-area"><div class="board-viewport" tabindex="0" aria-label="퍼즐 보드: 드래그 또는 스크롤로 이동"><div id="board" role="group" aria-label="디저트 패"><svg id="route" aria-hidden="true"></svg></div></div><div id="cover" class="board-cover"><div class="cover-card"><span class="cover-flower">${flower}</span><p class="eyebrow">A LITTLE BREAK, A SWEET MATCH</p><h2>잠깐 쉬어갈까요?</h2><p>같은 디저트를 이어보세요.<br>모모가 곁에서 응원할게요.</p><button class="primary" id="start">티타임 시작하기 <span>→</span></button><span class="cover-foot">시간에 쫓기지 않는 편안한 모드</span></div></div></div>
+<div class="board-area"><div class="board-viewport" tabindex="0" aria-label="퍼즐 보드: 전체 패 보기"><div id="board" role="group" aria-label="디저트 패"><svg id="route" aria-hidden="true"></svg></div></div><div id="cover" class="board-cover"><div class="cover-card"><span class="cover-flower">${flower}</span><p class="eyebrow">A LITTLE BREAK, A SWEET MATCH</p><h2>잠깐 쉬어갈까요?</h2><p>같은 디저트를 이어보세요.<br>모모가 곁에서 응원할게요.</p><button class="primary" id="start">티타임 시작하기 <span>→</span></button><span class="cover-foot">시간에 쫓기지 않는 편안한 모드</span></div></div></div>
 <div class="board-bottom"><span class="status-dot"></span><span id="notice" role="status">최대 두 번 꺾어서, 같은 디저트를 연결해요.</span></div>
 <div class="controls"><button id="hint"><span>☀</span> 힌트 <kbd>H</kbd></button><button id="shuffle"><span>⤨</span> 섞기 <kbd>S</kbd></button><button id="pause"><span>Ⅱ</span> 일시정지 <kbd>P</kbd></button></div></section>
 <aside class="companion"><div class="companion-top"><span class="eyebrow">YOUR LITTLE COMPANION</span><span class="sparkle">✧</span></div><div class="speech" aria-live="polite"><strong id="speech-title">어서 와요!</strong><p id="speech-text">따뜻한 차 한 잔처럼,<br>오늘도 편안하게 즐겨요.</p></div><div class="mascot-frame" id="mascot-frame"><img class="mascot-sprite" id="mascot" src="${import.meta.env.BASE_URL}assets/momo-idle.png" alt="미소 짓는 치비 캐릭터 모모"><span id="mascot-fallback" hidden>모모 ♡</span><span class="mascot-ground"></span></div><div class="companion-name"><span>모모</span><small>당신의 티타임 메이트</small></div><div class="little-tip"><span>✦ MOMO'S TIP</span><p>패 바깥쪽에도 길이 있어요.<br>조금 돌아가도 괜찮아요.</p><div class="tip-path">□ <i>└─────┘</i> □</div></div><div class="best-record"><span>나의 최고 점수</span><strong id="best">0 <small>pts</small></strong></div></aside></div>
@@ -201,8 +201,8 @@ function newGame(begin = false) {
   );
   notice(
     game.mode === "easy"
-      ? "같은 그림을 두 번까지 꺾어 연결해요. 보드를 드래그해서 이동하세요."
-      : "같은 층의 밝은 패끼리 연결해요. 보드를 드래그해서 이동하세요.",
+      ? "같은 그림을 두 번까지 꺾어 연결해요. 전체 보드에서 짝을 찾아보세요."
+      : "같은 층의 밝은 패끼리 연결해요. 전체 보드에서 짝을 찾아보세요.",
   );
 }
 function fitBoard() {
@@ -211,7 +211,7 @@ function fitBoard() {
     area = $(".board-area"),
     style = getComputedStyle(area);
   const gap = parseFloat(getComputedStyle(board).gap),
-    safe = 12;
+    safe = 18;
   const width =
     area.clientWidth -
     parseFloat(style.paddingLeft) -
@@ -225,9 +225,9 @@ function fitBoard() {
     $(".controls").getBoundingClientRect().height -
     2;
   const cell = Math.max(
-    44,
+    1,
     Math.min(
-      innerWidth <= 700 ? 58 : 52,
+      innerWidth <= 700 ? 58 : 72,
       (width - 2 * safe) / (game.board.cols + 1) - gap,
       (height - 2 * safe) / (game.board.rows + 1) - gap,
     ),
@@ -592,56 +592,6 @@ setInterval(() => {
   updateStats();
   if (game.status === "lost" || game.status === "won") finish();
 }, 100);
-
-const boardViewport = $(".board-viewport");
-let drag: {
-  id: number;
-  x: number;
-  y: number;
-  left: number;
-  top: number;
-  moved: boolean;
-} | null = null;
-let suppressClickUntil = 0;
-boardViewport.addEventListener("pointerdown", (e: PointerEvent) => {
-  if (e.button !== 0) return;
-  suppressClickUntil = 0;
-  drag = {
-    id: e.pointerId,
-    x: e.clientX,
-    y: e.clientY,
-    left: boardViewport.scrollLeft,
-    top: boardViewport.scrollTop,
-    moved: false,
-  };
-});
-boardViewport.addEventListener("pointermove", (e: PointerEvent) => {
-  if (!drag || drag.id !== e.pointerId) return;
-  if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 8) drag.moved = true;
-  if (drag.moved) {
-    suppressClickUntil = performance.now() + 500;
-    if (e.pointerType === "mouse") {
-      boardViewport.setPointerCapture(e.pointerId);
-      boardViewport.scrollLeft = drag.left - (e.clientX - drag.x);
-      boardViewport.scrollTop = drag.top - (e.clientY - drag.y);
-      e.preventDefault();
-    }
-  }
-});
-for (const event of ["pointerup", "pointercancel", "lostpointercapture"])
-  boardViewport.addEventListener(event, () => {
-    drag = null;
-  });
-boardViewport.addEventListener(
-  "click",
-  (e) => {
-    if (performance.now() < suppressClickUntil) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  },
-  true,
-);
 
 applyPrefs();
 newGame();
