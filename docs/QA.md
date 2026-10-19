@@ -82,3 +82,9 @@ Evidence: `test-results/` contains final browser screenshots/traces and last-run
 - This is signal/lifecycle verification; physical speaker listening, Safari and real-device autoplay remain unverified. Hosted BGM checks follow successful deployment.
 
 BGM hosted acceptance: gameplay commit `3a6154f0cdcf85072bbc511faabdf06d9a4185be`, Actions run 39269590710 verify/deploy SUCCESS. `BGM_URL=https://hyangdan2.github.io/CDXPilot0006/ npm run test:e2e -- --grep 'BGM audio'`: 2/2 PASS on the public Pages URL (desktop and touch emulation), including actual output, pause/resume, mute persistence and results silence. This documentation-only follow-up does not change the deployed bundle.
+
+## Branding local acceptance — 2026-10-19
+- Read CDXPilot0004/index.html and its SVG favicon as reference; reused its static OG/Twitter, ICO/PNG/SVG and Apple icon approach, with ChibiLink-specific artwork and URLs.
+- `node scripts/build-branding.mjs`: generated card and icons. Directly inspected the 1200×630 card and 32px icon: Korean copy readable, character/tiles separated, no character clipping; source PNG retained unchanged.
+- `npm run verify`: PASS, including new branding metadata/dimension/ICO checks, nine character alpha-margin checks, 16 model tests, lint/types and production build. JS/CSS bundle identities unchanged; no gameplay/layout changes.
+- Social-platform cached previews and actual Apple home-screen installation are not verified by local asset checks. Public response checks follow deployment.

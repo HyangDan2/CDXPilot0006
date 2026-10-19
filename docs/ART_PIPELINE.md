@@ -28,3 +28,6 @@ The untouched 1254×1254 generated sheet is retained in `art/source/momo-origina
 `npm run assets:check` measures alpha >0 and alpha >32 separately, validates 512×512 RGBA frames and anchors, and writes `test-results/asset-margins.json`. The raw source has faint alpha noise; complete cells are retained, and the added outer border is fully clear. Checkerboard/dark review found no visible detached fragments in normal display. The final `blink` frame is a wink.
 
 Dessert icons are original inline SVG in `src/icons.ts`; they are not extracted or scraped assets. Audio is a short locally synthesized two-note match cue, without external recordings.
+
+## Sharing and browser branding
+Following CDXPilot0004's static metadata format, `public/assets/branding/` contains a 1200×630 Open Graph/Twitter card, SVG/32px PNG/multi-size ICO favicons and a 180px Apple touch icon. `scripts/build-branding.mjs` composes the card in Chromium from original flower/dessert SVGs and the unchanged padded `momo-ready.png`; it does not crop or edit the character PNG. The favicon reuses the flower for small-size legibility. Rebuild intentionally, inspect at full and thumbnail size, and version the share-card filename on replacements. No new third-party artwork is used.

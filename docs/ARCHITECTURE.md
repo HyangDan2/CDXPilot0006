@@ -58,3 +58,6 @@ Records are isolated by board mode and relaxed/challenge setting. Legacy v1 prog
 `src/music.ts` owns an original 16-bar, 104 BPM synthesized café loop (plucked melody, light extended chords, soft bass). Audio is generated once into a reusable mono buffer; there are no external recordings or music requests. One looping source plays at a time; fades avoid abrupt transitions and ended nodes disconnect. The game model has no audio dependency.
 
 Only active, visible, unmuted gameplay enables BGM. Start/resume/sound controls provide the user gesture for Web Audio; initial page load is silent. Pause/dialogs/results/page hide stop music. The persisted sound setting controls both BGM and existing match effects. Unsupported audio/resume rejection must not break gameplay. Buffer generation and note tails wrap at the loop boundary.
+
+## Static sharing metadata
+Canonical, Open Graph and Twitter metadata live directly in index.html so crawlers need no JavaScript. Share-image URLs are absolute HTTPS project URLs; browser icon references are relative to the Pages mount. Keep 1200×630 image dimensions/alt text synchronized with the asset. SVG, PNG and ICO plus Apple touch icon mirror CDXPilot0004's compatibility approach.

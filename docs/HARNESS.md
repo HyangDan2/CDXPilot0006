@@ -60,3 +60,6 @@ Run both board modes through all six viewport/expression/corridor cases. Complet
 
 ## BGM gate
 Browser audio tests must observe actual analyser RMS, not just a requested play flag: silent initial load, audible output after mouse/touch start, fade to silence on pause/mute/results, resume output and persisted mute after reload. Test unavailable AudioContext while matching. Run the same BGM tests against Pages with `BGM_URL=https://hyangdan2.github.io/CDXPilot0006/ npm run test:e2e -- --grep 'BGM audio'`. Test hooks remain limited to `?test=1`. Headless signal checks do not certify speaker quality or physical iOS autoplay behavior.
+
+## Branding gate
+`npm run branding:check` is included in verify: validate static sharing metadata, PNG dimensions, all ICO entries and icon assets. Run `node scripts/check-branding.mjs --hosted` after deployment to check public responses and exact PNG bytes. Visually inspect the generated share card and 32px favicon; do not infer visual quality from dimensions. Third-party social cache refresh is separate from HTTP/metadata validation.

@@ -13,9 +13,10 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "assets:check": "node scripts/check-assets.mjs",
-    "verify": "node scripts/check-env.mjs && npm run assets:check && npm run lint && npm run typecheck && npm test && npm run build",
+    "verify": "node scripts/check-env.mjs && npm run assets:check && npm run branding:check && npm run lint && npm run typecheck && npm test && npm run build",
     "test:e2e": "playwright test",
-    "format": "prettier --write src tests *.json *.ts"
+    "format": "prettier --write src tests *.json *.ts",
+    "branding:check": "node scripts/check-branding.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",

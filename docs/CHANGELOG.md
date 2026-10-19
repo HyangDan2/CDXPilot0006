@@ -31,3 +31,8 @@
 - Added an original 104 BPM, 16-bar plucked melody/chord/bass loop, generated locally without external audio assets.
 - Linked BGM to gameplay, pause/results/background state and the saved sound toggle; clarified settings as “BGM · 효과음”.
 - Added desktop/touch signal-output and lifecycle tests plus audio-unavailable gameplay coverage.
+
+## Share preview and favicon — 2026-10-19
+- Added a Momo/dessert 1200×630 share card with static Open Graph and Twitter metadata, following CDXPilot0004.
+- Added flower-logo SVG/ICO/32px PNG favicon and 180px Apple touch icon.
+- Added reproducible branding build and local/hosted acceptance scripts.
