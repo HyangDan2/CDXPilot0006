@@ -1,3 +1,4 @@
+import { Music } from "./music";
 import "./style.css";
 import {
   Game,
@@ -38,6 +39,12 @@ let reactionTimer = 0,
   hintTimer = 0,
   routeTimer = 0,
   audio: AudioContext | undefined;
+const music = new Music();
+function syncMusic() {
+  music.setPlaying(
+    started && game?.status === "playing" && !prefs.muted && !document.hidden,
+  );
+}
 const testMode = new URLSearchParams(location.search).get("test") === "1";
 let seed = 731;
 let resultHandled = false;
@@ -111,6 +118,7 @@ $("#mascot").addEventListener("load", () => {
   $("#mascot-fallback").hidden = true;
 });
 function applyPrefs() {
+  syncMusic();
   document.body.classList.toggle("no-character", !prefs.character);
   document.body.classList.toggle("no-motion", !prefs.motion);
   $("#sound").textContent = prefs.muted ? "♫̸" : "♪";
@@ -126,7 +134,7 @@ function sound() {
   if (prefs.muted) return;
   try {
     audio ??= new AudioContext();
-    void audio.resume();
+    void audio.resume().catch(() => {});
     const t = audio.currentTime;
     for (const [i, f] of [523.25, 659.25].entries()) {
       const o = audio.createOscillator(),
@@ -201,6 +209,7 @@ function newGame(begin = false) {
   );
 }
 function renderBoard() {
+  syncMusic();
   const active =
     document.activeElement instanceof HTMLElement
       ? document.activeElement
@@ -431,7 +440,7 @@ function interruptForDialog() {
 $("#settings").onclick = () => {
   interruptForDialog();
   showDialog(
-    `<p class="eyebrow">MAKE YOURSELF AT HOME</p><h2>나의 티타임 설정</h2><label class="setting">보드 방식 <select id="board-mode"><option value="classic" ${prefs.boardMode === "classic" ? "selected" : ""}>클래식 1층</option><option value="layered" ${prefs.boardMode === "layered" ? "selected" : ""}>레이어 2층</option></select></label><label class="setting">도전 모드 <input type="checkbox" id="timed-setting" ${prefs.timed ? "checked" : ""}></label><p class="fine-print">모드는 다음 게임부터 적용돼요. 도전: 힌트 2회(-8초), 섞기 1회(-12초), 자동 복구 -150점.</p><label class="setting">모모 표시 <input type="checkbox" id="character-setting" ${prefs.character ? "checked" : ""}></label><label class="setting">캐릭터 움직임 <input type="checkbox" id="motion-setting" ${prefs.motion ? "checked" : ""}></label><label class="setting">효과음 <input type="checkbox" id="audio-setting" ${!prefs.muted ? "checked" : ""}></label><button class="primary" id="settings-done">저장하고 돌아가기</button>`,
+    `<p class="eyebrow">MAKE YOURSELF AT HOME</p><h2>나의 티타임 설정</h2><label class="setting">보드 방식 <select id="board-mode"><option value="classic" ${prefs.boardMode === "classic" ? "selected" : ""}>클래식 1층</option><option value="layered" ${prefs.boardMode === "layered" ? "selected" : ""}>레이어 2층</option></select></label><label class="setting">도전 모드 <input type="checkbox" id="timed-setting" ${prefs.timed ? "checked" : ""}></label><p class="fine-print">모드는 다음 게임부터 적용돼요. 도전: 힌트 2회(-8초), 섞기 1회(-12초), 자동 복구 -150점.</p><label class="setting">모모 표시 <input type="checkbox" id="character-setting" ${prefs.character ? "checked" : ""}></label><label class="setting">캐릭터 움직임 <input type="checkbox" id="motion-setting" ${prefs.motion ? "checked" : ""}></label><label class="setting">BGM · 효과음 <input type="checkbox" id="audio-setting" ${!prefs.muted ? "checked" : ""}></label><button class="primary" id="settings-done">저장하고 돌아가기</button>`,
   );
   $("#settings-done").onclick = () => {
     const modeChanged =
@@ -506,7 +515,9 @@ document.addEventListener("keydown", (e) => {
 });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) pause();
+  syncMusic();
 });
+window.addEventListener("pagehide", () => music.setPlaying(false));
 window.addEventListener("orientationchange", () => {
   pause();
   clearEffects();
@@ -527,6 +538,7 @@ if (storageError)
 if (testMode) {
   Object.assign(window, {
     __CHIBILINK__: {
+      music: () => music.snapshot(),
       drawRoute: (route: Point[]) => drawRoute(route),
       snapshot: () => ({
         board: game.board,

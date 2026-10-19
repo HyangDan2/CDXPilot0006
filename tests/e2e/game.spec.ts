@@ -12,6 +12,12 @@ type Snapshot = {
 declare global {
   interface Window {
     __CHIBILINK__: {
+      music: () => {
+        playing: boolean;
+        state: string;
+        rms: number;
+        duration: number;
+      };
       drawRoute: (route: Point[]) => void;
       snapshot: () => Snapshot;
       move: () => [Point, Point] | null;
@@ -332,3 +338,54 @@ for (const timed of [false, true])
     await expect(page.locator("#dialog h2")).toHaveText("티타임 완성!");
     await context.close();
   });
+
+for (const mobile of [false, true])
+  test(`BGM audio output and lifecycle mobile=${mobile}`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      viewport: mobile
+        ? { width: 390, height: 844 }
+        : { width: 1440, height: 900 },
+      hasTouch: mobile,
+      isMobile: mobile,
+    });
+    const page = await context.newPage();
+    await page.goto(
+      (process.env.BGM_URL ?? "http://127.0.0.1:4173/CDXPilot0006/") +
+        "?test=1",
+    );
+    const state = () => page.evaluate(() => window.__CHIBILINK__.music());
+    expect((await state()).state).toBe("idle");
+    if (mobile) await page.locator("#start").tap();
+    else await page.locator("#start").click();
+    await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
+    expect((await state()).duration).toBeGreaterThan(30);
+    await page.locator("#pause").click();
+    await expect.poll(async () => (await state()).rms).toBeLessThan(0.00001);
+    expect((await state()).playing).toBe(false);
+    await page.locator("#resume").click();
+    await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
+    await page.locator("#sound").click();
+    await expect.poll(async () => (await state()).rms).toBeLessThan(0.00001);
+    await page.reload();
+    await page.locator("#start").click();
+    expect((await state()).state).toBe("idle");
+    await page.locator("#sound").click();
+    await expect.poll(async () => (await state()).rms).toBeGreaterThan(0.001);
+    await page.evaluate(() => window.__CHIBILINK__.fixture("won"));
+    await expect.poll(async () => (await state()).rms).toBeLessThan(0.00001);
+    await context.close();
+  });
+test("audio unavailable does not block matching", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.AudioContext = class {
+      constructor() {
+        throw Error("Unavailable");
+      }
+    } as unknown as typeof AudioContext;
+  });
+  await start(page);
+  await match(page);
+  await expect(page.locator("#score")).not.toHaveText("0");
+});

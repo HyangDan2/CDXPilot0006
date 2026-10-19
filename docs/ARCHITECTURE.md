@@ -53,3 +53,8 @@ Both modes use seeded symmetric masks with permanent gaps. A geometric removal w
 Challenge selects the least immediately matchable of eight seeded candidates, weighting adjacent matches more heavily, and uses up to twelve symbol types. Its timer scales with initial pair count and stage, with a 30-second floor. Hints: two, each -8 seconds; shuffle: one, -12 seconds; automatic recovery: -150 points, floored at zero. Relaxed mode has unlimited assists and no deadline. Gaps can open routes, so gaps alone are not treated as proof of higher difficulty.
 
 Records are isolated by board mode and relaxed/challenge setting. Legacy v1 progression migrates to classic-relaxed because old records did not identify their mode. Existing settings are preserved; the storage key remains stable. Classic has ten stages; layered has five. Mode changes apply to the next game and new runs clamp the stage to the selected profile's unlocked range.
+
+## Background music
+`src/music.ts` owns an original 16-bar, 104 BPM synthesized café loop (plucked melody, light extended chords, soft bass). Audio is generated once into a reusable mono buffer; there are no external recordings or music requests. One looping source plays at a time; fades avoid abrupt transitions and ended nodes disconnect. The game model has no audio dependency.
+
+Only active, visible, unmuted gameplay enables BGM. Start/resume/sound controls provide the user gesture for Web Audio; initial page load is silent. Pause/dialogs/results/page hide stop music. The persisted sound setting controls both BGM and existing match effects. Unsupported audio/resume rejection must not break gameplay. Buffer generation and note tails wrap at the loop boundary.

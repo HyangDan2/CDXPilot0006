@@ -26,3 +26,8 @@
 - Hardened challenge generation, timer, limited assists and recovery penalty.
 - Migrated legacy records and isolated four gameplay profiles.
 - Extended model, browser and hosted harnesses; retained original mascot PNG padding.
+
+## Fresh café BGM — 2026-10-19
+- Added an original 104 BPM, 16-bar plucked melody/chord/bass loop, generated locally without external audio assets.
+- Linked BGM to gameplay, pause/results/background state and the saved sound toggle; clarified settings as “BGM · 효과음”.
+- Added desktop/touch signal-output and lifecycle tests plus audio-unavailable gameplay coverage.
