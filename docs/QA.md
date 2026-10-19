@@ -105,3 +105,11 @@ Branding hosted acceptance: deployed commit `745a9202c87b7d7c545ea31b5aafacd4ece
 - `node scripts/check-branding.mjs --hosted`: PASS for updated share-card-v2, metadata and favicon family.
 - Directly inspected hosted Hard challenge screenshots at 1440×900 and 320×568: staggered faces, covered-state shading, visible upper controls/targets and mascot remain within bounds. Public JS/CSS exactly match local build: JS SHA256 `95d8cfa2e226213c1ba2db891fce95a949e4d400eb1127c4b5ad06ca15178740`, CSS SHA256 `63874db553ac52a18c88106fa3a472310ed51420679fa691c6d27f3c7397c3d0`.
 - Physical mobile devices/Safari remain unverified. Follow-up evidence commit changes no deployed runtime.
+
+## Viewport/default/clearance local acceptance — 2026-10-20
+- Reproduced hidden-character Hard at 320×568 before changes: board left=-1.5/right=321.5 versus panel left=12/right=308, with controls below the viewport. Screenshot: `/tmp/chibilink-clipping-before.png`. The hidden-character CSS face formula omitted full exterior/effect space. This reproduces board/corridor clipping; it does not claim every device-specific clipping report has the same cause.
+- Fit now uses measured panel/visual-viewport space, full corridor and 12px clearance. Shared tile/grid-slot geometry keeps input and route coordinates aligned; geometry changes clear stale routes.
+- Final `npm run verify`: PASS (23 tests, asset/branding/lint/type/build checks). Final `npm run test:e2e`: PASS (42 tests). All existing full playthrough/BGM/storage/three-difficulty/six-viewport/nine-expression cases pass.
+- Added six shown/hidden-character Hard cases: board/panel/control containment and conservative 16px base/26px upper effect bounds. Directly reviewed 320×568 hidden and 844×390 shown screenshots in test-results/effect-safe-*; tiles, shadows, controls and companion remain contained.
+- Added actual Chromium touch pinch-in/out and double taps: visualViewport.scale stays 1. Real pair taps and single-finger scrolling of an overflowing settings dialog work. New profiles begin Normal; saved difficulties, migrated classic/layered choices, sound/character preferences and records remain intact.
+- Browser emulation is not physical-device Safari/Android or OS accessibility-zoom certification. Original character assets/padding remain unchanged. Hosted checks follow deployment.

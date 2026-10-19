@@ -75,6 +75,9 @@ try {
         await page.evaluate(() => typeof window.__CHIBILINK__),
         "undefined",
       );
+      assert(
+        (await page.locator("#mode-label").textContent()).includes("Normal"),
+      );
       await page.locator("#settings").click();
       await page.locator("#board-mode").selectOption(mode);
       await page.locator("#timed-setting").setChecked(mode !== "easy");
@@ -101,15 +104,13 @@ try {
       });
       // Use real hint and buttons on the normal deployed URL, without model fixtures.
       await page.locator("#hint").click();
-      const hinted = await page
-        .locator(".hinted")
-        .evaluateAll((els) =>
-          els.map((el) => ({
-            x: el.dataset.x,
-            y: el.dataset.y,
-            z: el.dataset.z,
-          })),
-        );
+      const hinted = await page.locator(".hinted").evaluateAll((els) =>
+        els.map((el) => ({
+          x: el.dataset.x,
+          y: el.dataset.y,
+          z: el.dataset.z,
+        })),
+      );
       assert.equal(hinted.length, 2);
       for (const p of hinted) {
         const locator = page.locator(
@@ -157,6 +158,27 @@ try {
       await page.screenshot({
         path: `${dir}/expressions-${mode}-${width}x${height}.png`,
       });
+      if (mode === "hard") {
+        await page.locator("#settings").click();
+        await page.locator("#character-setting").uncheck();
+        await page.locator("#settings-done").click();
+        await page.evaluate(() => new Promise(requestAnimationFrame));
+        assert(
+          await page.evaluate(() => {
+            const b = document.querySelector("#board").getBoundingClientRect(),
+              p = document.querySelector(".game-panel").getBoundingClientRect();
+            return (
+              b.left >= p.left &&
+              b.right <= p.right &&
+              document.querySelector(".controls").getBoundingClientRect()
+                .bottom <= innerHeight
+            );
+          }),
+        );
+        await page.screenshot({
+          path: `${dir}/hidden-hard-${width}x${height}.png`,
+        });
+      }
       assert.deepEqual(errors, []);
       assert.deepEqual(failed, []);
       report.viewports.push({

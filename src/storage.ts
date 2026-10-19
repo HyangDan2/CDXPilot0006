@@ -19,7 +19,7 @@ export const defaults: Preferences = {
   muted: false,
   character: true,
   motion: true,
-  boardMode: "easy",
+  boardMode: "normal",
   records: {},
 };
 export const key = "chibilink.v1";
@@ -68,6 +68,7 @@ export function read(store: Pick<Storage, "getItem">): {
     if (Number.isInteger(x.stage))
       data.stage = Math.min(10, Math.max(1, x.stage));
     if (Number.isFinite(x.best)) data.best = Math.max(0, Math.floor(x.best));
+    if (x.boardMode === "classic") data.boardMode = "easy";
     if (x.boardMode === "layered") data.boardMode = "normal";
     if (["easy", "normal", "hard"].includes(x.boardMode))
       data.boardMode = x.boardMode;

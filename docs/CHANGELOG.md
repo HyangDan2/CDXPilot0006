@@ -43,3 +43,8 @@
 - Same-floor exposed matches use half-cell paths; lower floors do not obstruct upper routes. Preserved complete generation/shuffle solutions.
 - Archived old records visibly in settings; v3 difficulty records remain separate. BGM, padding, sound and character preferences retained.
 - Updated static share description/card to reflect Hard three-floor play.
+
+## Mobile viewport fix — 2026-10-20
+- Prevent mobile pinch/double-tap zoom while retaining single-finger scrolling and normal inputs.
+- Fit tile geometry plus 12px exterior-effect clearance to the actual panel/visual viewport, fixing narrow hidden-character board overflow.
+- Default new users to Normal; preserve saved difficulties and records.

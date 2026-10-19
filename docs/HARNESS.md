@@ -65,3 +65,8 @@ Browser audio tests must observe actual analyser RMS, not just a requested play 
 
 ## Branding gate
 `npm run branding:check` is included in verify: validate static sharing metadata, PNG dimensions, all ICO entries and icon assets. Run `node scripts/check-branding.mjs --hosted` after deployment to check public responses and exact PNG bytes. Visually inspect the generated share card and 32px favicon; do not infer visual quality from dimensions. Third-party social cache refresh is separate from HTTP/metadata validation.
+
+## Mobile zoom and clipping gate
+Test a fresh browser starts Normal and persisted difficulties/settings/records survive. Use Chromium CDP touch pinch-in/out and double taps to assert visualViewport.scale remains 1; confirm real matching taps and single-finger scrolling in an overflowing dialog still work. `MOBILE_QA_URL` redirects the mobile test to Pages.
+
+At all six viewports, inspect Hard with character shown and hidden. Assert board bounds remain inside the panel, controls fit, and tile face bounds expanded by conservative effect extents (16px base, 26px upper) fit inside the board. Keep all three difficulty/mascot/exterior-route regression cases. Inspect actual screenshots; DOM bounds alone cannot establish shadow appearance. Record physical-device zoom/accessibility overrides separately.

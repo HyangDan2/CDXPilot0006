@@ -1,3 +1,4 @@
+import { installMobileZoomGuard } from "./viewport";
 import { Music } from "./music";
 import "./style.css";
 import {
@@ -48,6 +49,7 @@ function syncMusic() {
     started && game?.status === "playing" && !prefs.muted && !document.hidden,
   );
 }
+installMobileZoomGuard();
 const testMode = new URLSearchParams(location.search).get("test") === "1";
 let seed = 731;
 let resultHandled = false;
@@ -85,6 +87,7 @@ function persist() {
   if (storageError) notice("저장이 어려워요. 이번 게임은 계속 즐길 수 있어요.");
 }
 function notice(s: string) {
+  requestAnimationFrame(fitBoard);
   $("#notice").textContent = s;
 }
 function react(name: string, title: string, body: string) {
@@ -113,6 +116,7 @@ $("#mascot").addEventListener("load", () => {
   $("#mascot-fallback").hidden = true;
 });
 function applyPrefs() {
+  requestAnimationFrame(fitBoard);
   syncMusic();
   document.body.classList.toggle("no-character", !prefs.character);
   document.body.classList.toggle("no-motion", !prefs.motion);
@@ -201,8 +205,41 @@ function newGame(begin = false) {
       : "밝게 드러난 같은 층의 패끼리 연결해요. 위 패부터 지워보세요.",
   );
 }
+function fitBoard() {
+  if (!game) return;
+  const board = $("#board"),
+    area = $(".board-area"),
+    style = getComputedStyle(area);
+  const gap = parseFloat(getComputedStyle(board).gap),
+    safe = 12;
+  const width =
+    area.clientWidth -
+    parseFloat(style.paddingLeft) -
+    parseFloat(style.paddingRight);
+  const height =
+    (window.visualViewport?.height ?? innerHeight) -
+    area.getBoundingClientRect().top -
+    parseFloat(style.paddingTop) -
+    parseFloat(style.paddingBottom) -
+    $(".board-bottom").getBoundingClientRect().height -
+    $(".controls").getBoundingClientRect().height -
+    2;
+  const cell = Math.max(
+    1,
+    Math.min(
+      innerWidth <= 700 ? 58 : 52,
+      (width - 2 * safe) / (game.board.cols + 1) - gap,
+      (height - 2 * safe) / (game.board.rows + 1) - gap,
+    ),
+  );
+  const size = `${Math.floor(cell * 100) / 100}px`;
+  if (board.style.getPropertyValue("--cell") !== size)
+    $("#route").innerHTML = "";
+  board.style.setProperty("--cell", size);
+}
 function renderBoard() {
   syncMusic();
+  fitBoard();
   const active =
     document.activeElement instanceof HTMLElement
       ? document.activeElement
@@ -544,9 +581,12 @@ window.addEventListener("orientationchange", () => {
   pause();
   clearEffects();
 });
-window.addEventListener("resize", () => {
+function resizeBoard() {
+  fitBoard();
   $("#route").innerHTML = "";
-});
+}
+window.addEventListener("resize", resizeBoard);
+window.visualViewport?.addEventListener("resize", resizeBoard);
 setInterval(() => {
   if (!started) return;
   game.tick();

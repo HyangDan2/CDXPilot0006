@@ -158,3 +158,29 @@ it("version 2 records remain intact and separate from new difficulty records", (
   expect(profile(p, "easy", false).stage).toBe(1);
   expect(read({ getItem: () => JSON.stringify(p) }).data).toEqual(p);
 });
+
+it("Normal default does not overwrite saved difficulty, settings or records", () => {
+  expect(read({ getItem: () => null }).data.boardMode).toBe("normal");
+  for (const mode of ["easy", "normal", "hard", "classic", "layered"]) {
+    const saved = {
+      version: 3,
+      boardMode: mode,
+      muted: true,
+      character: false,
+      motion: false,
+      records: { "easy-relaxed": { stage: 6, best: 1200 } },
+    };
+    const p = read({ getItem: () => JSON.stringify(saved) }).data;
+    expect(p.boardMode).toBe(
+      mode === "classic" ? "easy" : mode === "layered" ? "normal" : mode,
+    );
+    expect(p.records).toEqual(saved.records);
+    expect(p.muted).toBe(true);
+    expect(p.character).toBe(false);
+    expect(p.motion).toBe(false);
+  }
+  expect(
+    read({ getItem: () => JSON.stringify({ version: 3, records: {} }) }).data
+      .boardMode,
+  ).toBe("normal");
+});

@@ -39,7 +39,7 @@ TypeScript strict + Vite, DOM/CSS presentation, Vitest, Playwright, ESLint/Prett
 
 New runs choose 6×6 on regular desktop, 4×6 on tall mobile, 4×4 on short mobile, and 6×4 on short landscape. Board dimensions remain fixed within a run to preserve connection topology; resize recalculates geometry and clears the previous route, while device orientation changes pause play. Very severe resizing of an existing larger board can reduce tile targets; restarting selects the new viewport's board size. This is a known limitation, not a verified universal rotation solution.
 
-The visible exterior corridor is `cell / 2 + gap + 4px`, ensuring exterior cell centers and line stroke remain within the board. Generated cell art has explicit outer 106px transparency; runtime inset remains 10%. All screens reuse one companion component, with results shown in a dialog over the game.
+The visible exterior corridor is `cell / 2 + gap + 12px`, ensuring exterior cell centers and line stroke remain within the board. Generated cell art has explicit outer 106px transparency; runtime inset remains 10%. All screens reuse one companion component, with results shown in a dialog over the game.
 
 Runtime hooks exist only under `?test=1`: snapshot, legal move lookup, expression selection, route geometry fixture, and named won/lost layout fixtures. Fixtures are not completion evidence; the E2E playthrough uses actual pair clicks.
 
@@ -65,3 +65,10 @@ Only active, visible, unmuted gameplay enables BGM. Start/resume/sound controls 
 
 ## Static sharing metadata
 Canonical, Open Graph and Twitter metadata live directly in index.html so crawlers need no JavaScript. Share-image URLs are absolute HTTPS project URLs; browser icon references are relative to the Pages mount. Keep 1200×630 image dimensions/alt text synchronized with the asset. SVG, PNG and ICO plus Apple touch icon mirror CDXPilot0004's compatibility approach.
+
+## Mobile viewport and effect clearance — 2026-10-20
+Normal is the default only when no valid difficulty is saved. Existing Easy/Normal/Hard choices and classic→Easy/layered→Normal migration remain intact; no record schema reset occurs.
+
+Mobile viewport metadata requests fixed 1× scale. Root touch-action allows pan-x/pan-y but excludes pinch/double-tap zoom; non-passive multi-touch and WebKit gesture guards reject mobile zoom gestures only. Single-finger dialog scrolling and button taps remain enabled; mobile selects use 16px text to avoid focus zoom. Platform accessibility overrides and physical Safari behavior require device testing.
+
+`fitBoard` sizes the face using actual board-area width and available visual viewport height after controls/notice/padding, including the complete exterior corridor plus 12px effect clearance on every side. This overrides conflicting legacy CSS size formulas, including the hidden-character branch. Both absolute tile placement and grid-slot route coordinates share the resulting --cell/--corridor. Preference changes, notices and viewport resizes trigger refitting; geometry changes discard stale route coordinates. Character source margins and inset do not change.

@@ -1500,3 +1500,20 @@ dialog .primary {
     font-size: 16px;
   }
 }
+
+/* No pinch/double-tap zoom; ordinary scrolling remains available in dialogs. */
+html {
+  touch-action: pan-x pan-y;
+}
+.board-area {
+  min-height: 0;
+}
+#board {
+  --corridor: calc(var(--cell) / 2 + var(--gap) + 12px);
+}
+@media (pointer: coarse), (max-width: 700px) {
+  .setting select {
+    font-size: 16px;
+    max-width: 175px;
+  }
+}

@@ -33,8 +33,13 @@ declare global {
 }
 const tile = (page: Page, p: Point) =>
   page.locator(`.tile[data-x="${p.x}"][data-y="${p.y}"][data-z="${p.z ?? 0}"]`);
-async function start(page: Page) {
+async function start(page: Page, mode?: string) {
   await page.goto("?test=1");
+  if (mode) {
+    await page.locator("#settings").click();
+    await page.locator("#board-mode").selectOption(mode);
+    await page.locator("#settings-done").click();
+  }
   await page.locator("#start").click();
 }
 async function match(page: Page) {
@@ -47,7 +52,7 @@ test("real input playthrough, pause, hints, shuffle, result and persistence", as
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await start(page);
+  await start(page, "easy");
   await page.keyboard.press("h");
   await expect(page.locator(".hinted")).toHaveCount(2);
   await match(page);
@@ -489,4 +494,110 @@ test("three-floor geometry, covered input and saved legacy records", async ({
         ],
     ),
   ).toEqual({ stage: 7, best: 4200 });
+});
+
+for (const [width, height] of [
+  [320, 568],
+  [360, 640],
+  [390, 844],
+  [620, 800],
+  [844, 390],
+  [1440, 900],
+])
+  test(`3D effects safe with character shown and hidden ${width}x${height}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height });
+    await start(page, "hard");
+    for (const visible of [true, false]) {
+      await page.locator("#settings").click();
+      await page.locator("#character-setting").setChecked(visible);
+      await page.locator("#settings-done").click();
+      await page.evaluate(() => new Promise(requestAnimationFrame));
+      const safe = await page.evaluate(() => {
+        const b = document.querySelector("#board")!.getBoundingClientRect(),
+          panel = document
+            .querySelector(".game-panel")!
+            .getBoundingClientRect();
+        const buttons = document
+          .querySelector(".controls")!
+          .getBoundingClientRect();
+        return (
+          b.left >= panel.left &&
+          b.right <= panel.right &&
+          b.top >= panel.top &&
+          buttons.bottom <= innerHeight &&
+          [...document.querySelectorAll<HTMLElement>(".tile")].every((el) => {
+            const r = el.getBoundingClientRect(),
+              margin = el.dataset.z === "0" ? 16 : 26;
+            return (
+              r.left - margin >= b.left &&
+              r.top - margin >= b.top &&
+              r.right + margin <= b.right &&
+              r.bottom + margin <= b.bottom
+            );
+          })
+        );
+      });
+      expect(safe).toBe(true);
+      await page.screenshot({
+        path: `test-results/effect-safe-${width}x${height}-${visible}.png`,
+      });
+    }
+  });
+
+test("mobile Normal start, pinch/double-tap lock, single taps and dialog scroll", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const page = await context.newPage();
+  await page.goto(
+    (process.env.MOBILE_QA_URL ?? "http://127.0.0.1:4173/CDXPilot0006/") +
+      "?test=1",
+  );
+  await expect(page.locator("#mode-label")).toContainText("Normal");
+  await page.locator("#start").tap();
+  const cdp = await context.newCDPSession(page);
+  await cdp.send("Input.synthesizePinchGesture", {
+    x: 190,
+    y: 420,
+    scaleFactor: 1.8,
+    gestureSourceType: "touch",
+  });
+  await cdp.send("Input.synthesizePinchGesture", {
+    x: 190,
+    y: 420,
+    scaleFactor: 0.6,
+    gestureSourceType: "touch",
+  });
+  await page.touchscreen.tap(20, 100);
+  await page.touchscreen.tap(20, 100);
+  expect(await page.evaluate(() => visualViewport!.scale)).toBe(1);
+  const pair = await page.evaluate(() => window.__CHIBILINK__.move());
+  for (const p of pair!) await tile(page, p).tap();
+  await expect(page.locator("#score")).not.toHaveText("0");
+  await page.locator("#settings").tap();
+  await page.setViewportSize({ width: 390, height: 400 });
+  const before = await page
+    .locator("#dialog")
+    .evaluate((el) => ({
+      top: el.scrollTop,
+      max: el.scrollHeight - el.clientHeight,
+    }));
+  expect(before.max).toBeGreaterThan(0);
+  await cdp.send("Input.synthesizeScrollGesture", {
+    x: 200,
+    y: 260,
+    yDistance: -170,
+    xDistance: 0,
+    gestureSourceType: "touch",
+  });
+  await expect
+    .poll(() => page.locator("#dialog").evaluate((el) => el.scrollTop))
+    .toBeGreaterThan(before.top);
+  await context.close();
 });
