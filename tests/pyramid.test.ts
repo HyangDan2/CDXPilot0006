@@ -184,3 +184,54 @@ it("Normal default does not overwrite saved difficulty, settings or records", ()
       .boardMode,
   ).toBe("normal");
 });
+
+it("rejects seam shortcuts between occupied tiles on every floor", () => {
+  for (const z of [0, 1, 2]) {
+    const tiles = Array.from({ length: 25 }, (_, i) => ({
+      x: (i % 5) + z / 2,
+      y: Math.floor(i / 5) + z / 2,
+      z,
+      value: i === 11 || i === 13 ? 1 : 2,
+    }));
+    const b: Board = {
+      cols: 7,
+      rows: 7,
+      cells: tiles.map((t) => t.value),
+      tiles,
+    };
+    expect(path(b, tiles[11], tiles[13])).toBeNull();
+    const g = new Game(1, 1, false, () => 0, 4, 4, "normal", true);
+    g.board = b;
+    g.select(tiles[11]);
+    expect(g.select(tiles[13]).kind).toBe("invalid");
+    expect(g.score).toBe(0);
+    expect(remainingTiles(b)).toBe(25);
+    // A whole empty row is a real corridor, unlike the seam between rows.
+    for (let i = 5; i < 10; i++) popTile(b, tiles[i]);
+    expect(path(b, tiles[11], tiles[13])).not.toBeNull();
+  }
+});
+
+it("matches classic corridor legality for isolated floors, including holes and all directions", () => {
+  let seed = 714;
+  for (let sample = 0; sample < 50; sample++) {
+    const cells = Array.from({ length: 16 }, () => {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      return seed % 3;
+    });
+    const classic: Board = { cols: 4, rows: 4, cells };
+    const tiles = cells.map((value, i) => ({
+      x: i % 4,
+      y: Math.floor(i / 4),
+      z: 0,
+      value,
+    }));
+    const spatial: Board = { ...classic, tiles };
+    for (let a = 0; a < 16; a++)
+      for (let b = a + 1; b < 16; b++) {
+        expect(!!path(spatial, tiles[a], tiles[b])).toBe(
+          !!path(classic, tiles[a], tiles[b]),
+        );
+      }
+  }
+});

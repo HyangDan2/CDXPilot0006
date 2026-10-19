@@ -520,7 +520,8 @@ function spatialPath(b: Board, a: Point, end: Point): Point[] | null {
       if (p.x < -1 || p.y < -1 || p.x > b.cols || p.y > b.rows) continue;
       if (
         obstacles.some(
-          (t) => Math.abs(t.x - p.x) < 0.5 && Math.abs(t.y - p.y) < 0.5,
+          // Closed footprints: decorative tile gaps are not playable corridors.
+          (t) => Math.abs(t.x - p.x) <= 0.5 && Math.abs(t.y - p.y) <= 0.5,
         )
       )
         continue;

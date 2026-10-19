@@ -123,3 +123,8 @@ Branding hosted acceptance: deployed commit `745a9202c87b7d7c545ea31b5aafacd4ece
 - Visually inspected hosted 320×568 hidden Hard, 320×568 shown Normal and 1440×900 shown Hard: tile effects, controls and character fit. Report/screenshots are in docs/hosted-evidence.
 - Public production bytes match local: JS SHA256 `5f8853676598df1c08f6b73da350ce3015695a883c2f21ce77135daadab67e1e`; CSS SHA256 `375ba9523d652a4cbefd1b856c660966b5e387f3fe35517ae6a2cc40b85fe7dd`.
 - Physical mobile devices, Safari and OS accessibility zoom remain unverified. Evidence-only follow-up changes no runtime assets.
+
+## Occupied-seam reproduction — 2026-10-20
+- Before fix: `npm test` fails new regression (23 previous pass): full 5×5 floor incorrectly connects (1,2) to (3,2) along y=2.5, through the boundary of occupied rows. Failure log `/tmp/path-before.log`. Existing tests only required a detour; they did not reject this invalid seam.
+- Root cause: strict <0.5 footprint check left boundary samples passable. Closed <=0.5 footprints reject the shortcut while preserving complete empty-cell corridors. No storage migration/reset or art/layout changes.
+- Local `npm run verify`: PASS, 25 model tests including all 360 generation witnesses and 6,000 independent grid comparisons. `npm run test:e2e`: PASS, 44 cases. Real mouse/touch blocked-seam inputs preserve tiles/score and emit no route; adjacent legal matches still remove exactly two tiles. Reviewed mobile blocked-seam screenshot: enclosed strawberry tiles remain and feedback asks for another route. Existing PC/mobile playthrough, zoom/scroll and character-padding checks pass.

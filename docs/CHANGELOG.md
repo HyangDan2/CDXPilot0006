@@ -48,3 +48,7 @@
 - Prevent mobile pinch/double-tap zoom while retaining single-finger scrolling and normal inputs.
 - Fit tile geometry plus 12px exterior-effect clearance to the actual panel/visual viewport, fixing narrow hidden-character board overflow.
 - Default new users to Normal; preserve saved difficulties and records.
+
+## 2026-10-20 — Occupied seam routing fix
+- Block routes that slipped between occupied tile rows/columns along half-cell boundaries. Preserve legitimate empty-cell/exterior routes, floor rules, saved settings and records.
+- Add enclosed-pair rejection on all three floors, independent classic-path comparison and actual mouse/touch blocked-pair checks.

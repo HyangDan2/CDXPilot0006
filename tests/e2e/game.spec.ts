@@ -616,3 +616,48 @@ test("mobile Normal start, pinch/double-tap lock, single taps and dialog scroll"
     .toBeGreaterThan(before.top);
   await context.close();
 });
+
+for (const mobile of [false, true]) {
+  test(`blocked seam rejects real ${mobile ? "touch" : "mouse"} matching`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      viewport: mobile
+        ? { width: 390, height: 844 }
+        : { width: 1440, height: 900 },
+      isMobile: mobile,
+      hasTouch: mobile,
+    });
+    const page = await context.newPage();
+    await page.goto(
+      (process.env.PATH_QA_URL ?? "http://127.0.0.1:4173/CDXPilot0006/") +
+        "?test=1",
+    );
+    await page.locator("#start").click();
+    await page.evaluate(() => window.__CHIBILINK__.fixture("blocked-seam"));
+    const before = await page.evaluate(() => window.__CHIBILINK__.snapshot());
+    for (const p of [
+      { x: 1, y: 2 },
+      { x: 3, y: 2 },
+    ]) {
+      if (mobile) await tile(page, p).tap();
+      else await tile(page, p).click();
+    }
+    const after = await page.evaluate(() => window.__CHIBILINK__.snapshot());
+    expect(after.score).toBe(before.score);
+    expect(after.board.tiles).toEqual(before.board.tiles);
+    await expect(page.locator("#route polyline")).toHaveCount(0);
+    await page.screenshot({ path: `test-results/blocked-seam-${mobile}.png` });
+    for (const p of [
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
+    ]) {
+      if (mobile) await tile(page, p).tap();
+      else await tile(page, p).click();
+    }
+    const valid = await page.evaluate(() => window.__CHIBILINK__.snapshot());
+    expect(valid.score).toBeGreaterThan(before.score);
+    expect(valid.board.tiles.filter((t) => t.value)).toHaveLength(23);
+    await context.close();
+  });
+}

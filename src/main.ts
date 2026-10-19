@@ -632,6 +632,23 @@ if (testMode) {
           react(name, "표정 확인", "패딩 검증");
       },
       fixture: (name: string) => {
+        if (name === "blocked-seam") {
+          const tiles = Array.from({ length: 25 }, (_, i) => ({
+            x: i % 5,
+            y: Math.floor(i / 5),
+            z: 0,
+            value: i === 11 || i === 13 ? 1 : 2,
+          }));
+          game.board = {
+            cols: 5,
+            rows: 5,
+            cells: tiles.map((t) => t.value),
+            tiles,
+          };
+          game.selected = null;
+          renderBoard();
+          updateStats();
+        }
         if (name === "won" || name === "lost") {
           started = true;
           game.status = name;
