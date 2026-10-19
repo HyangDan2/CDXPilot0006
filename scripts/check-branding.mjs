@@ -7,7 +7,7 @@ const get = async (path) => {
   if (!remote)
     return fs.readFile(path === "index.html" ? path : "public/" + path);
   const response = await fetch(base + (path === "index.html" ? "" : path));
-  assert(response.ok(), `${path}: ${response.status}`);
+  assert(response.ok, `${path}: ${response.status}`);
   return Buffer.from(await response.arrayBuffer());
 };
 const html = (await get("index.html")).toString();
