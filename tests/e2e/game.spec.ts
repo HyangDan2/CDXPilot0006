@@ -582,19 +582,34 @@ test("mobile Normal start, pinch/double-tap lock, single taps and dialog scroll"
   await expect(page.locator("#score")).not.toHaveText("0");
   await page.locator("#settings").tap();
   await page.setViewportSize({ width: 390, height: 400 });
-  const before = await page
-    .locator("#dialog")
-    .evaluate((el) => ({
-      top: el.scrollTop,
-      max: el.scrollHeight - el.clientHeight,
-    }));
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
+  const before = await page.locator("#dialog").evaluate((el) => ({
+    top: el.scrollTop,
+    max: el.scrollHeight - el.clientHeight,
+    x: el.getBoundingClientRect().left + 12,
+    y: el.getBoundingClientRect().bottom - 40,
+  }));
   expect(before.max).toBeGreaterThan(0);
-  await cdp.send("Input.synthesizeScrollGesture", {
-    x: 200,
-    y: 260,
-    yDistance: -170,
-    xDistance: 0,
-    gestureSourceType: "touch",
+  // Swipe the dialog padding, away from native selects and checkboxes.
+  await cdp.send("Input.dispatchTouchEvent", {
+    type: "touchStart",
+    touchPoints: [{ x: before.x, y: before.y }],
+  });
+  for (let step = 1; step <= 10; step++) {
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchMove",
+      touchPoints: [{ x: before.x, y: before.y - step * 17 }],
+    });
+    await page.waitForTimeout(20);
+  }
+  await cdp.send("Input.dispatchTouchEvent", {
+    type: "touchEnd",
+    touchPoints: [],
   });
   await expect
     .poll(() => page.locator("#dialog").evaluate((el) => el.scrollTop))
