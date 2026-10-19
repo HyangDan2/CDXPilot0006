@@ -65,3 +65,11 @@ Evidence: `test-results/` contains final browser screenshots/traces and last-run
 - Mascot source and output assets unchanged: nine 512px frames, alpha margins >=106px and independent runtime 10% inset retained.
 - Physical iOS Safari/Android devices, browser toolbars and subjective difficulty balance remain unverified. Emulated touch completion is not physical-device evidence. Existing extreme mid-run resize limitation remains.
 - Hosted acceptance for this release follows deployment; results recorded separately below.
+
+## Two-layer hosted acceptance — 2026-10-19
+- Deployed gameplay commit: `bf284dae0e1e2691f6eace21275973d529dc61e9`. GitHub Actions run 39268489804: verify and deploy jobs both SUCCESS, including clean npm ci and 19 browser tests.
+- `node scripts/verify-hosted.mjs`: PASS against https://hyangdan2.github.io/CDXPilot0006/. Twelve scenarios: classic relaxed and layered challenge at 320×568, 360×640, 390×844, 620×800, 844×390 and 1440×900. Real click/tap hint matching and pause/resume pass; no page errors or failed asset responses.
+- Nine expressions per scenario: containment at animation midpoint passes. All nine deployed PNGs equal local files and have >=106px transparent margins. `docs/hosted-evidence/report.json` records browser version, timestamp and measured bounds; mode-labelled PNGs contain screenshots. Earlier unlabelled screenshots are retained as historical evidence.
+- Directly inspected hosted layered challenge screenshots at 320×568 and 1440×900: visible depth badges/gaps, readable assist counts, no character cropping or horizontal overflow. Local 844×390 landscape also inspected.
+- Downloaded deployed JS/CSS match local production bytes: JS SHA256 `0862cb978e43873f4fe60f799fce3609a29c85cef64557850a6a53266fffa3c9`; CSS SHA256 `5e5388d4e6fb176558770480483163cc598f388f98035942a1c9abcfbb5b4327`.
+- Physical mobile devices and Safari remain unverified; this acceptance uses Chromium desktop and mobile/touch emulation.

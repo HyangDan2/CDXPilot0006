@@ -1,7 +1,7 @@
 {
   "url": "https://hyangdan2.github.io/CDXPilot0006/",
   "browser": "141.0.7390.37",
-  "checkedAt": "2026-10-19T14:09:46.817Z",
+  "checkedAt": "2026-10-19T14:25:00.287Z",
   "assets": [
     {
       "name": "idle",
@@ -96,6 +96,8 @@
   ],
   "viewports": [
     {
+      "mode": "classic",
+      "challenge": false,
       "width": 320,
       "height": 568,
       "bounds": {
@@ -112,6 +114,8 @@
       "failedResponses": []
     },
     {
+      "mode": "classic",
+      "challenge": false,
       "width": 360,
       "height": 640,
       "bounds": {
@@ -128,6 +132,8 @@
       "failedResponses": []
     },
     {
+      "mode": "classic",
+      "challenge": false,
       "width": 390,
       "height": 844,
       "bounds": {
@@ -144,6 +150,8 @@
       "failedResponses": []
     },
     {
+      "mode": "classic",
+      "challenge": false,
       "width": 620,
       "height": 800,
       "bounds": {
@@ -160,6 +168,8 @@
       "failedResponses": []
     },
     {
+      "mode": "classic",
+      "challenge": false,
       "width": 844,
       "height": 390,
       "bounds": {
@@ -176,6 +186,116 @@
       "failedResponses": []
     },
     {
+      "mode": "classic",
+      "challenge": false,
+      "width": 1440,
+      "height": 900,
+      "bounds": {
+        "scrollWidth": 1440,
+        "width": 1440,
+        "height": 900,
+        "controlsBottom": 875,
+        "boardLeft": 351.5,
+        "boardRight": 765.5
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "layered",
+      "challenge": true,
+      "width": 320,
+      "height": 568,
+      "bounds": {
+        "scrollWidth": 320,
+        "width": 320,
+        "height": 568,
+        "controlsBottom": 550.96875,
+        "boardLeft": 42.015625,
+        "boardRight": 277.984375
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "layered",
+      "challenge": true,
+      "width": 360,
+      "height": 640,
+      "bounds": {
+        "scrollWidth": 360,
+        "width": 360,
+        "height": 640,
+        "controlsBottom": 608,
+        "boardLeft": 33.5,
+        "boardRight": 326.5
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "layered",
+      "challenge": true,
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "scrollWidth": 390,
+        "width": 390,
+        "height": 844,
+        "controlsBottom": 835.96875,
+        "boardLeft": 37.796875,
+        "boardRight": 352.203125
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "layered",
+      "challenge": true,
+      "width": 620,
+      "height": 800,
+      "bounds": {
+        "scrollWidth": 620,
+        "width": 620,
+        "height": 800,
+        "controlsBottom": 792,
+        "boardLeft": 168.5,
+        "boardRight": 451.5
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "layered",
+      "challenge": true,
+      "width": 844,
+      "height": 390,
+      "bounds": {
+        "scrollWidth": 844,
+        "width": 844,
+        "height": 390,
+        "controlsBottom": 387,
+        "boardLeft": 139,
+        "boardRight": 469
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "layered",
+      "challenge": true,
       "width": 1440,
       "height": 900,
       "bounds": {
