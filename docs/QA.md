@@ -115,3 +115,11 @@ Branding hosted acceptance: deployed commit `745a9202c87b7d7c545ea31b5aafacd4ece
 - Browser emulation is not physical-device Safari/Android or OS accessibility-zoom certification. Original character assets/padding remain unchanged. Hosted checks follow deployment.
 
 - Initial remote gate 39275100083: 41/42 browser cases passed; dialog scroll stayed at 0 in the fixed-coordinate synthetic swipe. Deployment was blocked. Replaced fixed screen coordinates with a real touch drag along measured dialog padding after resize settles, avoiding native form controls; retained the scrollTop assertion. Targeted local mobile test passes. Remote recheck follows.
+
+## Viewport/default/clearance hosted acceptance — 2026-10-20
+- Runtime commit `0e32c59d30337d74d19c5c30b4279661d177be99`; Actions run 39276023399 verify/deploy SUCCESS, including 23 model tests and all 42 browser tests. The measured touch drag also passes on Linux CI; initial scroll-test failure is resolved without weakening the scroll assertion.
+- `node scripts/verify-hosted.mjs`: PASS on the public Pages URL. Three difficulties × six viewports, actual mouse/touch matches and pause/resume, nine expressions per scenario and six Hard hidden-character layouts. No page/asset failures; original nine character PNGs match local bytes and retain >=106px transparent margins.
+- `MOBILE_QA_URL=https://hyangdan2.github.io/CDXPilot0006/ npm run test:e2e -- --grep 'mobile Normal start'`: PASS. Public fresh profile starts Normal, actual touch pinch-in/out and double taps retain scale 1; matching and overflowing-dialog touch scroll work.
+- Visually inspected hosted 320×568 hidden Hard, 320×568 shown Normal and 1440×900 shown Hard: tile effects, controls and character fit. Report/screenshots are in docs/hosted-evidence.
+- Public production bytes match local: JS SHA256 `5f8853676598df1c08f6b73da350ce3015695a883c2f21ce77135daadab67e1e`; CSS SHA256 `375ba9523d652a4cbefd1b856c660966b5e387f3fe35517ae6a2cc40b85fe7dd`.
+- Physical mobile devices, Safari and OS accessibility zoom remain unverified. Evidence-only follow-up changes no runtime assets.
