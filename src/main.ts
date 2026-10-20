@@ -56,11 +56,11 @@ const testMode = new URLSearchParams(location.search).get("test") === "1";
 let seed = 731;
 let resultHandled = false;
 $("#app").innerHTML = `
-<header class="topbar"><a class="brand" href="./" aria-label="치비링크 홈"><span class="brand-flower">${flower}</span><span>chibi<span class="brand-light">link</span><small>모모의 작은 카페</small></span></a><h1 class="header-title">작은 연결, 달콤한 휴식<span>.</span></h1><div class="header-right"><button id="how" class="text-button">게임 방법 <span>↗</span></button><button class="icon-button" id="sound" aria-label="소리 켜기">♪</button><button class="icon-button" id="settings" aria-label="설정">⚙</button></div></header>
+<header class="topbar"><a class="brand" href="./" aria-label="치비링크 홈"><span class="brand-flower">${flower}</span><span>chibi<span class="brand-light">link</span><small>모모의 작은 카페</small></span></a><h1 class="header-title">작은 연결, 달콤한 휴식<span>.</span></h1><div class="header-right"><button id="how" class="text-button">게임 방법 <span>↗</span></button><button class="icon-button" id="sound" aria-label="소리 켜기">♪</button><button class="icon-button" id="settings" aria-label="설정">⚙</button><a id="hub-return" class="hub-link" href="${HUB_URL}">게임 허브로</a></div></header>
 <main>
 <div class="game-layout"><section class="game-panel" aria-label="사천성 게임"><div class="game-top"><button id="stage-picker" class="stage-button"><span class="stage-number">01</span><span><small>오늘의 디저트</small><strong id="stage-title">첫 번째 티타임</strong></span><span class="chevron">⌄</span></button><button class="mode-pill" id="mode-label" aria-label="게임 모드 선택">클래식 · 편안함 ⌄</button></div>
 <div class="stats"><div><span>남은 패</span><strong id="remaining">36<small> / 36</small></strong></div><div><span id="time-label">플레이 시간</span><strong id="time">00:00</strong></div><div><span>스코어</span><strong id="score">0</strong></div><div class="combo-stat"><span>연속 연결</span><strong id="combo">0 <small>COMBO</small></strong></div></div>
-<div class="board-area"><div class="board-viewport" tabindex="0" aria-label="퍼즐 보드: 전체 패 보기"><div id="board" role="group" aria-label="디저트 패"><svg id="route" aria-hidden="true"></svg></div></div><div id="cover" class="board-cover"><div class="cover-card"><span class="cover-flower">${flower}</span><p class="eyebrow">A LITTLE BREAK, A SWEET MATCH</p><h2>잠깐 쉬어갈까요?</h2><p>같은 디저트를 이어보세요.<br>모모가 곁에서 응원할게요.</p><button class="primary" id="start">티타임 시작하기 <span>→</span></button>${hubLink()}<span class="cover-foot">시간에 쫓기지 않는 편안한 모드</span></div></div></div>
+<div class="board-area"><div class="board-viewport" tabindex="0" aria-label="퍼즐 보드: 전체 패 보기"><div id="board" role="group" aria-label="디저트 패"><svg id="route" aria-hidden="true"></svg></div></div><div id="cover" class="board-cover"><div class="cover-card"><span class="cover-flower">${flower}</span><p class="eyebrow">A LITTLE BREAK, A SWEET MATCH</p><h2>잠깐 쉬어갈까요?</h2><p>같은 디저트를 이어보세요.<br>모모가 곁에서 응원할게요.</p><button class="primary" id="start">티타임 시작하기 <span>→</span></button><span class="cover-foot">시간에 쫓기지 않는 편안한 모드</span></div></div></div>
 <div class="board-bottom"><span class="status-dot"></span><span id="notice" role="status">최대 두 번 꺾어서, 같은 디저트를 연결해요.</span></div>
 <div class="controls"><button id="hint"><span>☀</span> 힌트 <kbd>H</kbd></button><button id="shuffle"><span>⤨</span> 섞기 <kbd>S</kbd></button><button id="pause"><span>Ⅱ</span> 일시정지 <kbd>P</kbd></button></div></section>
 <aside class="companion"><div class="companion-top"><span class="eyebrow">YOUR LITTLE COMPANION</span><span class="sparkle">✧</span></div><div class="speech" aria-live="polite"><strong id="speech-title">어서 와요!</strong><p id="speech-text">따뜻한 차 한 잔처럼,<br>오늘도 편안하게 즐겨요.</p></div><div class="mascot-frame" id="mascot-frame"><img class="mascot-sprite" id="mascot" src="${import.meta.env.BASE_URL}assets/momo-idle.png" alt="미소 짓는 치비 캐릭터 모모"><span id="mascot-fallback" hidden>모모 ♡</span><span class="mascot-ground"></span></div><div class="companion-name"><span>모모</span><small>당신의 티타임 메이트</small></div><div class="little-tip"><span>✦ MOMO'S TIP</span><p>패 바깥쪽에도 길이 있어요.<br>조금 돌아가도 괜찮아요.</p><div class="tip-path">□ <i>└─────┘</i> □</div></div><div class="best-record"><span>나의 최고 점수</span><strong id="best">0 <small>pts</small></strong></div></aside></div>
@@ -451,6 +451,12 @@ $("#dialog").addEventListener("close", () => {
 });
 $("#start").onclick = () => newGame(true);
 $("#pause").onclick = pause;
+$("#hub-return").onclick = (event) => {
+  if (started && game.status === "playing") {
+    event.preventDefault();
+    pause();
+  }
+};
 $("#hint").onclick = () => {
   const p = game.hint();
   if (p) {

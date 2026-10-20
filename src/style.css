@@ -1669,3 +1669,46 @@ dialog #hub-warning {
   max-height: 100%;
   overflow-y: auto;
 }
+
+/* Keep the shared return action beside settings, including narrow phones. */
+.header-right > .hub-link {
+  flex-shrink: 0;
+  padding-inline: 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font-size: 12px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.topbar {
+  min-height: 45px;
+}
+@media (max-width: 400px) {
+  .topbar {
+    padding-inline: 8px;
+    gap: 4px;
+  }
+  .brand {
+    font-size: 18px;
+    gap: 4px;
+  }
+  .brand-flower {
+    width: 22px;
+    height: 22px;
+  }
+  .brand small {
+    font-size: 7px;
+    letter-spacing: 0.3px;
+  }
+  .header-right {
+    gap: 2px;
+  }
+  #how {
+    font-size: 10px;
+    padding-inline: 2px;
+  }
+  .header-right > .hub-link {
+    padding-inline: 5px;
+    font-size: 11px;
+  }
+}

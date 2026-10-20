@@ -84,3 +84,7 @@
 - Pause explains that unfinished boards are lost when leaving while completed progress, best scores and settings remain. Existing resume controls allow staying in the run.
 - Kept native keyboard/touch link behavior, visible focus, 44px targets and scrollable small-screen menus. Page hide pauses active play and stops music; Back restores a usable menu.
 - Added focused navigation/paused-state/storage browser checks and a real hosted round-trip checker. See QA.md for executed checks and deployment status.
+
+## Game Hub header placement — 2026-10-20
+- Moved the initial-card Game Hub link to the top header beside settings. Compact phone spacing keeps the Korean label visible.
+- During active play, the header action pauses the run and opens the existing exit warning; resume allows staying, and the dialog link completes navigation. Pause/result dialog links remain accessible while the header is inert.

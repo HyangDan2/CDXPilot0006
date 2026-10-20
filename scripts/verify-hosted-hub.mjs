@@ -58,10 +58,12 @@ try {
         await page.locator("#timed-setting").check();
         await page.locator("#settings-done").click();
         await page.locator("#start").click();
-        await page.locator("#pause").click();
+        await page.locator("#hub-return").click();
         await expect(page.locator("#hub-warning")).toBeVisible();
       }
-      const menu = page.locator(surface === "title" ? "#cover" : "#dialog");
+      const menu = page.locator(
+        surface === "title" ? ".header-right" : "#dialog",
+      );
       const link = menu.getByRole("link", { name: "게임 허브로" });
       await expect(link).toHaveAttribute("href", hubUrl);
       const storage = await page.evaluate(() => {
@@ -98,10 +100,7 @@ try {
       await page.locator(`a[href="${gameUrl}"]`).click();
       await expect(page).toHaveURL(gameUrl);
       await expect(page.locator("#start")).toBeVisible();
-      await expect(page.locator("#cover .hub-link")).toHaveAttribute(
-        "href",
-        hubUrl,
-      );
+      await expect(page.locator("#hub-return")).toHaveAttribute("href", hubUrl);
       assert.equal(context.pages().length, 1);
       report.cases.push({
         width,

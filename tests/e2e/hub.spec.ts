@@ -30,7 +30,17 @@ for (const [width, height] of [
         await page.locator("#timed-setting").check();
         await page.locator("#settings-done").click();
         await page.locator("#start").click();
-        await page.locator("#pause").click();
+        const headerLink = page.locator("#hub-return");
+        await expect(headerLink).toBeVisible();
+        const settingsBox = (await page.locator("#settings").boundingBox())!;
+        const hubBox = (await headerLink.boundingBox())!;
+        expect(hubBox.x).toBeGreaterThanOrEqual(
+          settingsBox.x + settingsBox.width,
+        );
+        expect(hubBox.x + hubBox.width).toBeLessThanOrEqual(width);
+        if (width === 1440) await headerLink.click();
+        else await headerLink.tap();
+        expect(navigations).toBe(1);
         const before = await page.evaluate(() =>
           window.__CHIBILINK__.snapshot(),
         );
@@ -58,8 +68,12 @@ for (const [width, height] of [
         );
       }
       const surface =
-        screen === "title" ? page.locator("#cover") : page.locator("#dialog");
+        screen === "title"
+          ? page.locator(".header-right")
+          : page.locator("#dialog");
       const link = surface.getByRole("link", { name: "게임 허브로" });
+      if (screen === "title")
+        await expect(page.locator("#cover .hub-link")).toHaveCount(0);
       await expect(link).toHaveAttribute("href", HUB);
       expect(await link.getAttribute("target")).toBeNull();
       await link.scrollIntoViewIfNeeded();

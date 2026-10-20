@@ -31,3 +31,6 @@ The user replaced doubling with fixed 4×6/6×6/8×6 base extents and one/two/th
 
 ## 2026-10-20 — Native Game Hub return links
 Use one absolute HTTPS destination in the DOM composition module and ordinary same-tab anchors on existing start/pause/result surfaces. The existing Korean interface supplies the visible label. A clear pause-menu warning explains unfinished-board loss before activating the link; existing resume/close controls allow staying. This follows the guide's pause-explanation option without adding another dialog/focus state. Preserve synchronous result saves and storage namespaces. Page hide pauses active play and stops audio; history restoration stops audio while presenting a usable menu. Verify browser history and navigation separately from pure puzzle rules and hosted deployment separately from local navigation interception.
+
+## 2026-10-20 — Header placement for Game Hub
+Move the initial-card return action beside settings in the shared header. Keep the dialog actions because a modal dialog makes the header inert. During active play, the header anchor opens the existing paused exit menu before navigation; its warning and resume controls remain the exit convention. Compact the narrow header without adding a row or moving the board controls.
