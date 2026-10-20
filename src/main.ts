@@ -23,6 +23,10 @@ import {
 } from "./storage";
 import { icon, names, flower } from "./icons";
 
+const HUB_URL = "https://hyangdan2.github.io/GameHub/";
+const hubLink = (warning = false) =>
+  `<a class="hub-link" href="${HUB_URL}"${warning ? ' aria-describedby="hub-warning"' : ""}>게임 허브로</a>`;
+
 const $ = <T extends HTMLElement = HTMLElement>(s: string) =>
   document.querySelector<T>(s)!;
 let prefs: Preferences = { ...defaults },
@@ -56,7 +60,7 @@ $("#app").innerHTML = `
 <main>
 <div class="game-layout"><section class="game-panel" aria-label="사천성 게임"><div class="game-top"><button id="stage-picker" class="stage-button"><span class="stage-number">01</span><span><small>오늘의 디저트</small><strong id="stage-title">첫 번째 티타임</strong></span><span class="chevron">⌄</span></button><button class="mode-pill" id="mode-label" aria-label="게임 모드 선택">클래식 · 편안함 ⌄</button></div>
 <div class="stats"><div><span>남은 패</span><strong id="remaining">36<small> / 36</small></strong></div><div><span id="time-label">플레이 시간</span><strong id="time">00:00</strong></div><div><span>스코어</span><strong id="score">0</strong></div><div class="combo-stat"><span>연속 연결</span><strong id="combo">0 <small>COMBO</small></strong></div></div>
-<div class="board-area"><div class="board-viewport" tabindex="0" aria-label="퍼즐 보드: 전체 패 보기"><div id="board" role="group" aria-label="디저트 패"><svg id="route" aria-hidden="true"></svg></div></div><div id="cover" class="board-cover"><div class="cover-card"><span class="cover-flower">${flower}</span><p class="eyebrow">A LITTLE BREAK, A SWEET MATCH</p><h2>잠깐 쉬어갈까요?</h2><p>같은 디저트를 이어보세요.<br>모모가 곁에서 응원할게요.</p><button class="primary" id="start">티타임 시작하기 <span>→</span></button><span class="cover-foot">시간에 쫓기지 않는 편안한 모드</span></div></div></div>
+<div class="board-area"><div class="board-viewport" tabindex="0" aria-label="퍼즐 보드: 전체 패 보기"><div id="board" role="group" aria-label="디저트 패"><svg id="route" aria-hidden="true"></svg></div></div><div id="cover" class="board-cover"><div class="cover-card"><span class="cover-flower">${flower}</span><p class="eyebrow">A LITTLE BREAK, A SWEET MATCH</p><h2>잠깐 쉬어갈까요?</h2><p>같은 디저트를 이어보세요.<br>모모가 곁에서 응원할게요.</p><button class="primary" id="start">티타임 시작하기 <span>→</span></button>${hubLink()}<span class="cover-foot">시간에 쫓기지 않는 편안한 모드</span></div></div></div>
 <div class="board-bottom"><span class="status-dot"></span><span id="notice" role="status">최대 두 번 꺾어서, 같은 디저트를 연결해요.</span></div>
 <div class="controls"><button id="hint"><span>☀</span> 힌트 <kbd>H</kbd></button><button id="shuffle"><span>⤨</span> 섞기 <kbd>S</kbd></button><button id="pause"><span>Ⅱ</span> 일시정지 <kbd>P</kbd></button></div></section>
 <aside class="companion"><div class="companion-top"><span class="eyebrow">YOUR LITTLE COMPANION</span><span class="sparkle">✧</span></div><div class="speech" aria-live="polite"><strong id="speech-title">어서 와요!</strong><p id="speech-text">따뜻한 차 한 잔처럼,<br>오늘도 편안하게 즐겨요.</p></div><div class="mascot-frame" id="mascot-frame"><img class="mascot-sprite" id="mascot" src="${import.meta.env.BASE_URL}assets/momo-idle.png" alt="미소 짓는 치비 캐릭터 모모"><span id="mascot-fallback" hidden>모모 ♡</span><span class="mascot-ground"></span></div><div class="companion-name"><span>모모</span><small>당신의 티타임 메이트</small></div><div class="little-tip"><span>✦ MOMO'S TIP</span><p>패 바깥쪽에도 길이 있어요.<br>조금 돌아가도 괜찮아요.</p><div class="tip-path">□ <i>└─────┘</i> □</div></div><div class="best-record"><span>나의 최고 점수</span><strong id="best">0 <small>pts</small></strong></div></aside></div>
@@ -404,7 +408,7 @@ function finish() {
     react("clear", "오늘도 잘했어요!", "당신 덕분에 달콤한 티타임이 됐어요.");
   } else react("sad", "잠깐 쉬어가도 괜찮아요.", "우리 다시 한번 해볼까요?");
   showDialog(
-    `<p class="eyebrow">${game.status === "won" ? "SWEET LITTLE VICTORY" : "ANOTHER CUP?"}</p><h2>${game.status === "won" ? "티타임 완성!" : game.blockedOut ? "연결할 길이 없어요" : "시간이 다 되었어요"}</h2><p>${currentNames()[stage - 1]} · ${game.pairs}쌍 연결</p><div class="result-score">${game.score.toLocaleString()}<small>POINTS</small></div><p>힌트 ${game.hintCount}회 · 섞기 ${game.shuffles}회 · 자동 복구 ${game.recoveries}회</p><button class="primary" id="next">${game.status === "won" && stage < stageLimit(game.mode) ? "다음 티타임 →" : "다시 즐기기 →"}</button><button class="text-button" id="result-menu">처음으로</button>`,
+    `<p class="eyebrow">${game.status === "won" ? "SWEET LITTLE VICTORY" : "ANOTHER CUP?"}</p><h2>${game.status === "won" ? "티타임 완성!" : game.blockedOut ? "연결할 길이 없어요" : "시간이 다 되었어요"}</h2><p>${currentNames()[stage - 1]} · ${game.pairs}쌍 연결</p><div class="result-score">${game.score.toLocaleString()}<small>POINTS</small></div><p>힌트 ${game.hintCount}회 · 섞기 ${game.shuffles}회 · 자동 복구 ${game.recoveries}회</p><button class="primary" id="next">${game.status === "won" && stage < stageLimit(game.mode) ? "다음 티타임 →" : "다시 즐기기 →"}</button><button class="text-button" id="result-menu">처음으로</button>${hubLink()}`,
   );
   $("#next").onclick = () => {
     if (game.mode !== prefs.boardMode || game.timed !== prefs.timed) stage = 1;
@@ -426,7 +430,7 @@ function pause() {
   clearEffects();
   renderBoard();
   showDialog(
-    '<p class="eyebrow">TAKE YOUR TIME</p><h2>잠깐의 쉼표</h2><p>차가 식기 전에, 돌아와도 좋아요.<br>시간은 잠시 멈춰둘게요.</p><button class="primary" id="resume">계속하기 →</button><button class="text-button" id="restart">다시 시작</button>',
+    `<p class="eyebrow">TAKE YOUR TIME</p><h2>잠깐의 쉼표</h2><p>차가 식기 전에, 돌아와도 좋아요.<br>시간은 잠시 멈춰둘게요.</p><button class="primary" id="resume">계속하기 →</button><button class="text-button" id="restart">다시 시작</button><p id="hub-warning">허브로 나가면 진행 중인 보드는 저장되지 않아요.<br>완료한 단계와 최고 점수, 설정은 유지돼요.</p>${hubLink(true)}`,
   );
   $("#resume").onclick = () => {
     closeDialog();
@@ -578,7 +582,14 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden) pause();
   syncMusic();
 });
-window.addEventListener("pagehide", () => music.setPlaying(false));
+window.addEventListener("pagehide", () => {
+  pause();
+  music.setPlaying(false);
+});
+// A cached page returns paused; explicit resume restores audio after Back.
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) music.setPlaying(false);
+});
 window.addEventListener("orientationchange", () => {
   pause();
   clearEffects();

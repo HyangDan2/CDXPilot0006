@@ -44,6 +44,8 @@ Challenge allows **two hints (−8 seconds each)**, **one manual shuffle (−12 
 2. Match identical exposed desserts on the same floor. The connection may turn at most twice through empty space, including outside the board. Lower floors do not block an upper-floor route.
 3. Clear every tile to finish the stage and unlock the next one. Challenge also ends when time expires or no permitted recovery remains. Use the result dialog to continue/retry, or pause to restart.
 
+Use **게임 허브로** (Game Hub) on the start card, pause menu or results to return to [GameHub](https://hyangdan2.github.io/GameHub/) in the same tab. The pause menu warns that an unfinished board is not saved.
+
 Progress and best scores are stored per difficulty and mode in this browser. Earlier rule sets' records remain visible under settings and are separate from current scores. This saves progression, not an in-progress board; there is no account or cross-device synchronization. Storage failures do not prevent play.
 
 ## Getting Started
@@ -79,6 +81,7 @@ The project uses TypeScript, Vite and DOM/CSS rendering; Vitest covers pure rule
 | `npm run lint` / `npm run typecheck` | Static code and TypeScript checks |
 | `npm run assets:check` / `npm run branding:check` | Character margins and sharing/favicon metadata |
 | `node scripts/verify-hosted.mjs` | Public-site layout, input and character asset acceptance |
+| `node scripts/verify-hosted-hub.mjs` | Live GameHub round trips, Back/storage preservation and deployed bundle identity |
 | `node scripts/verify-hosted-timing.mjs` | Public Challenge budgets and popup timer pausing |
 
 Before E2E tests, run `npx playwright install chromium` (Linux CI uses `--with-deps`). Stop a manually running production preview first: E2E owns port 4173 and refuses to reuse an existing server. Run E2E suites one at a time. Hosted scripts write reports/screenshots into `docs/hosted-evidence`; review intended changes before committing them.

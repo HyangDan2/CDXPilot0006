@@ -5,7 +5,7 @@ import crypto from "node:crypto";
 import sharp from "sharp";
 const url =
   process.env.HOSTED_URL || "https://hyangdan2.github.io/CDXPilot0006/";
-const dir = "docs/hosted-evidence";
+const dir = process.env.HOSTED_EVIDENCE_DIR || "docs/hosted-evidence";
 await fs.mkdir(dir, { recursive: true });
 const browser = await chromium.launch();
 const report = {

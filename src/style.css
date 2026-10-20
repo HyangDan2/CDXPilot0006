@@ -1649,3 +1649,23 @@ main {
     line-height: 14px;
   }
 }
+
+/* Secondary menu navigation; native anchors preserve same-tab browser history. */
+.hub-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--ink);
+  font-size: 13px;
+  text-underline-offset: 3px;
+}
+dialog #hub-warning {
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.cover-card {
+  max-height: 100%;
+  overflow-y: auto;
+}

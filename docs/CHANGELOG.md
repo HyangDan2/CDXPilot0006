@@ -78,3 +78,9 @@
 - Easy uses 4×6, Normal 6×6 and Hard 8×6 on desktop and mobile; upper floors form one connected pyramid.
 - Challenge matches award +3/+2/+1.5 seconds respectively, capped at starting time; assist costs remain.
 - Preserve previous records and preferences; track the new rules separately. Compact short-landscape controls retain the full six-row board.
+
+## Game Hub return — 2026-10-20
+- Added “게임 허브로” (Game Hub) links to the start card, pause dialog, victory and defeat results, opening https://hyangdan2.github.io/GameHub/ in the same tab.
+- Pause explains that unfinished boards are lost when leaving while completed progress, best scores and settings remain. Existing resume controls allow staying in the run.
+- Kept native keyboard/touch link behavior, visible focus, 44px targets and scrollable small-screen menus. Page hide pauses active play and stops music; Back restores a usable menu.
+- Added focused navigation/paused-state/storage browser checks and a real hosted round-trip checker. See QA.md for executed checks and deployment status.

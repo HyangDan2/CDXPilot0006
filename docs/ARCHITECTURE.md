@@ -111,3 +111,8 @@ Challenge successful matches grant Easy 3000ms, Normal 2000ms or Hard 1500ms, ca
 Storage v5 preserves v1–v4 records and settings; unified-{difficulty}-{relaxed|challenge} keys separate changed rules. Prior records remain read-only in settings. Full-board fitting, source transparency, runtime character inset and effect corridors remain unchanged. Short landscape chrome is compacted to retain readable six-row boards.
 
 Gate: all ten stages per difficulty must have fixed dimensions, connected upper floors, four supports and complete legal witnesses. Test credit amount, cap, duplicate removal, pause, exact expiry and v4/v5 migration. Run full browser regression plus actual Challenge match-credit checks on desktop/touch for all difficulties; inspect all six sizes and verify Pages separately.
+
+## Game Hub return navigation — 2026-10-20
+`src/main.ts` defines one absolute Game Hub destination and renders native same-tab anchors on the initial start card, pause dialog and both result variants. Korean labels follow the existing interface. The pause dialog associates the link with an explicit warning: unfinished boards are not saved; completed stages, best scores and settings remain. Staying uses the existing resume/close controls; no extra confirmation state or unload trap is introduced. Result persistence still runs synchronously before rendering navigation. No model or storage contract changes.
+
+Links reuse visible keyboard focus and reserve at least 44 CSS pixels in each dimension. The start card can scroll within its existing overlay on short screens. Page hide pauses active gameplay and stops music; history restoration stops music until the next explicit action. Existing dialog input suppression and cleanup remain authoritative.

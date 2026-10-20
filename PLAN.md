@@ -137,3 +137,6 @@ Storage v5 preserves v1–v4 records and settings; unified-{difficulty}-{relaxed
 Gate: all ten stages per difficulty must have fixed dimensions, connected upper floors, four supports and complete legal witnesses. Test credit amount, cap, duplicate removal, pause, exact expiry and v4/v5 migration. Run full browser regression plus actual Challenge match-credit checks on desktop/touch for all difficulties; inspect all six sizes and verify Pages separately.
 
 Completed and deployed: runtime b1fb6ae, Actions 39335817723. Remote verification passed 36 model and 52 browser tests. Public checks passed all six viewport sizes, exact desktop/mobile match bonuses, initial budgets, continuous audio and character margins. Prior records are preserved under their original keys. See QA.md for corrected landscape failures, evidence and physical-device limitations.
+
+## Game Hub return — 2026-10-20
+Scope: existing start, pause and result surfaces in the DOM adapter; one exact absolute same-tab destination; an honest unfinished-board warning inside pause; existing result persistence and game rules retained. Gate: full verify and browser regressions, focused keyboard/touch/history/storage checks, screenshot inspection, normal Actions/Pages publication and real hosted GameHub → ChibiLink round-trip acceptance. See QA.md for outcomes and device limitations.
