@@ -1,0 +1,104 @@
+{
+  "gameUrl": "https://hyangdan2.github.io/CDXPilot0006/",
+  "hubUrl": "https://hyangdan2.github.io/GameHub/",
+  "checkedAt": "2026-10-20T13:58:47.117Z",
+  "browser": "141.0.7390.37",
+  "physicalDevices": false,
+  "interceptedNavigation": false,
+  "bundles": [
+    {
+      "file": "./assets/index-B27mxPI0.js",
+      "sha256": "181a49240f09e0adaf014d5c8af009369874288201564fda5e3efa2ad6b9494e"
+    },
+    {
+      "file": "./assets/index-DUIAzSIo.css",
+      "sha256": "10f5deb0976ab224fe46224d310dd4e6f984b5015e3899279c81df45daee5468"
+    }
+  ],
+  "cases": [
+    {
+      "width": 1440,
+      "height": 900,
+      "surface": "title",
+      "hubTitle": "GameHub — HD2Lab 플레이 아케이드",
+      "back": {
+        "record": null,
+        "other": "preserve",
+        "freshMenu": true,
+        "pausedMenu": false
+      },
+      "reopenedUrl": "https://hyangdan2.github.io/CDXPilot0006/",
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "surface": "pause",
+      "hubTitle": "GameHub — HD2Lab 플레이 아케이드",
+      "back": {
+        "record": "{\"version\":5,\"stage\":1,\"best\":0,\"timed\":true,\"muted\":false,\"character\":true,\"motion\":true,\"boardMode\":\"normal\",\"records\":{}}",
+        "other": "preserve",
+        "freshMenu": true,
+        "pausedMenu": false
+      },
+      "reopenedUrl": "https://hyangdan2.github.io/CDXPilot0006/",
+      "errors": []
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "surface": "title",
+      "hubTitle": "GameHub — HD2Lab 플레이 아케이드",
+      "back": {
+        "record": null,
+        "other": "preserve",
+        "freshMenu": true,
+        "pausedMenu": false
+      },
+      "reopenedUrl": "https://hyangdan2.github.io/CDXPilot0006/",
+      "errors": []
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "surface": "pause",
+      "hubTitle": "GameHub — HD2Lab 플레이 아케이드",
+      "back": {
+        "record": "{\"version\":5,\"stage\":1,\"best\":0,\"timed\":true,\"muted\":false,\"character\":true,\"motion\":true,\"boardMode\":\"normal\",\"records\":{}}",
+        "other": "preserve",
+        "freshMenu": true,
+        "pausedMenu": false
+      },
+      "reopenedUrl": "https://hyangdan2.github.io/CDXPilot0006/",
+      "errors": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "surface": "title",
+      "hubTitle": "GameHub — HD2Lab 플레이 아케이드",
+      "back": {
+        "record": null,
+        "other": "preserve",
+        "freshMenu": true,
+        "pausedMenu": false
+      },
+      "reopenedUrl": "https://hyangdan2.github.io/CDXPilot0006/",
+      "errors": []
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "surface": "pause",
+      "hubTitle": "GameHub — HD2Lab 플레이 아케이드",
+      "back": {
+        "record": "{\"version\":5,\"stage\":1,\"best\":0,\"timed\":true,\"muted\":false,\"character\":true,\"motion\":true,\"boardMode\":\"normal\",\"records\":{}}",
+        "other": "preserve",
+        "freshMenu": true,
+        "pausedMenu": false
+      },
+      "reopenedUrl": "https://hyangdan2.github.io/CDXPilot0006/",
+      "errors": []
+    }
+  ]
+}

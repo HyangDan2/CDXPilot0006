@@ -1,0 +1,460 @@
+{
+  "url": "https://hyangdan2.github.io/CDXPilot0006/",
+  "browser": "141.0.7390.37",
+  "checkedAt": "2026-10-20T13:59:34.802Z",
+  "assets": [
+    {
+      "name": "idle",
+      "sha256": "a737b2d9ac2b918e0f7c8f41577df32ea3f4c9608a36afd8e52d779594480af0",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "excited",
+      "sha256": "80366974f61067eed9859df26a6b0b24e94643e2c63f4b5badcfbe1f65c7828f",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "pleased",
+      "sha256": "39da2f24f2dda5095efaac60d7bcc253740821c6068466564688e0e3525a9120",
+      "margins": [
+        106,
+        106,
+        107,
+        106
+      ]
+    },
+    {
+      "name": "puzzled",
+      "sha256": "9c3e4f78917e769f521f6082891efcbc16e6d7518e4c09428e63248089904672",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "worried",
+      "sha256": "f747561b124d9c597dd590439b422233be012f1d3a504aeb208dc181f8635c2b",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "sad",
+      "sha256": "a02d2690ba02729028133b72ce362fe3b87ea1c2b46f13b570846a653a619d21",
+      "margins": [
+        106,
+        106,
+        107,
+        106
+      ]
+    },
+    {
+      "name": "clear",
+      "sha256": "0b0ba9509bb9253c39f474887108bd77143d0328a83d2cd4f5258ca41a1e5217",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "ready",
+      "sha256": "f5259a08837d0e5041f208e64d317b3631bf6e4be581ae9e30f1f6ff1f6dece2",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    },
+    {
+      "name": "blink",
+      "sha256": "f9e27c4f36525f04bd27f06b05fb9a47895cd29dfdc59e3fa655239e8d27f938",
+      "margins": [
+        106,
+        106,
+        106,
+        106
+      ]
+    }
+  ],
+  "viewports": [
+    {
+      "mode": "easy",
+      "challenge": false,
+      "width": 320,
+      "height": 568,
+      "bounds": {
+        "scrollWidth": 320,
+        "width": 320,
+        "height": 568,
+        "controlsBottom": 566,
+        "boardLeft": 56.6875,
+        "boardRight": 263.3125,
+        "boardBottom": 480.875,
+        "controlsTop": 503
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "easy",
+      "challenge": false,
+      "width": 360,
+      "height": 640,
+      "bounds": {
+        "scrollWidth": 360,
+        "width": 360,
+        "height": 640,
+        "controlsBottom": 638,
+        "boardLeft": 50.984375,
+        "boardRight": 309.015625,
+        "boardBottom": 552.84375,
+        "controlsTop": 575
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "easy",
+      "challenge": false,
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "scrollWidth": 390,
+        "width": 390,
+        "height": 844,
+        "controlsBottom": 842,
+        "boardLeft": 27,
+        "boardRight": 363,
+        "boardBottom": 697,
+        "controlsTop": 775
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "easy",
+      "challenge": false,
+      "width": 620,
+      "height": 800,
+      "bounds": {
+        "scrollWidth": 620,
+        "width": 620,
+        "height": 800,
+        "controlsBottom": 798,
+        "boardLeft": 142,
+        "boardRight": 478,
+        "boardBottom": 697,
+        "controlsTop": 731
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "easy",
+      "challenge": false,
+      "width": 844,
+      "height": 390,
+      "bounds": {
+        "scrollWidth": 844,
+        "width": 844,
+        "height": 390,
+        "controlsBottom": 388,
+        "boardLeft": 223.1875,
+        "boardRight": 384.8125,
+        "boardBottom": 330.875,
+        "controlsTop": 349
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "easy",
+      "challenge": false,
+      "width": 1440,
+      "height": 900,
+      "bounds": {
+        "scrollWidth": 1440,
+        "width": 1440,
+        "height": 900,
+        "controlsBottom": 898,
+        "boardLeft": 386.984375,
+        "boardRight": 795.015625,
+        "boardBottom": 800.84375,
+        "controlsTop": 833
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "normal",
+      "challenge": true,
+      "width": 320,
+      "height": 568,
+      "bounds": {
+        "scrollWidth": 320,
+        "width": 320,
+        "height": 568,
+        "controlsBottom": 566,
+        "boardLeft": 22.5625,
+        "boardRight": 297.4375,
+        "boardBottom": 480.875,
+        "controlsTop": 503
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "normal",
+      "challenge": true,
+      "width": 360,
+      "height": 640,
+      "bounds": {
+        "scrollWidth": 360,
+        "width": 360,
+        "height": 640,
+        "controlsBottom": 638,
+        "boardLeft": 17.078125,
+        "boardRight": 342.921875,
+        "boardBottom": 531.84375,
+        "controlsTop": 575
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "normal",
+      "challenge": true,
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "scrollWidth": 390,
+        "width": 390,
+        "height": 844,
+        "controlsBottom": 842,
+        "boardLeft": 17.046875,
+        "boardRight": 372.953125,
+        "boardBottom": 596.90625,
+        "controlsTop": 775
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "normal",
+      "challenge": true,
+      "width": 620,
+      "height": 800,
+      "bounds": {
+        "scrollWidth": 620,
+        "width": 620,
+        "height": 800,
+        "controlsBottom": 798,
+        "boardLeft": 82,
+        "boardRight": 538,
+        "boardBottom": 697,
+        "controlsTop": 731
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "normal",
+      "challenge": true,
+      "width": 844,
+      "height": 390,
+      "bounds": {
+        "scrollWidth": 844,
+        "width": 844,
+        "height": 390,
+        "controlsBottom": 388,
+        "boardLeft": 198.0625,
+        "boardRight": 409.9375,
+        "boardBottom": 330.875,
+        "controlsTop": 349
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "normal",
+      "challenge": true,
+      "width": 1440,
+      "height": 900,
+      "bounds": {
+        "scrollWidth": 1440,
+        "width": 1440,
+        "height": 900,
+        "controlsBottom": 898,
+        "boardLeft": 312.578125,
+        "boardRight": 869.421875,
+        "boardBottom": 800.84375,
+        "controlsTop": 833
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "hard",
+      "challenge": true,
+      "width": 320,
+      "height": 568,
+      "bounds": {
+        "scrollWidth": 320,
+        "width": 320,
+        "height": 568,
+        "controlsBottom": 566,
+        "boardLeft": 17.0625,
+        "boardRight": 302.9375,
+        "boardBottom": 436.34375,
+        "controlsTop": 503
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "hard",
+      "challenge": true,
+      "width": 360,
+      "height": 640,
+      "bounds": {
+        "scrollWidth": 360,
+        "width": 360,
+        "height": 640,
+        "controlsBottom": 638,
+        "boardLeft": 17.015625,
+        "boardRight": 342.984375,
+        "boardBottom": 467.53125,
+        "controlsTop": 575
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "hard",
+      "challenge": true,
+      "width": 390,
+      "height": 844,
+      "bounds": {
+        "scrollWidth": 390,
+        "width": 390,
+        "height": 844,
+        "controlsBottom": 842,
+        "boardLeft": 17.046875,
+        "boardRight": 372.953125,
+        "boardBottom": 525.8125,
+        "controlsTop": 775
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "hard",
+      "challenge": true,
+      "width": 620,
+      "height": 800,
+      "bounds": {
+        "scrollWidth": 620,
+        "width": 620,
+        "height": 800,
+        "controlsBottom": 798,
+        "boardLeft": 22,
+        "boardRight": 598,
+        "boardBottom": 697,
+        "controlsTop": 731
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "hard",
+      "challenge": true,
+      "width": 844,
+      "height": 390,
+      "bounds": {
+        "scrollWidth": 844,
+        "width": 844,
+        "height": 390,
+        "controlsBottom": 388,
+        "boardLeft": 172.9375,
+        "boardRight": 435.0625,
+        "boardBottom": 330.875,
+        "controlsTop": 349
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    },
+    {
+      "mode": "hard",
+      "challenge": true,
+      "width": 1440,
+      "height": 900,
+      "bounds": {
+        "scrollWidth": 1440,
+        "width": 1440,
+        "height": 900,
+        "controlsBottom": 898,
+        "boardLeft": 238.171875,
+        "boardRight": 943.828125,
+        "boardBottom": 800.84375,
+        "controlsTop": 833
+      },
+      "expressions": 9,
+      "normalUrlInput": "pass",
+      "consoleErrors": [],
+      "failedResponses": []
+    }
+  ],
+  "physicalDevices": false
+}

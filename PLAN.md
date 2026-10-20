@@ -140,3 +140,5 @@ Completed and deployed: runtime b1fb6ae, Actions 39335817723. Remote verificatio
 
 ## Game Hub return — 2026-10-20
 Scope: existing start, pause and result surfaces in the DOM adapter; one exact absolute same-tab destination; an honest unfinished-board warning inside pause; existing result persistence and game rules retained. Gate: full verify and browser regressions, focused keyboard/touch/history/storage checks, screenshot inspection, normal Actions/Pages publication and real hosted GameHub → ChibiLink round-trip acceptance. See QA.md for outcomes and device limitations.
+
+Completed: implementation f61c0f1, successful Actions/Pages run 39434325363, 36 model and 55 browser checks, three hosted focused menu cases, six real GameHub round trips and all 18 hosted difficulty/viewport cases. Public bundles match local dist. See QA.md and docs/hosted-evidence/gamehub for evidence; physical devices/Safari remain unverified.
