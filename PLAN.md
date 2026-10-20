@@ -145,3 +145,5 @@ Completed: implementation f61c0f1, successful Actions/Pages run 39434325363, 36 
 
 ## Game Hub header placement — 2026-10-20
 Move the initial-card action beside settings in the shared header, with compact narrow-screen spacing. During active play, route header activation through the existing pause/warning menu; retain dialog links for modal access. Gate: verify, full browser regression, actual desktop/portrait/landscape screenshot inspection, Actions/Pages and hosted header round trips.
+
+Completed locally and deployed: implementation 5771569, Actions 39436472549, 36 model and 55 browser tests, three focused hosted cases and six real hub round trips. Public bundles match dist; see QA.md for the final public layout gate and physical-device limitations.

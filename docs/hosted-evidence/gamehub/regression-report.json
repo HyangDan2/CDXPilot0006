@@ -1,7 +1,7 @@
 {
   "url": "https://hyangdan2.github.io/CDXPilot0006/",
   "browser": "141.0.7390.37",
-  "checkedAt": "2026-10-20T13:59:34.802Z",
+  "checkedAt": "2026-10-20T14:13:38.132Z",
   "assets": [
     {
       "name": "idle",
@@ -185,9 +185,9 @@
         "width": 844,
         "height": 390,
         "controlsBottom": 388,
-        "boardLeft": 223.1875,
-        "boardRight": 384.8125,
-        "boardBottom": 330.875,
+        "boardLeft": 224.25,
+        "boardRight": 383.75,
+        "boardBottom": 330.90625,
         "controlsTop": 349
       },
       "expressions": 9,
@@ -305,9 +305,9 @@
         "width": 844,
         "height": 390,
         "controlsBottom": 388,
-        "boardLeft": 198.0625,
-        "boardRight": 409.9375,
-        "boardBottom": 330.875,
+        "boardLeft": 199.546875,
+        "boardRight": 408.453125,
+        "boardBottom": 330.90625,
         "controlsTop": 349
       },
       "expressions": 9,
@@ -425,9 +425,9 @@
         "width": 844,
         "height": 390,
         "controlsBottom": 388,
-        "boardLeft": 172.9375,
-        "boardRight": 435.0625,
-        "boardBottom": 330.875,
+        "boardLeft": 174.84375,
+        "boardRight": 433.15625,
+        "boardBottom": 330.90625,
         "controlsTop": 349
       },
       "expressions": 9,

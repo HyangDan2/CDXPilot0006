@@ -1,18 +1,18 @@
 {
   "gameUrl": "https://hyangdan2.github.io/CDXPilot0006/",
   "hubUrl": "https://hyangdan2.github.io/GameHub/",
-  "checkedAt": "2026-10-20T13:58:47.117Z",
+  "checkedAt": "2026-10-20T14:13:10.835Z",
   "browser": "141.0.7390.37",
   "physicalDevices": false,
   "interceptedNavigation": false,
   "bundles": [
     {
-      "file": "./assets/index-B27mxPI0.js",
-      "sha256": "181a49240f09e0adaf014d5c8af009369874288201564fda5e3efa2ad6b9494e"
+      "file": "./assets/index-BDw_N93-.js",
+      "sha256": "7e6e7631382ade8180bcc1dd48bcd7011e835900c66a6a01cd50d7a9e5267dae"
     },
     {
-      "file": "./assets/index-DUIAzSIo.css",
-      "sha256": "10f5deb0976ab224fe46224d310dd4e6f984b5015e3899279c81df45daee5468"
+      "file": "./assets/index-HLKoWAba.css",
+      "sha256": "8ca36407412e8afb68eb4315a9aff3b4cfe8d44fc80d7e7e0716ec8e21d01ea9"
     }
   ],
   "cases": [
